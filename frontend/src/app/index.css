@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+    /* --- NỀN VÀ CHỮ (Sáng sủa, sạch sẽ cho website E-commerce) --- */
+    --background: #ffffff;
+    --foreground: #0f172a;
+
+    /* --- MÀU CẤU TRÚC (STRUCTURE) --- */
+    /* Navy - Lấy từ màu chữ chính của logo trên banner để tạo sự tin cậy công nghiệp */
+    --primary: #1e40af;
+    --primary-foreground: #f8fafc;
+
+    /* Xám - Lấy từ màu kim loại của các thiết bị máy móc trong ảnh */
+    --secondary: #64748b;
+    --secondary-foreground: #f3f4f6;
+
+    /* --- MÀU ĐIỂM NHẤN (ACCENTS) --- */
+    /* Màu Vàng rực rỡ - Lấy trực tiếp từ số Hotline trên banner, cực kỳ hiệu quả cho nút "Mua ngay" */
+    --accent: #facc15;
+    --accent-foreground: #0f172a;
+    --accent-hover: #eab308;
+
+    /* Màu Đỏ - Lấy từ nền thanh Hotline, dùng cho các nhãn Sale, Hot hoặc thông báo quan trọng */
+    --accent-alt: #dc2626;
+    --accent-alt-foreground: #ffffff;
+    --accent-alt-hover: #b91c1c;
+
+    /* --- MÀU TRUNG TÍNH --- */
+    --muted: #f8fafc;
+    --muted-foreground: #64748b;
+    --border: #e2e8f0;
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+
+    --color-brand-primary: var(--primary);
+    --color-brand-secondary: var(--secondary);
+
+    --color-brand-accent: var(--accent);
+    --color-brand-accent-hover: var(--accent-hover);
+    --color-brand-accent-fg: var(--accent-foreground);
+
+    --color-brand-accent-alt: var(--accent-alt);
+    --color-brand-accent-alt-hover: var(--accent-alt-hover);
+    --color-brand-accent-alt-fg: var(--accent-alt-foreground);
+
+    --color-border: var(--border);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    button {
+        cursor: pointer;
+    }
+
+    body {
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+        font-family: "Inter", sans-serif;
+    }
+
+    .font-serif {
+        font-family: "Playfair Display", serif;
+    }
+}
+
+@layer components {}
+
+@layer utilities {
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+            filter: blur(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.8s ease-out both;
+    }
+
+    .animation-delay-100 {
+        animation-delay: 100ms;
+    }
+
+    .animation-delay-200 {
+        animation-delay: 200ms;
+    }
+
+    .animation-delay-300 {
+        animation-delay: 300ms;
+    }
+
+    .animation-delay-400 {
+        animation-delay: 400ms;
+    }
+
+    .animation-delay-500 {
+        animation-delay: 500ms;
+    }
+
+    .animation-delay-600 {
+        animation-delay: 600ms;
+    }
+
+    .animation-delay-800 {
+        animation-delay: 800ms;
+    }
+
+    @keyframes subtle-zoom {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(1.1);
+        }
+    }
+
+    .animate-subtle-zoom {
+        animation: subtle-zoom 20s linear infinite alternate;
+    }
+}
