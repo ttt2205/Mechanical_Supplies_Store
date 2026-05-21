@@ -76,8 +76,7 @@ export default function LoginPage() {
                     <div className="space-y-2">
                         <div className="flex justify-between items-center ml-4">
                             <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Mật khẩu</label>
-                            <Link href="/forgot-password" size="sm" className="text-[10px] font-black uppercase tracking-widest text-brand-primary hover:underline">Quên mật khẩu?</Link>
-                        </div>
+                            <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-brand-primary hover:underline">Quên mật khẩu?</Link>                        </div>
                         <div className="relative group">
                             <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors">
                                 <Lock size={18} />
