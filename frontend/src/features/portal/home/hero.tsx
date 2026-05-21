@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ArrowRight, Phone, FileText, ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 const slides = [
   {
@@ -47,12 +48,12 @@ export default function Hero() {
 
   useEffect(() => {
     setIsLoaded(true);
-    const timer = setInterval(handleSwitch, 10000);
+    const timer = setInterval(handleSwitch, 8000);
     return () => clearInterval(timer);
   }, [handleSwitch]);
 
   return (
-    <section className="relative w-full min-h-screen lg:h-[800px] flex items-center overflow-hidden bg-white pt-24">
+    <section className="relative w-full min-h-[80vh] lg:h-[700px] flex items-center overflow-hidden bg-white pt-24 lg:pt-44">
       {/* BACKGROUND DECORATION - SUBTLE GRID */}
       <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
         <div className="absolute inset-0" style={{ 
@@ -85,7 +86,7 @@ export default function Hero() {
                     <div className="h-[1px] w-12 bg-slate-200"></div>
                     <span className="text-slate-400 font-bold text-[10px] tracking-[0.3em] uppercase">{slides[activeIndex].subtitle}</span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-brand-primary leading-tight tracking-tight uppercase transition-all duration-700">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-brand-primary leading-tight tracking-tight uppercase transition-all duration-700">
                   CÔNG TY TNHH <br />
                   <span className="text-brand-accent-alt">{slides[activeIndex].title}</span> <br />
                   HƯNG THỊNH
@@ -105,10 +106,13 @@ export default function Hero() {
                 XEM CATALOGUE
               </button>
               
-              <button className="w-full sm:w-auto px-8 py-4 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-md font-bold uppercase tracking-widest text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+              <Link 
+                href="/contact"
+                className="w-full sm:w-auto px-8 py-4 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-md font-bold uppercase tracking-widest text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
                 LIÊN HỆ NGAY
                 <ArrowRight size={18} />
-              </button>
+              </Link>
             </div>
 
             {/* NAV CONTROLS */}
@@ -137,7 +141,7 @@ export default function Hero() {
           </div>
 
           {/* RIGHT VISUAL SIDE - FLOATING OVERLAPPING PRODUCTS */}
-          <div className="lg:col-span-6 relative h-[400px] sm:h-[500px] lg:h-full mt-8 md:mt-16 lg:mt-0">
+          <div className="lg:col-span-6 relative h-[400px] sm:h-[500px] lg:h-full mt-8 md:mt-16 lg:mt-0 overflow-hidden">
             <div className="relative w-full h-full flex items-center justify-center pt-8 md:pt-12 lg:pt-0">
               
               {/* SHADOW BASE FOR DEPTH */}
@@ -175,7 +179,7 @@ export default function Hero() {
                   />
                   
                   {/* PRODUCT INFO BADGE */}
-                  <div className={`absolute bottom-6 md:bottom-10 -right-4 z-30 bg-white border border-slate-100 shadow-2xl p-3 md:p-4 min-w-[150px] md:min-w-[180px] rounded-lg transition-all duration-700 ${
+                  <div className={`absolute bottom-6 md:bottom-10 right-0 sm:-right-4 z-30 bg-white border border-slate-100 shadow-2xl p-3 md:p-4 min-w-[140px] md:min-w-[180px] rounded-lg transition-all duration-700 ${
                     isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
                   }`}>
                     <p className="text-[9px] md:text-[10px] font-bold text-brand-accent-alt uppercase tracking-[0.2em] mb-1">{slides[activeIndex].badge}</p>

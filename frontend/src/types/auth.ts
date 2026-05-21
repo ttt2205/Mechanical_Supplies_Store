@@ -2,6 +2,7 @@ export interface UserAccount {
   account_id: string;
   role_id: string;
   email: string;
+  username: string;
   status: string;
 }
 

@@ -27,11 +27,11 @@
 
     /* --- MÀU TRUNG TÍNH --- */
     --muted: #f8fafc;
-    --muted-foreground: #64748b;
-    --border: #e2e8f0;
-}
+    --font-sans: var(--font-montserrat);
+    --font-mono: var(--font-geist-mono);
+    }
 
-@theme inline {
+    @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
 
@@ -50,13 +50,13 @@
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
 
-    --font-sans: var(--font-geist-sans);
+    --font-sans: var(--font-montserrat);
     --font-mono: var(--font-geist-mono);
-}
-
-@layer base {
+    }
+    @layer base {
     html {
         scroll-behavior: smooth;
+        overflow-x: hidden;
     }
 
     button {
@@ -66,15 +66,114 @@
     body {
         background-color: var(--color-background);
         color: var(--color-foreground);
-        font-family: "Inter", sans-serif;
+        font-family: var(--font-sans), sans-serif;
+        overflow-x: hidden;
+        width: 100%;
+        position: relative;
     }
+
 
     .font-serif {
         font-family: "Playfair Display", serif;
     }
 }
 
-@layer components {}
+@layer components {
+    /* --- PRODUCT CARD EFFECTS --- */
+    .product-card {
+        @apply relative bg-white rounded-xl overflow-hidden border border-border transition-all duration-500 ease-out;
+    }
+
+    .product-card:hover {
+        @apply shadow-2xl -translate-y-2 border-brand-primary/20;
+    }
+
+    .product-card .image-container {
+        @apply relative aspect-square overflow-hidden bg-muted;
+    }
+
+    .product-card .image-container img {
+        @apply w-full h-full object-cover transition-transform duration-700 ease-in-out;
+    }
+
+    .product-card:hover .image-container img {
+        @apply scale-110;
+    }
+
+    /* --- BUTTON HIGHLIGHT EFFECTS --- */
+    .btn-highlight {
+        @apply relative inline-flex items-center justify-center px-6 py-2.5 
+               bg-brand-accent text-brand-accent-fg font-semibold rounded-lg
+               overflow-hidden transition-all duration-300;
+    }
+
+    .btn-highlight::before {
+        content: '';
+        @apply absolute inset-0 bg-brand-accent-hover opacity-0 transition-opacity duration-300;
+    }
+
+    .btn-highlight:hover::before {
+        @apply opacity-100;
+    }
+
+    .btn-highlight .btn-text {
+        @apply relative z-10 transition-transform duration-300;
+    }
+
+    .btn-highlight:hover .btn-text {
+        @apply translate-x-1;
+    }
+
+    .btn-highlight .btn-icon {
+        @apply relative z-10 ml-2 opacity-0 -translate-x-2 transition-all duration-300;
+    }
+
+    .btn-highlight:hover .btn-icon {
+        @apply opacity-100 translate-x-0;
+    }
+
+    /* Shimmer effect for button */
+    .btn-shimmer {
+        @apply relative overflow-hidden;
+    }
+
+    .btn-shimmer::after {
+        content: '';
+        @apply absolute top-0 -left-[100%] w-full h-full;
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent
+        );
+        animation: shimmer 3s infinite;
+    }
+
+    /* --- PREMIUM SPOTLIGHT EFFECTS --- */
+    .spotlight-container {
+        @apply relative rounded-2xl p-1 bg-gradient-to-br from-brand-primary/20 via-transparent to-brand-accent/20;
+        box-shadow: 0 0 40px -10px rgba(30, 64, 175, 0.1);
+    }
+
+    .glass-nav {
+        @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-xl;
+    }
+
+    .section-divider {
+        @apply flex items-center gap-4 mb-8;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+        content: '';
+        @apply h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent;
+    }
+
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-blue-700 font-black;
+        font-family: inherit;
+    }
+}
 
 @layer utilities {
     @keyframes fade-in {
@@ -135,5 +234,98 @@
 
     .animate-subtle-zoom {
         animation: subtle-zoom 20s linear infinite alternate;
+    }
+
+    /* --- SCROLL REVEAL UTILITIES --- */
+    .reveal {
+        @apply opacity-0 translate-y-12 blur-sm transition-all duration-1000 ease-out;
+    }
+
+    .reveal.active {
+        @apply opacity-100 translate-y-0 blur-none;
+    }
+
+    .reveal-left {
+        @apply opacity-0 -translate-x-12 blur-sm transition-all duration-1000 ease-out;
+    }
+
+    .reveal-left.active {
+        @apply opacity-100 translate-x-0 blur-none;
+    }
+
+    .reveal-right {
+        @apply opacity-0 translate-x-12 blur-sm transition-all duration-1000 ease-out;
+    }
+
+    .reveal-right.active {
+        @apply opacity-100 translate-x-0 blur-none;
+    }
+
+    .reveal-scale {
+        @apply opacity-0 scale-90 blur-sm transition-all duration-1000 ease-out;
+    }
+
+    .reveal-scale.active {
+        @apply opacity-100 scale-100 blur-none;
+    }
+
+    /* --- FLOATING SIDEBAR ANIMATIONS --- */
+    @keyframes phone-vibrate {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-15deg); }
+        50% { transform: rotate(15deg); }
+        75% { transform: rotate(-15deg); }
+    }
+    .animate-phone-vibrate {
+        animation: phone-vibrate 0.5s linear infinite;
+    }
+
+    @keyframes heart-beat {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+    }
+    .animate-heart-beat {
+        animation: heart-beat 1s ease-in-out infinite;
+    }
+
+    @keyframes icon-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.9; }
+    }
+    .animate-icon-pulse {
+        animation: icon-pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes ping-slow {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(1.8); opacity: 0; }
+    }
+    .animate-ping-slow {
+        animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+
+    @keyframes ripple {
+        0% { transform: scale(1); opacity: 0.6; }
+        100% { transform: scale(2.5); opacity: 0; }
+    }
+    .animate-ripple {
+        animation: ripple 2s linear infinite;
+    }
+
+    @keyframes bounce-subtle {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-5px); }
+    }
+    .animate-bounce-subtle {
+        animation: bounce-subtle 2s ease-in-out infinite;
+    }
+
+    /* --- SCROLLBAR UTILITIES --- */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
     }
 }

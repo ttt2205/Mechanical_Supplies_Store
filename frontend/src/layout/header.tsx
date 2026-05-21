@@ -195,19 +195,19 @@ export default function Header() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between p-6 rounded-2xl text-brand-primary font-black text-5xl md:text-6xl tracking-tighter hover:bg-brand-muted transition-all group"
+                  className="flex items-center justify-between py-4 px-2 border-b border-slate-50 text-brand-primary font-bold text-2xl tracking-tight hover:text-brand-accent transition-all group"
                 >
                   {item.name}
                   <ChevronRight
                     size={20}
-                    className="text-brand-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="text-brand-accent opacity-50 group-hover:opacity-100 transition-opacity"
                   />
                 </Link>
               ))}
             </div>
             <div className="mt-10 pt-10 border-t space-y-6">
               <Link
-                href="/account"
+                href={isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "/admin/dashboard" : "/account") : "/login"}
                 className="flex items-center gap-4 text-brand-primary font-bold px-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -216,12 +216,12 @@ export default function Header() {
                 </div>
                 <div>
                   <p className="text-sm text-brand-muted-foreground font-medium">
-                    {isHydrated && isAuthenticated ? "Xin chào," : "Khách hàng"}
+                    {isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "Quản trị viên" : "Khách hàng") : "Khách hàng"}
                   </p>
                   <p className="text-lg">
                     {isHydrated && isAuthenticated
-                      ? user?.email
-                      : "Chưa đăng nhập"}
+                      ? (user?.username || user?.email)
+                      : "Đăng nhập ngay"}
                   </p>
                 </div>
               </Link>

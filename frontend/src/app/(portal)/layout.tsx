@@ -1,19 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/layout/header";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import Footer from "@/layout/footer";
+import FloatingSidebar from "@/components/ui/FloatingSidebar";
+import SessionInitializer from "@/components/ui/SessionInitializer";
 
 export const metadata: Metadata = {
-  title: "CSH Group - Ống Thủy Lực & Phụ Kiện Công Nghiệp",
+  title: "CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH - CUNG CẤP ỐNG THỦY LỰC, PHỤ KIỆN CÔNG NGHIỆP, MÁY VÀ THIẾT BỊ",
   description: "Chuyên cung cấp ống thủy lực, đầu bấm và phụ kiện chất lượng cao tại TP.HCM. Cam kết sản phẩm chính hãng, giá tốt nhất.",
 };
 
@@ -23,14 +15,14 @@ export default function PortalLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <>
+        <SessionInitializer />
         <Header />
-        {children}
-      </body>
-    </html>
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
+        <FloatingSidebar />
+    </>
   );
 }
