@@ -6,7 +6,7 @@ export const useViewLog = () => {
 
   const logView = useCallback(async (productId: number) => {
     // Simulate API call to save view log in database
-    console.log(`[ViewLog] User ${user?.user_id || "Guest"} viewed product ${productId}`);
+    console.log(`[ViewLog] User ${user?.account_id || "Guest"} viewed product ${productId}`);
     
     // In a real application, this would be a fetch/axios POST request:
     /*
@@ -14,7 +14,7 @@ export const useViewLog = () => {
       method: 'POST',
       body: JSON.stringify({
         product_id: productId,
-        user_id: user?.user_id || null,
+        user_id: user?.account_id || null,
         viewed_at: new Date().toISOString()
       })
     });
