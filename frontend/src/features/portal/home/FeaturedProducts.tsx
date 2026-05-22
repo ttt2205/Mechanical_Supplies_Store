@@ -153,25 +153,29 @@ const FeaturedProducts: React.FC = () => {
                             className="relative group/slider"
                         >
                             {/* Navigation Buttons - Enhanced Premium Glassmorphism */}
-                            <div className="absolute top-1/2 -translate-y-1/2 -left-4 md:-left-12 z-30 transition-all duration-500 opacity-0 group-hover/slider:opacity-100 group-hover/slider:-translate-x-2">
-                                <button 
-                                    onClick={handlePrev}
-                                    className="p-5 rounded-3xl bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
-                                    aria-label="Previous slide"
-                                >
-                                    <ChevronLeft className="w-8 h-8 transition-transform group-hover/btn:-translate-x-1" />
-                                </button>
-                            </div>
+                            {products.length > itemsPerView && (
+                                <>
+                                    <div className="absolute top-1/2 -translate-y-1/2 -left-2 md:-left-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
+                                        <button 
+                                            onClick={handlePrev}
+                                            className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white/10 md:bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
+                                            aria-label="Previous slide"
+                                        >
+                                            <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:-translate-x-1" />
+                                        </button>
+                                    </div>
 
-                            <div className="absolute top-1/2 -translate-y-1/2 -right-4 md:-right-12 z-30 transition-all duration-500 opacity-0 group-hover/slider:opacity-100 group-hover/slider:translate-x-2">
-                                <button 
-                                    onClick={handleNext}
-                                    className="p-5 rounded-3xl bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
-                                    aria-label="Next slide"
-                                >
-                                    <ChevronRight className="w-8 h-8 transition-transform group-hover/btn:translate-x-1" />
-                                </button>
-                            </div>
+                                    <div className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
+                                        <button 
+                                            onClick={handleNext}
+                                            className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white/10 md:bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
+                                            aria-label="Next slide"
+                                        >
+                                            <ChevronRight className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:translate-x-1" />
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
                             <div className="spotlight-container relative">
                                 {/* Subtle inner glow for the container */}
@@ -179,17 +183,17 @@ const FeaturedProducts: React.FC = () => {
                                 
                                 <div className="bg-slate-900/40 backdrop-blur-sm rounded-[2.5rem] border border-white/5 overflow-hidden px-6 py-12 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
                                     <div 
-                                        className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-8"
+                                        className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
                                         style={{ 
-                                            transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (32 / itemsPerView)}px))` 
+                                            transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (16 / itemsPerView)}px))` 
                                         }}
                                     >
                                         {products.map((product) => (
                                             <div 
                                                 key={product.product_id} 
-                                                className="flex-shrink-0 transform scale-95 origin-top-left transition-transform duration-500 hover:scale-100"
+                                                className="flex-shrink-0 transform scale-[0.98] md:scale-95 md:origin-top-left transition-transform duration-500 hover:scale-100"
                                                 style={{ 
-                                                    width: `calc(${100 / itemsPerView}% - ${(32 * (itemsPerView - 1)) / itemsPerView}px)` 
+                                                    width: `calc(${100 / itemsPerView}% - ${(16 * (itemsPerView - 1)) / itemsPerView}px)` 
                                                 }}
                                             >
                                                 <ProductCard product={product} />

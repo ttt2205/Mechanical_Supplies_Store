@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { Category } from '@/types/category';
 import { Product } from '@/types/product';
 import ProductCard from '@/components/product/ProductCard';
 import ScrollReveal from '@/components/ui/ScrollReveal';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronRight, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
 interface CategoryProductSectionProps {
@@ -21,6 +21,11 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
     allProducts, 
     index 
 }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [itemsPerView, setItemsPerView] = useState(4);
+    const [touchStart, setTouchStart] = useState<number | null>(null);
+    const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
     const sectionProducts = useMemo(() => {
         // Find all subcategory IDs
         const subCategoryIds = allCategories
@@ -35,14 +40,54 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
             .slice(0, 8);
     }, [category, allCategories, allProducts]);
 
+    useEffect(() => {
+        const updateItemsPerView = () => {
+            if (window.innerWidth < 640) setItemsPerView(1);
+            else if (window.innerWidth < 1024) setItemsPerView(2);
+            else setItemsPerView(4);
+        };
+
+        updateItemsPerView();
+        window.addEventListener('resize', updateItemsPerView);
+        return () => window.removeEventListener('resize', updateItemsPerView);
+    }, []);
+
+    const maxIndex = Math.max(0, sectionProducts.length - itemsPerView);
+    const totalPages = Math.ceil(sectionProducts.length / itemsPerView);
+    const currentPage = Math.floor(currentIndex / itemsPerView);
+
+    const nextSlide = useCallback(() => {
+        setCurrentIndex(prev => prev >= maxIndex ? 0 : Math.min(prev + itemsPerView, maxIndex));
+    }, [maxIndex, itemsPerView]);
+
+    const prevSlide = useCallback(() => {
+        setCurrentIndex(prev => prev <= 0 ? maxIndex : Math.max(prev - itemsPerView, 0));
+    }, [maxIndex, itemsPerView]);
+
+    // Swipe handlers
+    const minSwipeDistance = 50;
+    const onTouchStart = (e: React.TouchEvent) => {
+        setTouchEnd(null);
+        setTouchStart(e.targetTouches[0].clientX);
+    };
+    const onTouchMove = (e: React.TouchEvent) => {
+        setTouchEnd(e.targetTouches[0].clientX);
+    };
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return;
+        const distance = touchStart - touchEnd;
+        if (distance > minSwipeDistance) nextSlide();
+        else if (distance < -minSwipeDistance) prevSlide();
+    };
+
     if (sectionProducts.length === 0) return null;
 
     const isEven = index % 2 === 0;
 
     return (
-        <section className={`py-16 ${isEven ? 'bg-white' : 'bg-[#f8fafc]'} overflow-hidden`}>
+        <section className={`py-20 ${isEven ? 'bg-white' : 'bg-slate-50/50'} overflow-hidden border-b border-slate-100`}>
             <div className="container mx-auto px-4 md:px-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
                     <ScrollReveal animation="reveal-left">
                         <div className="flex items-center gap-3 mb-4 text-brand-primary">
                             <div className="w-10 h-px bg-brand-primary"></div>
@@ -64,21 +109,80 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
                     </ScrollReveal>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-4 md:gap-x-6 gap-y-8 md:gap-y-12">
-                    {sectionProducts.map((product, pIndex) => (
-                        <ScrollReveal 
-                            key={product.product_id} 
-                            animation="reveal-scale" 
-                            delay={pIndex * 50}
-                        >
-                            <div className="transform scale-95 origin-top-left h-full">
-                                <ProductCard product={product} />
+                <div 
+                    className="relative group/slider max-w-[1400px] mx-auto"
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={onTouchEnd}
+                >
+                    {/* Navigation Buttons */}
+                    {sectionProducts.length > itemsPerView && (
+                        <>
+                            <div className="absolute top-1/2 -translate-y-1/2 -left-2 md:-left-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
+                                <button 
+                                    onClick={prevSlide}
+                                    className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white shadow-xl border border-slate-100 text-slate-900 hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90 group/btn"
+                                    aria-label="Previous slide"
+                                >
+                                    <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:-translate-x-1" />
+                                </button>
                             </div>
-                        </ScrollReveal>
-                    ))}
+
+                            <div className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
+                                <button 
+                                    onClick={nextSlide}
+                                    className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white shadow-xl border border-slate-100 text-slate-900 hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-90 group/btn"
+                                    aria-label="Next slide"
+                                >
+                                    <ChevronRight className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:translate-x-1" />
+                                </button>
+                            </div>
+                        </>
+                    )}
+
+                    <div className="relative">
+                        <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden px-4 md:px-8 py-10 relative z-10 shadow-sm">
+                            <div 
+                                className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
+                                style={{ 
+                                    transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (16 / itemsPerView)}px))` 
+                                }}
+                            >
+                                {sectionProducts.map((product) => (
+                                    <div 
+                                        key={product.product_id} 
+                                        className="flex-shrink-0 transform scale-[0.98] md:scale-95 md:origin-top-left transition-transform duration-500"
+                                        style={{ 
+                                            width: `calc(${100 / itemsPerView}% - ${(16 * (itemsPerView - 1)) / itemsPerView}px)` 
+                                        }}
+                                    >
+                                        <ProductCard product={product} />
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dots / Pagination */}
+                    {totalPages > 1 && (
+                        <div className="flex justify-center items-center gap-4 mt-10">
+                            {Array.from({ length: totalPages }).map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setCurrentIndex(Math.min(i * itemsPerView, maxIndex))}
+                                    className={`h-1.5 rounded-full transition-all duration-500 ${
+                                        currentPage === i 
+                                        ? 'w-10 bg-brand-primary' 
+                                        : 'w-1.5 bg-slate-200 hover:bg-slate-300'
+                                    }`}
+                                    aria-label={`Go to page ${i + 1}`}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
 
-                <div className="mt-10 text-center">
+                <div className="mt-12 text-center">
                     <Link 
                         href={`/products/${category.slug}`}
                         className="inline-flex items-center gap-4 px-10 py-5 bg-white border-2 border-slate-100 rounded-2xl text-xs font-black uppercase tracking-[0.2em] text-slate-900 hover:border-brand-primary hover:text-brand-primary hover:shadow-xl transition-all"

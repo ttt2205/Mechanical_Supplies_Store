@@ -53,7 +53,7 @@ export default function Hero() {
   }, [handleSwitch]);
 
   return (
-    <section className="relative w-full min-h-[80vh] lg:h-[700px] flex items-center overflow-hidden bg-white pt-24 lg:pt-44">
+    <section className="relative w-full min-h-[850px] md:min-h-[950px] lg:h-[1000px] flex items-center overflow-hidden bg-white pt-40 md:pt-56 lg:pt-64 pb-20 lg:pb-0">
       {/* BACKGROUND DECORATION - SUBTLE GRID */}
       <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
         <div className="absolute inset-0" style={{ 

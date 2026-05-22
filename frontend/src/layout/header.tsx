@@ -14,7 +14,7 @@ import Link from "next/link";
 import SearchHeader from "@/features/layout/header/search";
 import Navigation from "@/features/layout/header/navigation";
 import AccountInfo from "@/features/layout/header/account-info";
-import CartBadge from "@/features/layout/header/cart-badge";
+import FavoriteBadge from "@/features/layout/header/favorite-badge";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const list_nav = [
@@ -139,7 +139,7 @@ export default function Header() {
           >
             <Navigation />
             <div className="flex items-center gap-6">
-              <CartBadge isMobile={false} />
+              <FavoriteBadge isMobile={false} />
               <a
                 href="tel:0123456789"
                 className="bg-brand-accent hover:bg-brand-accent-hover text-white px-5 py-2 rounded-full font-black text-[15px] uppercase tracking-wider shadow-lg active:scale-95 transition-all flex items-center gap-3"
@@ -153,7 +153,7 @@ export default function Header() {
 
         {/* Mobile Controls (Right Side) */}
         <div className="flex lg:hidden items-center gap-2">
-          <CartBadge isMobile={true} />
+          <FavoriteBadge isMobile={true} />
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             className="text-white p-2"
@@ -188,18 +188,18 @@ export default function Header() {
               <X size={28} />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto py-8 px-6">
-            <div className="space-y-2">
+          <div className="flex-1 overflow-y-auto py-6 px-6">
+            <div className="space-y-1">
               {list_nav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between py-4 px-2 border-b border-slate-50 text-brand-primary font-bold text-2xl tracking-tight hover:text-brand-accent transition-all group"
+                  className="flex items-center justify-between py-3 px-2 border-b border-slate-50 text-brand-primary font-semibold text-base tracking-normal hover:text-brand-accent transition-all group leading-relaxed"
                 >
                   {item.name}
                   <ChevronRight
-                    size={20}
+                    size={18}
                     className="text-brand-accent opacity-50 group-hover:opacity-100 transition-opacity"
                   />
                 </Link>
@@ -208,17 +208,17 @@ export default function Header() {
             <div className="mt-10 pt-10 border-t space-y-6">
               <Link
                 href={isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "/admin/dashboard" : "/account") : "/login"}
-                className="flex items-center gap-4 text-brand-primary font-bold px-2"
+                className="flex items-center gap-4 text-brand-primary font-semibold px-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <div className="w-12 h-12 rounded-full bg-brand-muted flex items-center justify-center text-brand-primary">
                   <User size={24} />
                 </div>
                 <div>
-                  <p className="text-sm text-brand-muted-foreground font-medium">
+                  <p className="text-xs text-brand-muted-foreground font-medium uppercase tracking-wider">
                     {isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "Quản trị viên" : "Khách hàng") : "Khách hàng"}
                   </p>
-                  <p className="text-lg">
+                  <p className="text-base">
                     {isHydrated && isAuthenticated
                       ? (user?.username || user?.email)
                       : "Đăng nhập ngay"}
@@ -230,9 +230,9 @@ export default function Header() {
           <div className="p-6 bg-brand-muted border-t">
             <a
               href="tel:0123456789"
-              className="w-full bg-brand-accent text-white p-4 rounded-2xl flex items-center justify-center gap-3 font-black text-lg shadow-lg"
+              className="w-full bg-brand-accent text-white p-4 rounded-2xl flex items-center justify-center gap-3 font-bold text-base shadow-lg active:scale-95 transition-all"
             >
-              <Phone size={24} fill="currentColor" />
+              <Phone size={20} fill="currentColor" />
               0123.456.789
             </a>
           </div>
