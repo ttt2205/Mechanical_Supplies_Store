@@ -32,6 +32,7 @@ export default function PartnerManagementPage() {
     const [partners] = useState(initialPartners);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPartner, setEditingPartner] = useState<any>(null);
+    const [isRegionModalOpen, setIsRegionModalOpen] = useState(false);
 
     const openModal = (partner: any = null) => {
         setEditingPartner(partner || {
@@ -55,13 +56,22 @@ export default function PartnerManagementPage() {
                     <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý Đối tác</h1>
                     <p className="text-slate-500 font-bold">Quản lý mạng lưới đại lý và đối tác chiến lược trên toàn quốc.</p>
                 </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
-                >
-                    <Plus size={18} />
-                    Thêm đối tác mới
-                </button>
+                <div className="flex gap-4">
+                    <button 
+                        onClick={() => setIsRegionModalOpen(true)}
+                        className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3"
+                    >
+                        <MapPin size={18} />
+                        Khu vực
+                    </button>
+                    <button 
+                        onClick={() => openModal()}
+                        className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
+                    >
+                        <Plus size={18} />
+                        Thêm đối tác mới
+                    </button>
+                </div>
             </div>
 
             {/* Filters Bar */}
@@ -237,6 +247,47 @@ export default function PartnerManagementPage() {
                         rows={4}
                         placeholder="Các thỏa thuận hoặc thông tin bổ sung về đối tác này..."
                         defaultValue={editingPartner?.description}
+                    />
+                </div>
+            </AdminModal>
+
+            {/* REGION MODAL */}
+            <AdminModal 
+                isOpen={isRegionModalOpen} 
+                onClose={() => setIsRegionModalOpen(false)}
+                title="Thêm khu vực mới"
+                size="md"
+                footer={
+                    <>
+                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsRegionModalOpen(false)}>Hủy bỏ</button>
+                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                            <Save size={16} /> Tạo khu vực
+                        </button>
+                    </>
+                }
+            >
+                <div className="space-y-6">
+                    <AdminInput 
+                        label="Tên khu vực" 
+                        placeholder="Ví dụ: Miền Nam, Đồng bằng Sông Cửu Long..." 
+                        defaultValue=""
+                        required
+                    />
+                    <AdminSelect
+                        label="Khu vực cha"
+                        defaultValue=""
+                        options={[
+                            { value: '', label: 'Không có (Khu vực gốc)' },
+                            { value: 'mn', label: 'Miền Nam' },
+                            { value: 'mt', label: 'Miền Trung' },
+                            { value: 'mb', label: 'Miền Bắc' }
+                        ]}
+                    />
+                    <AdminTextarea 
+                        label="Mô tả"
+                        rows={4}
+                        placeholder="Nhập ghi chú cho khu vực này..."
+                        defaultValue=""
                     />
                 </div>
             </AdminModal>

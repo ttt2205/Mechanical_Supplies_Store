@@ -35,6 +35,9 @@ export default function ProductManagementPage() {
     const [products, setProducts] = useState(initialProducts);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState<any>(null);
+    
+    // State for Category Modal
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
     const openModal = (product: any = null) => {
         setEditingProduct(product || {
@@ -59,7 +62,10 @@ export default function ProductManagementPage() {
                     <p className="text-slate-500 font-bold">Quản lý danh mục, thông tin và tồn kho sản phẩm.</p>
                 </div>
                 <div className="flex gap-4">
-                    <button className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3">
+                    <button 
+                        onClick={() => setIsCategoryModalOpen(true)}
+                        className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3"
+                    >
                         <Layers size={18} />
                         Danh mục
                     </button>
@@ -286,6 +292,53 @@ export default function ProductManagementPage() {
                             defaultValue={editingProduct?.description}
                         />
                     </div>
+                </div>
+            </AdminModal>
+
+            {/* CATEGORY MODAL */}
+            <AdminModal 
+                isOpen={isCategoryModalOpen} 
+                onClose={() => setIsCategoryModalOpen(false)}
+                title="Thêm danh mục mới"
+                size="md"
+                footer={
+                    <>
+                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsCategoryModalOpen(false)}>Hủy bỏ</button>
+                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                            <Save size={16} /> Tạo danh mục
+                        </button>
+                    </>
+                }
+            >
+                <div className="space-y-6">
+                    <AdminInput 
+                        label="Tên danh mục" 
+                        placeholder="Nhập tên danh mục..." 
+                        defaultValue=""
+                        required
+                    />
+                    <AdminSelect
+                        label="Danh mục cha"
+                        defaultValue=""
+                        options={[
+                            { value: '', label: 'Không có (Danh mục gốc)' },
+                            { value: '1', label: 'Vật tư tiêu hao' },
+                            { value: '1.1', label: '--- Bu lông & Đai ốc' },
+                            { value: '1.2', label: '--- Gioăng & Phớt' },
+                            { value: '2', label: 'Thiết bị truyền động' },
+                            { value: '2.1', label: '--- Vòng bi & Bạc đạn' },
+                            { value: '2.2', label: '--- Dây curoa & Xích' },
+                            { value: '3', label: 'Kim loại & Ống' },
+                            { value: '4', label: 'Dụng cụ & Máy móc' },
+                            { value: '5', label: 'Bảo hộ lao động' }
+                        ]}
+                    />
+                    <AdminTextarea 
+                        label="Mô tả"
+                        rows={4}
+                        placeholder="Nhập mô tả danh mục..."
+                        defaultValue=""
+                    />
                 </div>
             </AdminModal>
         </div>

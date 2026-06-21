@@ -1,24 +1,27 @@
-"use client";
+﻿"use client";
 
 import { Heart } from 'lucide-react';
 import Link from 'next/link';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { useEffect, useState } from 'react';
 
 export default function FavoriteBadge({ isMobile }: { isMobile: boolean }) {
   const favorites = useFavoritesStore((state) => state.favorites);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Handle hydration to avoid mismatch with SSR
   useEffect(() => {
-    setIsHydrated(true);
+    const frame = requestAnimationFrame(() => setIsHydrated(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
-  const count = isHydrated ? favorites.length : 0;
+  const count = isHydrated && isAuthenticated ? favorites.length : 0;
+  const href = '/favorites';
 
   return (
     <Link 
-      href="/favorites"
+      href={href}
       className="flex items-center gap-2 text-white hover:text-brand-accent transition-colors group"
     >
       <div className="relative">
@@ -33,3 +36,4 @@ export default function FavoriteBadge({ isMobile }: { isMobile: boolean }) {
     </Link>
   );
 }
+

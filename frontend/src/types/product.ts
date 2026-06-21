@@ -8,6 +8,7 @@ export interface Product {
     base_price: number;
     status: 'active' | 'inactive';
     thumbnail: string;
+    images?: string[];
     view_count?: number;
     sold_count?: number;
     brand?: string;
@@ -22,7 +23,7 @@ export interface ProductVariant {
     product_variant_id: number;
     product_id: number;
     sku: string;
-    attributes: Record<string, any>;
+    attributes: Record<string, string | number | boolean | null>;
     is_contact_price: boolean;
     price_override?: number;
     is_default: boolean;

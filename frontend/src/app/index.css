@@ -27,7 +27,9 @@
 
     /* --- MÀU TRUNG TÍNH --- */
     --muted: #f8fafc;
-    --font-sans: var(--font-montserrat);
+    --muted-foreground: #475569;
+    --border: #e2e8f0;
+    --font-sans: var(--font-inter);
     --font-mono: var(--font-geist-mono);
     }
 
@@ -50,17 +52,44 @@
     --color-muted: var(--muted);
     --color-muted-foreground: var(--muted-foreground);
 
-    --font-sans: var(--font-montserrat);
+    --font-sans: var(--font-inter);
     --font-mono: var(--font-geist-mono);
     }
     @layer base {
     html {
         scroll-behavior: smooth;
         overflow-x: hidden;
+        -webkit-text-size-adjust: 100%;
+    }
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
     }
 
     button {
         cursor: pointer;
+    }
+
+    button,
+    a,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    a,
+    button {
+        touch-action: manipulation;
+    }
+
+    img,
+    svg,
+    video,
+    canvas {
+        max-width: 100%;
     }
 
     body {
@@ -72,9 +101,18 @@
         position: relative;
     }
 
+    :focus-visible {
+        outline: 3px solid color-mix(in srgb, var(--accent) 80%, white);
+        outline-offset: 3px;
+    }
+
 
     .font-serif {
         font-family: "Playfair Display", serif;
+    }
+
+    .font-montserrat {
+        font-family: var(--font-montserrat), sans-serif;
     }
 }
 
@@ -327,5 +365,16 @@
     .scrollbar-hide {
         -ms-overflow-style: none;
         scrollbar-width: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+            animation-duration: 0.01ms !important;
+            animation-iteration-count: 1 !important;
+            scroll-behavior: auto !important;
+            transition-duration: 0.01ms !important;
+        }
     }
 }

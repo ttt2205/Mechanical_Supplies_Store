@@ -16,13 +16,13 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-black text-white pt-20 relative overflow-hidden">
+    <footer className="bg-black text-white pt-12 md:pt-20 pb-24 md:pb-0 relative overflow-hidden">
       {/* Top Tier: 4 Columns */}
-      <div className="container mx-auto px-6 lg:px-12 pb-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 pb-10 md:pb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 md:gap-12">
           {/* Column 1: About */}
           <div className="space-y-6">
-            <h3 className="text-xl font-bold uppercase tracking-wider text-brand-accent">CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH</h3>
+            <h3 className="text-lg md:text-xl font-bold uppercase tracking-wide md:tracking-wider text-brand-accent leading-tight">CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH</h3>
             <p className="text-slate-400 leading-relaxed text-sm">
               Chuyên cung cấp các giải pháp máy móc công nghiệp, ống thủy lực và phụ kiện chất lượng cao. Chúng tôi cam kết mang lại giá trị bền vững cho doanh nghiệp của bạn qua từng sản phẩm.
             </p>
@@ -42,7 +42,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {['Trang chủ', 'Về chúng tôi', 'Sản phẩm', 'Dịch vụ', 'Tin tức', 'Liên hệ'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-slate-400 hover:text-brand-accent transition-colors text-sm flex items-center gap-2">
+                  <a href="#" className="min-h-8 text-slate-400 hover:text-brand-accent transition-colors text-sm flex items-center gap-2">
                     <span className="w-1 h-1 bg-slate-600 rounded-full"></span>
                     {item}
                   </a>
@@ -60,7 +60,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {['Ống thủy lực', 'Máy bấm ống', 'Đầu nối & Phụ kiện', 'Thiết bị truyền động', 'Dụng cụ cầm tay'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-slate-400 hover:text-brand-accent transition-colors text-sm flex items-center gap-2">
+                  <a href="#" className="min-h-8 text-slate-400 hover:text-brand-accent transition-colors text-sm flex items-center gap-2">
                     <span className="w-1 h-1 bg-slate-600 rounded-full"></span>
                     {item}
                   </a>
@@ -103,7 +103,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Tier */}
-      <div className="container mx-auto px-6 lg:px-12 py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 py-10 md:py-12">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Social Cluster */}
           <div className="flex items-center gap-8 lg:pl-28">

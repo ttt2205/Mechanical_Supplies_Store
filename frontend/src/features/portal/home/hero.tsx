@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { ArrowRight, Phone, FileText, ChevronLeft, ChevronRight } from "lucide-react";
@@ -47,13 +47,16 @@ export default function Hero() {
   }, [isAnimating]);
 
   useEffect(() => {
-    setIsLoaded(true);
+    const frame = requestAnimationFrame(() => setIsLoaded(true));
     const timer = setInterval(handleSwitch, 8000);
-    return () => clearInterval(timer);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearInterval(timer);
+    };
   }, [handleSwitch]);
 
   return (
-    <section className="relative w-full min-h-[850px] md:min-h-[950px] lg:h-[1000px] flex items-center overflow-hidden bg-white pt-40 md:pt-56 lg:pt-64 pb-20 lg:pb-0">
+    <section className="relative w-full min-h-[660px] md:min-h-[780px] lg:min-h-[820px] flex items-center overflow-hidden bg-white pt-20 md:pt-28 lg:pt-32 pb-10 md:pb-14 lg:pb-16">
       {/* BACKGROUND DECORATION - SUBTLE GRID */}
       <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
         <div className="absolute inset-0" style={{ 
@@ -62,31 +65,31 @@ export default function Hero() {
         }}></div>
       </div>
 
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-4 items-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 lg:gap-4 items-center">
           
           {/* LEFT CONTENT SIDE (6 COLS) */}
-          <div className="lg:col-span-6 space-y-10 text-center lg:text-left">
-            <div className={`space-y-6 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className="lg:col-span-6 space-y-7 md:space-y-10 text-center lg:text-left">
+            <div className={`space-y-5 md:space-y-6 transition-all duration-700 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
               
               {/* HOTLINE BADGE - FLAT DESIGN */}
-              <div className="inline-flex items-center rounded-sm overflow-hidden shadow-sm border border-brand-primary/10">
-                <div className="bg-brand-accent-alt px-4 py-1.5 flex items-center gap-2">
+              <div className="inline-flex max-w-full items-center rounded-sm overflow-hidden shadow-sm border border-brand-primary/10">
+                <div className="bg-brand-accent-alt px-3 sm:px-4 py-1.5 flex items-center gap-2 shrink-0">
                   <Phone size={14} className="text-white fill-white" />
                   <span className="text-white font-bold text-xs tracking-tight">HOTLINE:</span>
                 </div>
-                <div className="bg-white px-4 py-1.5 border-l border-brand-primary/10">
-                  <span className="text-brand-primary font-black text-sm tracking-widest">0123.456.789</span>
+                <div className="bg-white px-3 sm:px-4 py-1.5 border-l border-brand-primary/10 min-w-0">
+                  <span className="text-brand-primary font-black text-sm tracking-wide sm:tracking-widest whitespace-nowrap">0123.456.789</span>
                 </div>
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-center lg:justify-start gap-4">
+                <div className="flex items-center justify-center lg:justify-start gap-3 sm:gap-4">
                     <span className="text-brand-accent-alt font-black text-sm tracking-widest">{slides[activeIndex].id}</span>
-                    <div className="h-[1px] w-12 bg-slate-200"></div>
-                    <span className="text-slate-400 font-bold text-[10px] tracking-[0.3em] uppercase">{slides[activeIndex].subtitle}</span>
+                    <div className="h-[1px] w-12 bg-slate-300"></div>
+                    <span className="text-slate-600 font-bold text-[10px] sm:tracking-[0.3em] uppercase">{slides[activeIndex].subtitle}</span>
                 </div>
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-brand-primary leading-tight tracking-tight uppercase transition-all duration-700">
+                <h1 className="text-[2rem] sm:text-4xl md:text-5xl lg:text-6xl font-black font-montserrat text-brand-primary leading-[1.08] tracking-normal uppercase transition-all duration-700">
                   CÔNG TY TNHH <br />
                   <span className="text-brand-accent-alt">{slides[activeIndex].title}</span> <br />
                   HƯNG THỊNH
@@ -94,21 +97,21 @@ export default function Hero() {
                 <div className="h-1.5 w-24 bg-brand-accent mx-auto lg:mx-0"></div>
               </div>
 
-              <p className="text-slate-500 text-lg md:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal min-h-[3em]">
+              <p className="text-slate-800 text-base md:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium min-h-[3em]">
                 {slides[activeIndex].description}
               </p>
             </div>
 
             {/* CTA SECTION */}
             <div className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 transition-all duration-1000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-              <button className="w-full sm:w-auto px-8 py-3.5 border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white rounded-md font-bold uppercase tracking-widest text-sm transition-all active:scale-95 flex items-center justify-center gap-2">
+              <button className="w-full sm:w-auto min-h-12 px-6 sm:px-8 py-3.5 border-2 border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white rounded-md font-bold uppercase tracking-wide sm:tracking-widest text-sm transition-all active:scale-95 flex items-center justify-center gap-2">
                 <FileText size={18} />
                 XEM CATALOGUE
               </button>
               
               <Link 
                 href="/contact"
-                className="w-full sm:w-auto px-8 py-4 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-md font-bold uppercase tracking-widest text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                className="w-full sm:w-auto min-h-12 px-6 sm:px-8 py-4 bg-brand-primary hover:bg-brand-primary/90 text-white rounded-md font-bold uppercase tracking-wide sm:tracking-widest text-sm shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
               >
                 LIÊN HỆ NGAY
                 <ArrowRight size={18} />
@@ -119,7 +122,8 @@ export default function Hero() {
             <div className="pt-4 flex items-center justify-center lg:justify-start gap-4">
                 <button 
                   onClick={handlePrev}
-                  className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all"
+                  className="w-11 h-11 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:text-brand-primary hover:border-brand-primary transition-all shadow-sm"
+                  aria-label="Slide trước"
                 >
                     <ChevronLeft size={20} />
                 </button>
@@ -133,7 +137,8 @@ export default function Hero() {
                 </div>
                 <button 
                   onClick={handleSwitch}
-                  className="w-10 h-10 rounded-full border border-slate-200 flex items-center justify-center text-slate-400 hover:text-brand-primary hover:border-brand-primary transition-all"
+                  className="w-11 h-11 rounded-full border border-slate-300 flex items-center justify-center text-slate-600 hover:text-brand-primary hover:border-brand-primary transition-all shadow-sm"
+                  aria-label="Slide tiếp theo"
                 >
                     <ChevronRight size={20} />
                 </button>
@@ -141,8 +146,8 @@ export default function Hero() {
           </div>
 
           {/* RIGHT VISUAL SIDE - FLOATING OVERLAPPING PRODUCTS */}
-          <div className="lg:col-span-6 relative h-[400px] sm:h-[500px] lg:h-full mt-8 md:mt-16 lg:mt-0 overflow-hidden">
-            <div className="relative w-full h-full flex items-center justify-center pt-8 md:pt-12 lg:pt-0">
+          <div className="lg:col-span-6 relative h-[300px] sm:h-[460px] lg:h-full mt-2 md:mt-16 lg:mt-0 overflow-hidden">
+            <div className="relative w-full h-full flex items-center justify-center pt-4 md:pt-12 lg:pt-0">
               
               {/* SHADOW BASE FOR DEPTH */}
               <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 w-2/3 h-10 bg-slate-900/5 blur-[40px] rounded-full -z-10"></div>
@@ -161,7 +166,7 @@ export default function Hero() {
                     className="w-full h-full object-contain drop-shadow-xl"
                   />
                   {/* DATA TAG */}
-                  <div className="absolute top-1/4 -left-4 bg-brand-primary text-white text-[9px] font-bold px-2 py-1 rounded-sm shadow-lg tracking-widest uppercase opacity-0 group-hover/bg:opacity-100 transition-opacity">
+                  <div className="hidden sm:block absolute top-1/4 -left-4 bg-brand-primary text-white text-[9px] font-bold px-2 py-1 rounded-sm shadow-lg tracking-widest uppercase opacity-0 group-hover/bg:opacity-100 transition-opacity">
                     Xem {slides[nextIndex].label}
                   </div>
                 </div>
@@ -179,14 +184,14 @@ export default function Hero() {
                   />
                   
                   {/* PRODUCT INFO BADGE */}
-                  <div className={`absolute bottom-6 md:bottom-10 right-0 sm:-right-4 z-30 bg-white border border-slate-100 shadow-2xl p-3 md:p-4 min-w-[140px] md:min-w-[180px] rounded-lg transition-all duration-700 ${
+                  <div className={`absolute bottom-3 md:bottom-10 right-0 sm:-right-4 z-30 bg-white border border-slate-100 shadow-2xl p-3 md:p-4 min-w-[140px] md:min-w-[180px] max-w-[70%] rounded-lg transition-all duration-700 ${
                     isAnimating ? 'opacity-0 translate-y-4' : 'opacity-100 translate-y-0'
                   }`}>
-                    <p className="text-[9px] md:text-[10px] font-bold text-brand-accent-alt uppercase tracking-[0.2em] mb-1">{slides[activeIndex].badge}</p>
+                    <p className="text-[9px] md:text-[10px] font-bold text-brand-accent-alt uppercase md:tracking-[0.2em] mb-1">{slides[activeIndex].badge}</p>
                     <p className="text-sm md:text-base font-black text-brand-primary uppercase">{slides[activeIndex].label}</p>
                     <div className="mt-2 flex items-center gap-2">
                         <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500"></div>
-                        <span className="text-[9px] md:text-[10px] font-bold text-slate-400 uppercase">Sẵn hàng tại kho</span>
+                        <span className="text-[9px] md:text-[10px] font-bold text-slate-600 uppercase">Sẵn hàng tại kho</span>
                     </div>
                   </div>
                 </div>
@@ -204,3 +209,4 @@ export default function Hero() {
     </section>
   );
 }
+

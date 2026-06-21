@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { Category } from '@/types/category';
 import { Product } from '@/types/product';
 import ProductCard from '@/components/product/ProductCard';
@@ -85,15 +85,15 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
     const isEven = index % 2 === 0;
 
     return (
-        <section className={`py-20 ${isEven ? 'bg-white' : 'bg-slate-50/50'} overflow-hidden border-b border-slate-100`}>
+        <section className={`py-14 md:py-20 ${isEven ? 'bg-white' : 'bg-slate-50/50'} overflow-hidden border-b border-slate-100`}>
             <div className="container mx-auto px-4 md:px-12">
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-5 md:gap-6">
                     <ScrollReveal animation="reveal-left">
                         <div className="flex items-center gap-3 mb-4 text-brand-primary">
                             <div className="w-10 h-px bg-brand-primary"></div>
                             <span className="text-xs font-black uppercase tracking-[0.3em]">{category.name}</span>
                         </div>
-                        <h2 className="text-2xl md:text-5xl font-black tracking-tight text-slate-900 uppercase">
+                        <h2 className="text-2xl md:text-5xl font-black tracking-normal md:tracking-tight text-slate-900 uppercase leading-tight">
                             Giải pháp <span className="text-gradient">{category.name}</span>
                         </h2>
                     </ScrollReveal>
@@ -101,7 +101,7 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
                     <ScrollReveal animation="reveal-right">
                         <Link 
                             href={`/products/${category.slug}`}
-                            className="group flex items-center gap-2 text-sm font-black uppercase tracking-widest text-slate-400 hover:text-brand-primary transition-all"
+                            className="group flex items-center gap-2 text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest text-slate-400 hover:text-brand-primary transition-all"
                         >
                             Xem toàn bộ danh mục
                             <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
@@ -141,7 +141,7 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
                     )}
 
                     <div className="relative">
-                        <div className="bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden px-4 md:px-8 py-10 relative z-10 shadow-sm">
+                        <div className="bg-white rounded-3xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden px-3 md:px-8 py-6 md:py-10 relative z-10 shadow-sm">
                             <div 
                                 className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
                                 style={{ 
@@ -182,10 +182,10 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
                     )}
                 </div>
 
-                <div className="mt-12 text-center">
+                <div className="mt-8 md:mt-12 text-center">
                     <Link 
                         href={`/products/${category.slug}`}
-                        className="inline-flex items-center gap-4 px-10 py-5 bg-white border-2 border-slate-100 rounded-2xl text-xs font-black uppercase tracking-[0.2em] text-slate-900 hover:border-brand-primary hover:text-brand-primary hover:shadow-xl transition-all"
+                        className="inline-flex min-h-12 items-center justify-center gap-3 md:gap-4 px-5 md:px-10 py-4 md:py-5 bg-white border-2 border-slate-100 rounded-2xl text-[11px] md:text-xs font-black uppercase tracking-wider md:tracking-[0.2em] text-slate-900 hover:border-brand-primary hover:text-brand-primary hover:shadow-xl transition-all"
                     >
                         Tất cả sản phẩm {category.name}
                         <ChevronRight size={16} />

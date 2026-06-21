@@ -7,7 +7,6 @@ import {
   Calendar, 
   User, 
   ChevronLeft, 
-  Share2, 
   Link as LinkIcon,
   MessageCircle,
   Clock,
@@ -23,7 +22,7 @@ export default function NewsDetailPage() {
 
   if (loading) {
     return (
-      <div className="pt-40 pb-20 container mx-auto px-4 flex flex-col items-center">
+      <div className="pt-28 md:pt-40 pb-16 md:pb-20 container mx-auto px-4 flex flex-col items-center">
         <div className="w-full max-w-4xl bg-slate-100 h-[600px] animate-pulse rounded-3xl"></div>
       </div>
     );
@@ -31,7 +30,7 @@ export default function NewsDetailPage() {
 
   if (!post) {
     return (
-      <div className="pt-40 pb-20 container mx-auto px-4 text-center">
+      <div className="pt-28 md:pt-40 pb-16 md:pb-20 container mx-auto px-4 text-center">
         <h1 className="text-4xl font-black mb-6">Không tìm thấy bài viết</h1>
         <Link href="/news" className="text-brand-primary font-bold hover:underline">Quay lại danh sách tin tức</Link>
       </div>
@@ -50,7 +49,7 @@ export default function NewsDetailPage() {
   return (
     <main className="bg-white">
       {/* Article Header */}
-      <section className="pt-40 pb-12 bg-slate-50">
+      <section className="pt-24 md:pt-40 pb-10 md:pb-12 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <Link 
@@ -75,11 +74,11 @@ export default function NewsDetailPage() {
               </div>
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.1] tracking-tighter mb-8">
+            <h1 className="text-3xl md:text-6xl font-black text-slate-900 leading-[1.15] md:leading-[1.1] tracking-normal md:tracking-tighter mb-6 md:mb-8">
               {post.title}
             </h1>
 
-            <div className="flex items-center justify-between border-t border-slate-200 pt-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-t border-slate-200 pt-6 md:pt-8">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-full bg-brand-muted flex items-center justify-center text-brand-primary">
                   <User size={24} />
@@ -107,16 +106,16 @@ export default function NewsDetailPage() {
       </section>
 
       {/* Article Content */}
-      <section className="py-16">
+      <section className="py-10 md:py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             {/* Featured Image */}
-            <div className="rounded-[40px] overflow-hidden shadow-2xl mb-16 relative aspect-video">
+            <div className="rounded-3xl md:rounded-[40px] overflow-hidden shadow-2xl mb-8 md:mb-16 relative aspect-video">
               <img src={post.thumbnail} alt={post.title} className="w-full h-full object-cover" />
             </div>
 
             {/* Content Body */}
-            <div className="prose prose-slate prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-p:leading-relaxed prose-p:text-slate-600 prose-strong:text-slate-900 prose-img:rounded-3xl shadow-sm bg-white p-8 md:p-12 rounded-[40px] border border-slate-100">
+            <div className="prose prose-slate prose-base md:prose-lg max-w-none prose-headings:font-black prose-headings:tracking-tight md:prose-headings:tracking-tighter prose-p:leading-relaxed prose-p:text-slate-600 prose-strong:text-slate-900 prose-img:rounded-3xl shadow-sm bg-white p-5 md:p-12 rounded-3xl md:rounded-[40px] border border-slate-100">
               <div dangerouslySetInnerHTML={{ __html: post.content }} />
               
               <p className="italic text-slate-400 mt-12 pt-12 border-t border-slate-100">
@@ -135,7 +134,7 @@ export default function NewsDetailPage() {
       </section>
 
       {/* Suggested Articles */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-14 md:py-20 bg-slate-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-12">
@@ -171,8 +170,8 @@ export default function NewsDetailPage() {
       </section>
 
       {/* Floating CTA */}
-      <div className="fixed bottom-10 right-10 z-40">
-        <button className="bg-brand-accent text-brand-primary w-16 h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all animate-bounce-subtle group">
+      <div className="fixed bottom-36 right-3 md:bottom-10 md:right-10 z-40">
+        <button className="bg-brand-accent text-brand-primary w-12 h-12 md:w-16 md:h-16 rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all md:animate-bounce-subtle group">
           <MessageCircle size={28} />
           <span className="absolute right-full mr-4 bg-white text-brand-primary px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest shadow-xl opacity-0 translate-x-4 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 transition-all">
             Liên hệ tư vấn

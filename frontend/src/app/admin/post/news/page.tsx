@@ -17,7 +17,8 @@ import {
     Image as ImageIcon,
     Save,
     Type,
-    FileText
+    FileText,
+    Layers
 } from 'lucide-react';
 import { AdminModal, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/AdminUI';
 
@@ -32,6 +33,9 @@ export default function NewsManagementPage() {
     const [posts, setPosts] = useState(initialPosts);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPost, setEditingPost] = useState<any>(null);
+
+    // State for Category Modal
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
     const openModal = (post: any = null) => {
         setEditingPost(post || {
@@ -53,13 +57,22 @@ export default function NewsManagementPage() {
                     <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý Tin tức</h1>
                     <p className="text-slate-500 font-bold">Viết và quản lý các bài viết tin tức, sự kiện của công ty.</p>
                 </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
-                >
-                    <Plus size={18} />
-                    Viết bài mới
-                </button>
+                <div className="flex gap-4">
+                    <button 
+                        onClick={() => setIsCategoryModalOpen(true)}
+                        className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3 w-fit"
+                    >
+                        <Layers size={18} />
+                        Danh mục bài viết
+                    </button>
+                    <button 
+                        onClick={() => openModal()}
+                        className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
+                    >
+                        <Plus size={18} />
+                        Viết bài mới
+                    </button>
+                </div>
             </div>
 
             {/* Filters Bar */}
@@ -236,6 +249,51 @@ export default function NewsManagementPage() {
                             />
                         </div>
                     </div>
+                </div>
+            </AdminModal>
+
+            {/* CATEGORY MODAL */}
+            <AdminModal 
+                isOpen={isCategoryModalOpen} 
+                onClose={() => setIsCategoryModalOpen(false)}
+                title="Thêm danh mục bài viết"
+                size="md"
+                footer={
+                    <>
+                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsCategoryModalOpen(false)}>Hủy bỏ</button>
+                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                            <Save size={16} /> Tạo danh mục
+                        </button>
+                    </>
+                }
+            >
+                <div className="space-y-6">
+                    <AdminInput 
+                        label="Tên danh mục" 
+                        placeholder="Nhập tên danh mục bài viết..." 
+                        defaultValue=""
+                        required
+                    />
+                    <AdminSelect
+                        label="Nhóm cha"
+                        defaultValue=""
+                        options={[
+                            { value: '', label: 'Không có (Nhóm gốc)' },
+                            { value: 'news', label: 'Tin tức & Sự kiện' },
+                            { value: 'news.1', label: '--- Tin tức ngành' },
+                            { value: 'news.2', label: '--- Tin tức nội bộ' },
+                            { value: 'tech', label: 'Kiến thức kỹ thuật' },
+                            { value: 'tech.1', label: '--- Hướng dẫn sử dụng' },
+                            { value: 'tech.2', label: '--- Phân tích chuyên sâu' },
+                            { value: 'event', label: 'Hoạt động công ty' }
+                        ]}
+                    />
+                    <AdminTextarea 
+                        label="Mô tả"
+                        rows={4}
+                        placeholder="Nhập mô tả danh mục..."
+                        defaultValue=""
+                    />
                 </div>
             </AdminModal>
         </div>

@@ -29,12 +29,14 @@ const list_nav = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
 
   const { user, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
-    setIsHydrated(true);
+    const frame = requestAnimationFrame(() => setIsHydrated(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const handleScroll = useCallback(() => {
@@ -52,12 +54,16 @@ export default function Header() {
     } else {
       document.body.style.overflow = "unset";
     }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
   }, [isMobileMenuOpen]);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        isScrolled ? "h-16 lg:h-20 shadow-lg" : "h-20 lg:h-28"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? "h-16 lg:h-20 shadow-lg" : "h-16 lg:h-28"
       }`}
     >
       {/* Background Layers */}
@@ -74,18 +80,25 @@ export default function Header() {
       <div className="relative z-10 w-full h-full flex items-center justify-between px-4 lg:px-0">
         {/* MOBILE SEARCH ICON (LEFT) */}
         <div className="flex lg:hidden items-center">
-          <button className="text-white p-2" aria-label="Search">
+          <button
+            type="button"
+            onClick={() => setIsMobileSearchOpen((value) => !value)}
+            className="text-white p-2 min-h-11 min-w-11 rounded-full hover:bg-white/10 transition-colors"
+            aria-label="Mở tìm kiếm"
+            aria-expanded={isMobileSearchOpen}
+          >
             <Search size={24} />
           </button>
         </div>
 
         {/* Logo Section */}
         <div
-          className={`absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 transition-all duration-500 flex items-center ${isScrolled ? "h-12 lg:h-full lg:w-56" : "h-16 lg:h-full lg:w-72"}`}
+          className={`absolute left-1/2 -translate-x-1/2 lg:relative lg:left-0 lg:translate-x-0 transition-all duration-300 flex items-center ${isScrolled ? "h-11 lg:h-full lg:w-56" : "h-12 lg:h-full lg:w-72"}`}
         >
           <Link
             href="/"
-            className="h-full w-40 lg:w-full bg-white text-brand-primary flex items-center px-4 lg:pl-2 lg:pr-16 transition-all duration-500 [clip-path:none] lg:[clip-path:polygon(0%_0%,_85%_0%,_100%_50%,_85%_100%,_0%_100%)] shadow-xl rounded-lg lg:rounded-none"
+            className="h-full w-36 sm:w-40 lg:w-full bg-white text-brand-primary flex items-center px-3 lg:pl-2 lg:pr-16 transition-all duration-300 [clip-path:none] lg:[clip-path:polygon(0%_0%,_85%_0%,_100%_50%,_85%_100%,_0%_100%)] shadow-xl rounded-lg lg:rounded-none"
+            aria-label="Về trang chủ"
           >
             <div className="relative w-full h-full flex items-center justify-center lg:justify-start py-1 lg:py-2">
               <img
@@ -155,13 +168,26 @@ export default function Header() {
         <div className="flex lg:hidden items-center gap-2">
           <FavoriteBadge isMobile={true} />
           <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="text-white p-2"
-            aria-label="Open menu"
+            onClick={() => {
+              setIsMobileSearchOpen(false);
+              setIsMobileMenuOpen(true);
+            }}
+            className="text-white p-2 min-h-11 min-w-11 rounded-full hover:bg-white/10 transition-colors"
+            aria-label="Mở menu"
           >
             <Menu size={28} />
           </button>
         </div>
+      </div>
+
+      <div
+        className={`absolute left-0 right-0 top-full z-20 lg:hidden bg-white px-4 py-3 shadow-xl border-t border-slate-100 transition-all duration-300 ${
+          isMobileSearchOpen
+            ? "opacity-100 translate-y-0 visible"
+            : "opacity-0 -translate-y-2 invisible"
+        }`}
+      >
+        <SearchHeader />
       </div>
 
       {/* Mobile Menu Overlay */}
@@ -173,29 +199,40 @@ export default function Header() {
           onClick={() => setIsMobileMenuOpen(false)}
         ></div>
         <div
-          className={`absolute top-0 right-0 w-[85%] max-w-sm h-full bg-white shadow-2xl transition-transform duration-500 flex flex-col ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+          className={`absolute top-0 right-0 w-[min(88vw,24rem)] h-full bg-white shadow-2xl transition-transform duration-300 flex flex-col ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"}`}
         >
-          <div className="p-6 border-b flex items-center justify-between bg-brand-primary text-white">
-            <img
-              src="/Logo.png"
-              alt="Logo"
-              className="h-8 brightness-0 invert"
-            />
+          <div className="p-5 border-b flex items-center justify-between bg-brand-primary text-white">
+            <Link
+              href="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="h-11 w-40 max-w-[70%] rounded-xl bg-white px-3 py-1.5 shadow-lg"
+              aria-label="Về trang chủ"
+            >
+              <img
+                src="/Logo.png"
+                alt="Logo"
+                className="h-full w-full object-contain"
+              />
+            </Link>
             <button
               onClick={() => setIsMobileMenuOpen(false)}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
+              className="p-2 min-h-11 min-w-11 hover:bg-white/10 rounded-full transition-colors"
+              aria-label="Đóng menu"
             >
               <X size={28} />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto py-6 px-6">
+          <div className="flex-1 overflow-y-auto py-5 px-5">
+            <div className="mb-5">
+              <SearchHeader />
+            </div>
             <div className="space-y-1">
               {list_nav.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center justify-between py-3 px-2 border-b border-slate-50 text-brand-primary font-semibold text-base tracking-normal hover:text-brand-accent transition-all group leading-relaxed"
+                  className="flex min-h-12 items-center justify-between py-3 px-2 border-b border-slate-100 text-brand-primary font-semibold text-base tracking-normal hover:text-brand-accent transition-all group leading-relaxed"
                 >
                   {item.name}
                   <ChevronRight
@@ -205,17 +242,17 @@ export default function Header() {
                 </Link>
               ))}
             </div>
-            <div className="mt-10 pt-10 border-t space-y-6">
+            <div className="mt-8 pt-8 border-t space-y-6">
               <Link
                 href={isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "/admin/dashboard" : "/account") : "/login"}
                 className="flex items-center gap-4 text-brand-primary font-semibold px-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <div className="w-12 h-12 rounded-full bg-brand-muted flex items-center justify-center text-brand-primary">
+                <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-brand-primary">
                   <User size={24} />
                 </div>
                 <div>
-                  <p className="text-xs text-brand-muted-foreground font-medium uppercase tracking-wider">
+                  <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
                     {isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "Quản trị viên" : "Khách hàng") : "Khách hàng"}
                   </p>
                   <p className="text-base">
@@ -227,10 +264,10 @@ export default function Header() {
               </Link>
             </div>
           </div>
-          <div className="p-6 bg-brand-muted border-t">
+          <div className="p-5 bg-muted border-t">
             <a
               href="tel:0123456789"
-              className="w-full bg-brand-accent text-white p-4 rounded-2xl flex items-center justify-center gap-3 font-bold text-base shadow-lg active:scale-95 transition-all"
+              className="w-full min-h-12 bg-brand-accent text-white p-4 rounded-2xl flex items-center justify-center gap-3 font-bold text-base shadow-lg active:scale-95 transition-all"
             >
               <Phone size={20} fill="currentColor" />
               0123.456.789

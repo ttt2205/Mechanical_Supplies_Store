@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Calendar, User, ArrowRight, Tag } from "lucide-react";
+import { Calendar, User, ArrowRight } from "lucide-react";
 import { Post } from "@/types/post";
 
 interface NewsCardProps {
@@ -26,7 +26,7 @@ export default function NewsCard({ post }: NewsCardProps) {
   };
 
   return (
-    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full">
+    <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 md:duration-500 flex flex-col h-full">
       {/* Thumbnail */}
       <div className="relative aspect-[16/10] overflow-hidden">
         <img 
@@ -42,8 +42,8 @@ export default function NewsCard({ post }: NewsCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-6 flex flex-col flex-1">
-        <div className="flex items-center gap-4 text-slate-400 text-[11px] font-bold uppercase tracking-tight mb-4">
+      <div className="p-5 md:p-6 flex flex-col flex-1">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-slate-400 text-[11px] font-bold uppercase tracking-tight mb-4">
           <div className="flex items-center gap-1.5">
             <Calendar size={14} className="text-brand-accent" />
             {formattedDate}
@@ -55,7 +55,7 @@ export default function NewsCard({ post }: NewsCardProps) {
         </div>
 
         <Link href={`/news/${post.slug}`} className="block group/title">
-          <h3 className="text-xl font-black text-slate-900 leading-tight mb-3 group-hover/title:text-brand-primary transition-colors line-clamp-2">
+          <h3 className="text-lg md:text-xl font-black text-slate-900 leading-tight mb-3 group-hover/title:text-brand-primary transition-colors line-clamp-2">
             {post.title}
           </h3>
         </Link>
@@ -66,7 +66,7 @@ export default function NewsCard({ post }: NewsCardProps) {
 
         <Link 
           href={`/news/${post.slug}`}
-          className="inline-flex items-center gap-2 text-brand-primary font-black text-xs uppercase tracking-wider group/link"
+          className="inline-flex min-h-11 items-center gap-2 text-brand-primary font-black text-xs uppercase tracking-wider group/link"
         >
           Đọc thêm
           <div className="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center group-hover/link:bg-brand-primary group-hover/link:text-white transition-all">

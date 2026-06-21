@@ -2,8 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowRight, Package, LayoutGrid, ChevronRight } from "lucide-react";
-import { Category } from "@/types/category";
+import { ArrowRight, Package, LayoutGrid } from "lucide-react";
 import { useProductCategories } from "@/hooks/useProductCategories";
 
 export default function CategoryIndex() {

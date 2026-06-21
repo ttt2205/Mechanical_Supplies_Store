@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "eyebrow": "Trang chủ / Về chúng tôi",
+    "title": "VỀ CHÚNG TÔI",
+    "highlight": "CÔNG TY TNHH HƯNG THỊNH",
+    "excerpt": "CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH - Đối tác tin cậy trong lĩnh vực cung cấp giải pháp máy móc công nghiệp và thiết bị thủy lực tại Việt Nam.",
+    "thumbnail": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1200&auto=format&fit=crop"
+  },
+  "story": {
+    "heading": "Câu chuyện của chúng tôi",
+    "body": "Được thành lập với khát vọng nâng tầm nền công nghiệp Việt Nam, CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH đã không ngừng nỗ lực để trở thành nhà cung cấp hàng đầu các thiết bị máy móc, ống thủy lực và phụ kiện công nghiệp. Chúng tôi hiểu rằng, sự thành công của khách hàng chính là thước đo giá trị chính xác nhất cho uy tín của chúng tôi."
+  },
+  "vision": {
+    "heading": "Tầm nhìn",
+    "body": "Trở thành hệ sinh thái cung ứng vật tư cơ khí và giải pháp kỹ thuật toàn diện nhất, là lựa chọn số 1 cho các doanh nghiệp sản xuất và bảo trì máy móc tại thị trường khu vực."
+  },
+  "mission": {
+    "heading": "Sứ mệnh",
+    "body": "Cung cấp những sản phẩm chất lượng tiêu chuẩn quốc tế với chi phí tối ưu nhất, đồng thời đem lại dịch vụ hỗ trợ kỹ thuật chuyên nghiệp, tận tâm giúp khách hàng vận hành máy móc an toàn và hiệu quả."
+  },
+  "reasonsHeading": "Tại sao nên chọn Hưng Thịnh?",
+  "reasons": [
+    {
+      "title": "Sản phẩm chính hãng",
+      "body": "Cam kết 100% sản phẩm có nguồn gốc xuất xứ rõ ràng từ các thương hiệu uy tín."
+    },
+    {
+      "title": "Kho hàng đa dạng",
+      "body": "Luôn có sẵn hàng nghìn mã sản phẩm để đáp ứng nhu cầu giao hàng nhanh chóng."
+    },
+    {
+      "title": "Đội ngũ chuyên gia",
+      "body": "Kỹ thuật viên giàu kinh nghiệm sẵn sàng tư vấn giải pháp tối ưu cho mọi hệ thống máy móc."
+    }
+  ],
+  "showcase": {
+    "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop",
+    "alt": "Xưởng máy",
+    "caption": "Uy tín làm nên thương hiệu"
+  },
+  "contact": {
+    "heading": "Thông tin liên hệ",
+    "addressLabel": "Địa chỉ",
+    "address": "208 Lò Siêu, Phường 12, Quận 11, TP. Hồ Chí Minh",
+    "hotlineLabel": "Hotline",
+    "hotline": "0123.456.789",
+    "emailLabel": "Email",
+    "email": "info@hungthinh.vn",
+    "hoursLabel": "Giờ làm việc",
+    "hours": "Thứ 2 - Thứ 7: 08:00 - 17:30",
+    "cta": "Gửi yêu cầu báo giá"
+  }
+}

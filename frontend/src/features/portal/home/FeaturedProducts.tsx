@@ -104,7 +104,7 @@ const FeaturedProducts: React.FC = () => {
     };
 
     return (
-        <section className="relative py-16 bg-[#0f172a] overflow-hidden border-y border-white/5">
+        <section className="relative py-12 md:py-16 bg-[#0f172a] overflow-hidden border-y border-white/5">
             {/* Background Decorative Elements - Luxurious Glow */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-60">
                 <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-brand-primary/20 rounded-full blur-[160px]"></div>
@@ -112,13 +112,13 @@ const FeaturedProducts: React.FC = () => {
             </div>
 
             <div className="container mx-auto px-4 md:px-12 relative z-10">
-                <ScrollReveal animation="reveal" className="text-center mb-12">
-                    <div className="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-brand-accent text-xs font-black uppercase tracking-[0.4em] mb-6 shadow-2xl">
+                <ScrollReveal animation="reveal" className="text-center mb-8 md:mb-12">
+                    <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-brand-accent text-[10px] md:text-xs font-black uppercase tracking-[0.16em] md:tracking-[0.4em] mb-5 md:mb-6 shadow-2xl">
                         <Sparkles className="w-4 h-4" />
                         <span>BST SẢN PHẨM ƯU VIỆT</span>
                     </div>
                     
-                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-black mb-6 tracking-tighter text-white uppercase leading-none">
+                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-black mb-5 md:mb-6 tracking-normal md:tracking-tighter text-white uppercase leading-tight md:leading-none">
                         Sản Phẩm <span className="text-gradient">Nổi Bật</span>
                     </h2>
                     
@@ -126,7 +126,7 @@ const FeaturedProducts: React.FC = () => {
                         <div className="h-1.5 w-16 bg-gradient-to-r from-brand-primary to-brand-accent rounded-full mx-auto shadow-[0_0_20px_rgba(30,64,175,0.5)]"></div>
                     </div>
                     
-                    <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
+                    <p className="max-w-2xl mx-auto text-slate-200 md:text-slate-200 text-base md:text-xl font-medium leading-relaxed">
                         Khám phá những thiết bị cơ khí đột phá và vật tư công nghiệp 
                         <span className="text-white font-bold"> tiêu chuẩn quốc tế</span>, được tinh tuyển cho hiệu suất tối đa.
                     </p>
@@ -181,7 +181,7 @@ const FeaturedProducts: React.FC = () => {
                                 {/* Subtle inner glow for the container */}
                                 <div className="absolute inset-0 bg-brand-primary/5 rounded-[3rem] blur-3xl"></div>
                                 
-                                <div className="bg-slate-900/40 backdrop-blur-sm rounded-[2.5rem] border border-white/5 overflow-hidden px-6 py-12 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
+                                <div className="bg-slate-900/40 backdrop-blur-sm rounded-3xl md:rounded-[2.5rem] border border-white/5 overflow-hidden px-3 md:px-6 py-6 md:py-12 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
                                     <div 
                                         className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
                                         style={{ 
@@ -228,7 +228,7 @@ const FeaturedProducts: React.FC = () => {
                                 );
                             })}
                         </div>
-                        <span className="text-xs font-black tracking-widest text-slate-500">
+                        <span className="text-xs font-black tracking-widest text-slate-300">
                             {String(currentPage + 1).padStart(2, '0')} / {String(totalPages).padStart(2, '0')}
                         </span>
                     </div>

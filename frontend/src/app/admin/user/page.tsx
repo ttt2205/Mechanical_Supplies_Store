@@ -23,18 +23,28 @@ import { AdminModal, AdminInput, AdminSelect } from '@/components/admin/AdminUI'
 
 // Mock data for users
 const initialUsers = [
-    { id: '1', username: 'admin_thinh', email: 'admin@hungthinh.vn', fullname: 'Nguyễn Hưng Thịnh', role: 'Admin', role_id: 'admin', status: 'active', phone: '0901.234.567', lastLogin: '2024-03-21 08:30' },
-    { id: '2', username: 'hoang_mech', email: 'hoang.le@gmail.com', fullname: 'Lê Minh Hoàng', role: 'Editor', role_id: 'editor', status: 'active', phone: '0908.765.432', lastLogin: '2024-03-20 14:15' },
-    { id: '3', username: 'customer_01', email: 'vantu@outlook.com', fullname: 'Trần Văn Tú', role: 'User', role_id: 'user', status: 'inactive', phone: '028.3848.xxxx', lastLogin: '2024-03-15 10:00' },
-    { id: '4', username: 'thuy_sales', email: 'thuy.nguyen@hungthinh.vn', fullname: 'Nguyễn Thị Thủy', role: 'Editor', role_id: 'editor', status: 'active', phone: '0912.333.444', lastLogin: '2024-03-21 09:12' },
-    { id: '5', username: 'phuc_kithuat', email: 'phuc.ho@hungthinh.vn', fullname: 'Hồ Hoàng Phúc', role: 'User', role_id: 'user', status: 'active', phone: '0988.999.888', lastLogin: '2024-03-19 16:45' },
+    { id: '1', username: 'admin_thinh', email: 'admin@hungthinh.vn', fullname: 'Nguyễn Hưng Thịnh', role: 'Siêu quản trị', role_id: 'SUPER_ADMIN', status: 'active', phone: '0901.234.567', lastLogin: '2024-03-21 08:30' },
+    { id: '2', username: 'hoang_mech', email: 'hoang.le@gmail.com', fullname: 'Lê Minh Hoàng', role: 'Quản lý Nội dung', role_id: 'CONTENT_MANAGER', status: 'active', phone: '0908.765.432', lastLogin: '2024-03-20 14:15' },
+    { id: '3', username: 'customer_01', email: 'vantu@outlook.com', fullname: 'Trần Văn Tú', role: 'Khách hàng', role_id: 'USER', status: 'inactive', phone: '028.3848.xxxx', lastLogin: '2024-03-15 10:00' },
+    { id: '4', username: 'thuy_sales', email: 'thuy.nguyen@hungthinh.vn', fullname: 'Nguyễn Thị Thủy', role: 'Nhân viên Bán hàng', role_id: 'SALES', status: 'active', phone: '0912.333.444', lastLogin: '2024-03-21 09:12' },
+    { id: '5', username: 'phuc_kithuat', email: 'phuc.ho@hungthinh.vn', fullname: 'Hồ Hoàng Phúc', role: 'Kỹ thuật viên', role_id: 'TECHNICIAN', status: 'active', phone: '0988.999.888', lastLogin: '2024-03-19 16:45' },
 ];
 
 export default function UserManagementPage() {
     const [users, setUsers] = useState(initialUsers);
     const [searchTerm, setSearchName] = useState('');
+    const [roleFilter, setRoleFilter] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<any>(null);
+
+    const filteredUsers = users.filter(user => {
+        const matchesSearch = 
+            user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            user.username.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesRole = roleFilter === '' || user.role_id === roleFilter;
+        return matchesSearch && matchesRole;
+    });
 
     const openModal = (user: any = null) => {
         setEditingUser(user || {
@@ -42,7 +52,7 @@ export default function UserManagementPage() {
             username: '',
             email: '',
             phone: '',
-            role_id: 'user',
+            role_id: 'USER',
             status: 'active'
         });
         setIsModalOpen(true);
@@ -78,11 +88,17 @@ export default function UserManagementPage() {
                     />
                 </div>
                 <div className="flex gap-4">
-                    <select className="bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-3 outline-none text-sm font-bold text-slate-700 focus:border-brand-primary transition-all appearance-none cursor-pointer min-w-[140px]">
+                    <select 
+                        className="bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-3 outline-none text-sm font-bold text-slate-700 focus:border-brand-primary transition-all appearance-none cursor-pointer min-w-[140px]"
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                    >
                         <option value="">Tất cả Vai trò</option>
-                        <option value="admin">Admin</option>
-                        <option value="editor">Editor</option>
-                        <option value="user">User</option>
+                        <option value="SUPER_ADMIN">Siêu quản trị</option>
+                        <option value="CONTENT_MANAGER">Quản lý nội dung</option>
+                        <option value="TECHNICIAN">Kỹ thuật viên</option>
+                        <option value="SALES">Nhân viên Bán hàng</option>
+                        <option value="USER">Khách hàng</option>
                     </select>
                     <button className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
                         <Filter size={14} /> Lọc
@@ -105,63 +121,71 @@ export default function UserManagementPage() {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-50">
-                            {users.map((user) => (
-                                <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(user)}>
-                                    <td className="px-8 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0">
-                                                {user.fullname.charAt(0)}
+                            {filteredUsers.length > 0 ? (
+                                filteredUsers.map((user) => (
+                                    <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(user)}>
+                                        <td className="px-8 py-5">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0">
+                                                    {user.fullname.charAt(0)}
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{user.fullname}</p>
+                                                    <p className="text-[10px] font-bold text-brand-primary">@{user.username}</p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{user.fullname}</p>
-                                                <p className="text-[10px] font-bold text-brand-primary">@{user.username}</p>
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <div className="space-y-1">
+                                                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                                    <Mail size={12} className="text-slate-300" />
+                                                    {user.email}
+                                                </div>
+                                                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                                    <Phone size={12} className="text-slate-300" />
+                                                    {user.phone}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                <Mail size={12} className="text-slate-300" />
-                                                {user.email}
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <div className="flex items-center gap-2">
+                                                <Shield size={14} className={user.role_id === 'SUPER_ADMIN' ? 'text-brand-accent' : 'text-slate-400'} />
+                                                <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{user.role}</span>
                                             </div>
-                                            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                <Phone size={12} className="text-slate-300" />
-                                                {user.phone}
+                                        </td>
+                                        <td className="px-8 py-5">
+                                            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
+                                                user.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'
+                                            }`}>
+                                                {user.status === 'active' ? <UserCheck size={12} /> : <UserX size={12} />}
+                                                {user.status === 'active' ? 'Hoạt động' : 'Bị khóa'}
                                             </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className="flex items-center gap-2">
-                                            <Shield size={14} className={user.role === 'Admin' ? 'text-brand-accent' : 'text-slate-400'} />
-                                            <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{user.role}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
-                                            user.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'
-                                        }`}>
-                                            {user.status === 'active' ? <UserCheck size={12} /> : <UserX size={12} />}
-                                            {user.status === 'active' ? 'Hoạt động' : 'Bị khóa'}
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-tighter">
-                                        {user.lastLogin}
-                                    </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-2 text-slate-400 hover:text-brand-primary hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => { e.stopPropagation(); openModal(user); }}>
-                                                <Edit2 size={16} />
-                                            </button>
-                                            <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
-                                                <Trash2 size={16} />
-                                            </button>
-                                            <button className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
-                                                <MoreVertical size={16} />
-                                            </button>
-                                        </div>
+                                        </td>
+                                        <td className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-tighter">
+                                            {user.lastLogin}
+                                        </td>
+                                        <td className="px-8 py-5 text-right">
+                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                <button className="p-2 text-slate-400 hover:text-brand-primary hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => { e.stopPropagation(); openModal(user); }}>
+                                                    <Edit2 size={16} />
+                                                </button>
+                                                <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
+                                                    <Trash2 size={16} />
+                                                </button>
+                                                <button className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
+                                                    <MoreVertical size={16} />
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={6} className="px-8 py-10 text-center text-slate-400 font-bold text-sm">
+                                        Không tìm thấy người dùng nào phù hợp.
                                     </td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>
@@ -242,9 +266,11 @@ export default function UserManagementPage() {
                             icon={KeyRound}
                             defaultValue={editingUser?.role_id}
                             options={[
-                                { value: 'admin', label: 'Siêu quản trị (Admin)' },
-                                { value: 'editor', label: 'Biên tập viên (Editor)' },
-                                { value: 'user', label: 'Khách hàng (User)' }
+                                { value: 'SUPER_ADMIN', label: 'Siêu quản trị (Super Admin)' },
+                                { value: 'CONTENT_MANAGER', label: 'Quản lý Nội dung (Content Manager)' },
+                                { value: 'TECHNICIAN', label: 'Kỹ thuật viên (Technician)' },
+                                { value: 'SALES', label: 'Nhân viên Bán hàng (Sales)' },
+                                { value: 'USER', label: 'Khách hàng (User)' }
                             ]}
                             required
                         />

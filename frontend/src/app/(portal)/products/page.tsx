@@ -1,60 +1,72 @@
-"use client";
-
 import React from "react";
 import ProductListing from "@/features/portal/products/ProductListing";
-import { useProducts } from "@/hooks/useProducts";
-import { useProductCategories } from "@/hooks/useProductCategories";
+import {
+  filterAndPaginateProducts,
+  getProductCategories,
+  getProducts,
+  parseProductFilters,
+  type ProductSearchParams,
+} from "@/lib/product-catalog";
 
-export default function ProductsPage() {
-  const { products, loading: productsLoading } = useProducts();
-  const { categories, loading: categoriesLoading } = useProductCategories();
+interface ProductsPageProps {
+  searchParams: Promise<ProductSearchParams>;
+}
+
+export default async function ProductsPage({ searchParams }: ProductsPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const products = getProducts();
+  const categories = getProductCategories();
+  const filters = parseProductFilters(resolvedSearchParams);
+  const listing = filterAndPaginateProducts(products, categories, filters);
 
   return (
     <main>
-      {/* Dynamic Header Section - Luxurious "Dark-Bright" Theme */}
-      <section className="bg-[#020617] pt-40 pb-24 overflow-hidden relative border-b border-white/5">
-        {/* Intensified Deep Glow Background */}
+      <section className="relative overflow-hidden border-b border-white/5 bg-[#020617] pb-14 pt-24 md:pb-24 md:pt-40">
         <div className="absolute inset-0 z-0">
-          <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/25 rounded-full blur-[180px] animate-pulse"></div>
-          <div className="absolute -bottom-[30%] -right-[10%] w-[70%] h-[70%] bg-brand-accent/15 rounded-full blur-[180px]"></div>
+          <div className="absolute -left-[10%] -top-[30%] h-[70%] w-[70%] animate-pulse rounded-full bg-brand-primary/25 blur-[180px]" />
+          <div className="absolute -bottom-[30%] -right-[10%] h-[70%] w-[70%] rounded-full bg-brand-accent/15 blur-[180px]" />
         </div>
 
         <div className="absolute inset-0 z-0 opacity-[0.05]">
-          <div className="grid grid-cols-6 h-full">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="border-r border-white h-full"></div>
+          <div className="grid h-full grid-cols-6">
+            {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div key={item} className="h-full border-r border-white" />
             ))}
           </div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-4 mb-8">
-                <span className="h-1 w-12 bg-brand-accent rounded-full shadow-[0_0_20px_rgba(245,158,11,0.6)]"></span>
-                <span className="text-xs font-black uppercase tracking-[0.4em] text-brand-accent drop-shadow-lg">Hệ sinh thái sản phẩm</span>
-                <span className="h-1 w-12 bg-brand-accent rounded-full shadow-[0_0_20px_rgba(245,158,11,0.6)]"></span>
+        <div className="container relative z-10 mx-auto px-4 font-montserrat">
+          <div className="mx-auto max-w-4xl text-center">
+            <div className="mb-5 flex items-center justify-center gap-3 md:mb-8 md:gap-4">
+              <span className="h-1 w-12 rounded-full bg-brand-accent shadow-[0_0_20px_rgba(245,158,11,0.6)]" />
+              <span className="text-[10px] font-black uppercase tracking-[0.18em] text-brand-accent drop-shadow-lg md:text-xs md:tracking-[0.4em]">
+                Hệ sinh thái sản phẩm
+              </span>
+              <span className="h-1 w-12 rounded-full bg-brand-accent shadow-[0_0_20px_rgba(245,158,11,0.6)]" />
             </div>
-            <h1 className="text-5xl md:text-8xl font-black text-white tracking-tighter mb-8 leading-tight uppercase drop-shadow-2xl">
+            <h1 className="mb-5 text-4xl font-black uppercase leading-tight tracking-normal text-white drop-shadow-2xl md:mb-8 md:text-8xl md:tracking-tighter">
               TẤT CẢ <span className="text-gradient">SẢN PHẨM</span>
             </h1>
-            <p className="text-slate-400 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-medium">
-              Khám phá toàn bộ danh mục thiết bị cơ khí và vật tư công nghiệp <span className="text-white font-bold">chính hãng</span>, được tuyển chọn kỹ lưỡng cho hiệu suất vận hành tối ưu.
+            <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-slate-300 md:text-xl md:text-slate-400">
+              Khám phá toàn bộ danh mục thiết bị cơ khí và vật tư công nghiệp{" "}
+              <span className="font-bold text-white">chính hãng</span>, được
+              tuyển chọn kỹ lưỡng cho hiệu suất vận hành tối ưu.
             </p>
           </div>
         </div>
       </section>
 
-
-      <section className="py-20 relative z-20">
-        <div className="container mx-auto px-4">
-          <ProductListing 
-            products={products} 
+      <section className="relative z-20 py-12 md:py-20">
+        <div className="container mx-auto px-0 sm:px-4">
+          <ProductListing
+            products={listing.products}
+            totalResults={listing.totalResults}
+            totalPages={listing.totalPages}
+            filters={listing.filters}
             allCategories={categories}
-            loading={productsLoading || categoriesLoading}
           />
         </div>
       </section>
     </main>
   );
 }
-

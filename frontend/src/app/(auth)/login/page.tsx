@@ -1,6 +1,6 @@
-'use client';
+﻿'use client';
 
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { 
     User, 
@@ -13,9 +13,9 @@ import {
     Loader2
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
+function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [username, setUsername] = useState('');
@@ -23,6 +23,7 @@ export default function LoginPage() {
     
     const { login } = useAuthStore();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -38,7 +39,9 @@ export default function LoginPage() {
                 status: 'active'
             });
             setIsLoading(false);
-            router.push('/');
+            const redirect = searchParams.get('redirect');
+            const safeRedirect = redirect?.startsWith('/') && !redirect.startsWith('//') ? redirect : '/';
+            router.push(safeRedirect);
         }, 1500);
     };
 
@@ -148,5 +151,12 @@ export default function LoginPage() {
                 Bằng cách đăng nhập, bạn đồng ý với <Link href="/terms" className="text-slate-300 underline">Điều khoản dịch vụ</Link> và <Link href="/privacy" className="text-slate-300 underline">Chính sách bảo mật</Link> của chúng tôi.
             </p>
         </div>
+    );
+}
+export default function LoginPage() {
+    return (
+        <Suspense fallback={null}>
+            <LoginForm />
+        </Suspense>
     );
 }

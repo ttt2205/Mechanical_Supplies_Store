@@ -1,67 +1,102 @@
-"use client";
-
 import React from "react";
-import { useParams } from "next/navigation";
-import { useProducts } from "@/hooks/useProducts";
-import { useProductCategories } from "@/hooks/useProductCategories";
-import ProductListing from "@/features/portal/products/ProductListing";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import ProductListing from "@/features/portal/products/ProductListing";
+import {
+  filterAndPaginateProducts,
+  getCategoryBySlug,
+  getDescendantCategoryIds,
+  getDirectChildren,
+  getProductCategories,
+  getProducts,
+  parseProductFilters,
+  type ProductSearchParams,
+} from "@/lib/product-catalog";
 
-export default function CategoryProductsPage() {
-  const { slug } = useParams();
-  const { products, loading: productsLoading } = useProducts();
-  const { categories, loading: categoriesLoading } = useProductCategories();
+interface CategoryProductsPageProps {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<ProductSearchParams>;
+}
 
-  const category = categories.find(c => c.slug === slug);
-  const subCategories = categories.filter(c => c.parent_id === category?.category_id);
-  
-  // Get all category IDs including subcategories to filter products
-  const categoryIds = [category?.category_id, ...subCategories.map(s => s.category_id)].filter(Boolean) as number[];
-  const filteredProducts = products.filter(p => categoryIds.includes(p.category_id));
+export default async function CategoryProductsPage({
+  params,
+  searchParams,
+}: CategoryProductsPageProps) {
+  const [{ slug }, resolvedSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ]);
+  const products = getProducts();
+  const categories = getProductCategories();
+  const category = getCategoryBySlug(slug);
 
-  if (!category && !categoriesLoading) {
+  if (!category) {
     return (
-      <div className="pt-40 pb-20 container mx-auto px-4 text-center">
-        <h1 className="text-4xl font-black mb-6">Không tìm thấy danh mục</h1>
-        <Link href="/products" className="text-brand-primary font-bold hover:underline">Quay lại danh mục sản phẩm</Link>
+      <div className="container mx-auto px-4 pb-16 pt-28 text-center md:pb-20 md:pt-40">
+        <h1 className="mb-6 text-4xl font-black">Không tìm thấy danh mục</h1>
+        <Link
+          href="/products"
+          className="font-bold text-brand-primary hover:underline"
+        >
+          Quay lại danh mục sản phẩm
+        </Link>
       </div>
     );
   }
 
+  const subCategories = getDirectChildren(category.category_id);
+  const filters = parseProductFilters(resolvedSearchParams);
+  const categoryIds = getDescendantCategoryIds(categories, category.category_id);
+  const listing = filterAndPaginateProducts(
+    products,
+    categories,
+    filters,
+    categoryIds,
+  );
+
   return (
     <main>
-      {/* Category Hero Header */}
-      <section className="bg-brand-primary pt-40 pb-20 overflow-hidden relative">
+      <section className="relative overflow-hidden bg-brand-primary pb-14 pt-24 md:pb-20 md:pt-40">
         <div className="absolute inset-0 z-0 opacity-10">
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-white rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
+          <div className="absolute right-0 top-0 h-[500px] w-[500px] -translate-y-1/2 translate-x-1/2 rounded-full bg-white blur-[100px]" />
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <nav className="flex items-center gap-3 text-white/50 text-[10px] font-black uppercase tracking-widest mb-6">
-            <Link href="/" className="hover:text-brand-accent transition-colors">Trang chủ</Link>
+        <div className="container relative z-10 mx-auto px-4">
+          <nav className="mb-5 flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-wider text-white/60 md:mb-6 md:gap-3 md:tracking-widest">
+            <Link href="/" className="transition-colors hover:text-brand-accent">
+              Trang chủ
+            </Link>
             <ChevronRight size={10} />
-            <Link href="/products" className="hover:text-brand-accent transition-colors">Sản phẩm</Link>
+            <Link
+              href="/products"
+              className="transition-colors hover:text-brand-accent"
+            >
+              Sản phẩm
+            </Link>
             <ChevronRight size={10} />
-            <span className="text-white">{category?.name}</span>
+            <span className="text-white">{category.name}</span>
           </nav>
-          
-          <h1 className="text-5xl md:text-6xl font-black text-white tracking-tighter mb-4 uppercase">
-            {category?.name}
+
+          <h1 className="mb-4 text-4xl font-black uppercase leading-tight tracking-normal text-white md:text-6xl md:tracking-tighter">
+            {category.name}
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl leading-relaxed">
-            {category?.description || `Khám phá các giải pháp tối ưu trong danh mục ${category?.name} dành cho hệ thống máy móc của bạn.`}
+          <p className="max-w-2xl text-lg leading-relaxed text-white/60">
+            {category.description ||
+              `Khám phá các giải pháp tối ưu trong danh mục ${category.name} dành cho hệ thống máy móc của bạn.`}
           </p>
         </div>
       </section>
 
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <ProductListing 
-            products={filteredProducts} 
-            category={category!} 
+      <section className="py-12 md:py-20">
+        <div className="container mx-auto px-0 sm:px-4">
+          <ProductListing
+            products={listing.products}
+            totalResults={listing.totalResults}
+            totalPages={listing.totalPages}
+            filters={listing.filters}
+            category={category}
             subCategories={subCategories}
-            loading={productsLoading || categoriesLoading}
+            allCategories={categories}
           />
         </div>
       </section>

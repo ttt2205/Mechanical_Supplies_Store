@@ -1,60 +1,54 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
-import { Heart, ShoppingBag, Trash2, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Heart, ShoppingBag, Trash2, Plus } from 'lucide-react';
 import Link from 'next/link';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import ScrollReveal from '@/components/ui/ScrollReveal';
 
 export default function FavoritesPage() {
-  const { favorites, clearFavorites, removeFavorite, addFavorite } = useFavoritesStore();
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+  const { favorites, clearFavorites, removeFavorite } = useFavoritesStore();
 
-  // Mock data initialization for testing
-  React.useEffect(() => {
-    if (favorites.length === 0) {
-      const mockItems = [
-        {
-          product_id: 1,
-          category_id: 101,
-          product_code: "MS-BOLT-S304",
-          name: "Bu lông lục giác inox 304 - M8x50mm",
-          is_featured: true,
-          is_contact_price: false,
-          base_price: 15000,
-          status: "active",
-          thumbnail: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop",
-        },
-        {
-          product_id: 4,
-          category_id: 103,
-          product_code: "MS-WELD-E6013",
-          name: "Que hàn điện Kim Tín KT-421 (E6013) - 3.2mm",
-          is_featured: true,
-          is_contact_price: false,
-          base_price: 320000,
-          status: "active",
-          thumbnail: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=800&auto=format&fit=crop",
-        },
-        {
-          product_id: 5,
-          category_id: 104,
-          product_code: "MS-BEAR-6205",
-          name: "Vòng bi SKF 6205-2Z chính hãng",
-          is_featured: true,
-          is_contact_price: false,
-          base_price: 125000,
-          status: "active",
-          thumbnail: "https://images.unsplash.com/photo-1590959651373-a3db0f38a961?q=80&w=800&auto=format&fit=crop",
-        }
-      ];
-      mockItems.forEach(item => addFavorite(item as any));
-    }
-  }, [favorites.length, addFavorite]);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-50 pt-24 md:pt-32 pb-24 md:pb-20">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-12">
+          <div className="mx-auto mt-20 max-w-xl rounded-3xl border-2 border-slate-100 bg-white p-10 text-center shadow-xl">
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-100">
+              <Heart size={40} className="text-slate-300" />
+            </div>
+            <h1 className="mb-3 text-2xl font-black text-slate-900">Vui lòng đăng nhập</h1>
+            <p className="mb-8 text-slate-500">Bạn cần đăng nhập để xem và quản lý danh sách sản phẩm yêu thích.</p>
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={() => router.back()}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl border-2 border-slate-100 bg-white px-8 py-4 text-xs font-black uppercase tracking-widest text-slate-600 transition-all hover:border-brand-primary/20 hover:text-brand-primary"
+              >
+                <ArrowLeft size={16} />
+                Quay lại
+              </button>
+              <Link
+                href="/login?redirect=/favorites"
+                className="inline-flex items-center justify-center rounded-2xl bg-brand-primary px-8 py-4 text-xs font-black uppercase tracking-widest text-white transition-all hover:bg-blue-800"
+              >
+                Đăng nhập
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-32 pb-20">
-      <div className="container mx-auto px-6 lg:px-12">
-        {/* Header Section */}
+    <div className="min-h-screen bg-slate-50 pt-24 md:pt-32 pb-24 md:pb-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-12">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <ScrollReveal animation="reveal-left">
             <nav className="flex items-center gap-2 text-slate-500 text-sm mb-4">
@@ -62,7 +56,7 @@ export default function FavoritesPage() {
               <span>/</span>
               <span className="text-brand-primary font-bold">Danh sách yêu thích</span>
             </nav>
-            <h1 className="text-4xl md:text-5xl font-black text-brand-primary uppercase tracking-tight flex items-center gap-4">
+            <h1 className="text-3xl md:text-5xl font-black text-brand-primary uppercase tracking-normal md:tracking-tight flex flex-wrap items-center gap-3 md:gap-4">
               Sản phẩm yêu thích
               <span className="bg-brand-accent text-brand-primary text-xl px-4 py-1 rounded-full">
                 {favorites.length}
@@ -84,14 +78,13 @@ export default function FavoritesPage() {
         </div>
 
         {favorites.length === 0 ? (
-          /* Empty State */
-          <ScrollReveal animation="reveal-scale" className="bg-white rounded-3xl p-20 text-center shadow-xl border-2 border-slate-100 max-w-2xl mx-auto mt-20">
+          <ScrollReveal animation="reveal-scale" className="bg-white rounded-3xl p-10 md:p-20 text-center shadow-xl border-2 border-slate-100 max-w-2xl mx-auto mt-20">
             <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-8">
               <Heart size={48} className="text-slate-300" />
             </div>
             <h2 className="text-2xl font-bold text-slate-800 mb-4">Danh sách trống</h2>
             <p className="text-slate-500 mb-10 leading-relaxed">
-              Bạn chưa có sản phẩm nào trong danh sách yêu thích. Hãy khám phá kho hàng của chúng tôi và nhấn vào biểu tượng trái tim để lưu lại nhé!
+              Bạn chưa có sản phẩm nào trong danh sách yêu thích. Hãy khám phá kho hàng và nhấn biểu tượng trái tim để lưu lại.
             </p>
             <Link 
               href="/products"
@@ -102,7 +95,6 @@ export default function FavoritesPage() {
             </Link>
           </ScrollReveal>
         ) : (
-          /* List Format */
           <div className="flex flex-col gap-6">
             {favorites.map((product, index) => (
               <ScrollReveal 
@@ -112,7 +104,6 @@ export default function FavoritesPage() {
                 className="bg-white rounded-3xl overflow-hidden border-2 border-slate-100 shadow-sm hover:shadow-xl hover:border-brand-primary/10 transition-all duration-500 group"
               >
                 <div className="flex flex-col md:flex-row items-center p-6 gap-8">
-                  {/* Image Section */}
                   <div className="w-full md:w-48 h-48 bg-slate-50 rounded-2xl overflow-hidden shrink-0 relative">
                     <img 
                       src={product.thumbnail || '/placeholder-product.jpg'} 
@@ -128,7 +119,6 @@ export default function FavoritesPage() {
                     )}
                   </div>
 
-                  {/* Info Section */}
                   <div className="flex-grow space-y-3 text-center md:text-left">
                     <span className="text-xs text-slate-400 font-bold uppercase tracking-[0.2em]">
                       {product.product_code}
@@ -150,10 +140,9 @@ export default function FavoritesPage() {
                     </div>
                   </div>
 
-                  {/* Actions Section */}
                   <div className="flex flex-col sm:flex-row md:flex-col gap-3 w-full md:w-auto">
                     <Link 
-                      href={`/product/${product.product_id}`}
+                      href={`/product/${product.product_code.toLowerCase()}`}
                       className="inline-flex items-center justify-center gap-3 bg-brand-primary text-white px-8 py-3 rounded-xl font-bold uppercase text-xs tracking-widest hover:bg-blue-800 transition-all shadow-md active:scale-95"
                     >
                       Chi tiết
@@ -170,7 +159,6 @@ export default function FavoritesPage() {
               </ScrollReveal>
             ))}
 
-            {/* "Add More" List Item */}
             <ScrollReveal animation="reveal-left" delay={favorites.length * 100}>
               <Link 
                 href="/products"
@@ -188,3 +176,4 @@ export default function FavoritesPage() {
     </div>
   );
 }
+

@@ -14,7 +14,8 @@ export default function AccountInfo() {
   const router = useRouter();
 
   useEffect(() => {
-    setIsHydrated(true);
+    const frame = requestAnimationFrame(() => setIsHydrated(true));
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   useEffect(() => {

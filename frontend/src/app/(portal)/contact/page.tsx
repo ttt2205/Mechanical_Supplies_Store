@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React from 'react';
 import { 
@@ -30,7 +30,7 @@ export default function ContactPage() {
               <MessageSquare size={14} />
               <span>Sẵn sàng hỗ trợ 24/7</span>
             </div>
-            <h1 className="text-3xl md:text-7xl font-black text-white tracking-tighter uppercase mb-6 md:mb-8 leading-tight md:leading-none">
+            <h1 className="text-3xl md:text-7xl font-black font-montserrat text-white tracking-normal uppercase mb-6 md:mb-8 leading-tight md:leading-none">
               LIÊN HỆ VỚI <br className="hidden md:block" />
               <span className="text-gradient">HƯNG THỊNH</span>
             </h1>
@@ -264,3 +264,4 @@ export default function ContactPage() {
     </main>
   );
 }
+

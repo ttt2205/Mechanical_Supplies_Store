@@ -21,15 +21,17 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        const node = ref.current;
+        let timer: ReturnType<typeof setTimeout> | null = null;
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
-                    setTimeout(() => {
+                    timer = setTimeout(() => {
                         setIsVisible(true);
                     }, delay);
                     // Once visible, we can stop observing
-                    if (ref.current) {
-                        observer.unobserve(ref.current);
+                    if (node) {
+                        observer.unobserve(node);
                     }
                 }
             },
@@ -38,13 +40,16 @@ const ScrollReveal: React.FC<ScrollRevealProps> = ({
             }
         );
 
-        if (ref.current) {
-            observer.observe(ref.current);
+        if (node) {
+            observer.observe(node);
         }
 
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
+            if (timer) {
+                clearTimeout(timer);
+            }
+            if (node) {
+                observer.unobserve(node);
             }
         };
     }, [threshold, delay]);

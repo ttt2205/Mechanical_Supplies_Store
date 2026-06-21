@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Category } from "@/types/category";
@@ -29,17 +29,11 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
   // Filter levels
   const rootCategories = categories.filter((c) => c.parent_id === null);
   
-  // Set first root category as active by default when menu opens
-  useEffect(() => {
-    if (isOpen && activeRootId === null && rootCategories.length > 0) {
-      setActiveRootId(rootCategories[0].category_id);
-    }
-  }, [isOpen, activeRootId, rootCategories]);
-
-  const activeSubCategories = categories.filter((c) => c.parent_id === activeRootId);
+  const effectiveActiveRootId = activeRootId ?? rootCategories[0]?.category_id ?? null;
+  const activeSubCategories = categories.filter((c) => c.parent_id === effectiveActiveRootId);
   const getLevel3 = (parentId: number) => categories.filter((c) => c.parent_id === parentId);
 
-  const activeRoot = rootCategories.find(c => c.category_id === activeRootId);
+  const activeRoot = rootCategories.find(c => c.category_id === effectiveActiveRootId);
 
   if (!isOpen) return null;
 
@@ -59,7 +53,7 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
               key={root.category_id}
               onMouseEnter={() => setActiveRootId(root.category_id)}
               className={`px-6 py-4 cursor-pointer transition-colors flex items-center justify-between group ${
-                activeRootId === root.category_id 
+                effectiveActiveRootId === root.category_id 
                   ? "bg-white text-brand-primary" 
                   : "text-slate-600 hover:bg-white hover:text-brand-primary"
               }`}
@@ -68,7 +62,7 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
               <ChevronRight 
                 size={14} 
                 className={`transition-transform ${
-                  activeRootId === root.category_id ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+                  effectiveActiveRootId === root.category_id ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
                 }`} 
               />
             </div>

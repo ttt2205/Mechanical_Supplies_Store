@@ -36,26 +36,26 @@ export default function NewsList() {
   };
 
   return (
-    <section className="py-20 bg-slate-50/50 min-h-screen">
+    <section className="py-12 md:py-20 bg-slate-50/50 min-h-screen">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 md:gap-8 mb-10 md:mb-16">
           <div className="max-w-2xl">
             <div className="flex items-center gap-2 mb-4">
               <span className="h-px w-12 bg-brand-accent"></span>
               <span className="text-xs font-black uppercase tracking-[0.2em] text-brand-accent">Trung tâm tin tức</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter leading-none mb-6">
+            <h2 className="text-3xl md:text-5xl font-black text-slate-900 tracking-normal md:tracking-tighter leading-tight md:leading-none mb-5 md:mb-6">
               Cập nhật <span className="text-brand-primary">Kiến thức & Thông tin</span> Công nghiệp
             </h2>
-            <p className="text-slate-500 text-lg leading-relaxed">
+            <p className="text-slate-600 md:text-slate-500 text-base md:text-lg leading-relaxed">
               Tổng hợp những bài viết mới nhất về kỹ thuật thủy lực, tin tức thị trường và hướng dẫn sử dụng thiết bị cơ khí chuyên nghiệp.
             </p>
           </div>
         </div>
 
         {/* REDESIGNED SEARCH & FILTER BAR */}
-        <div className="bg-white p-2 md:p-3 rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 mb-12 flex flex-col lg:flex-row items-center gap-4">
+        <div className="bg-white p-2 md:p-3 rounded-3xl md:rounded-[32px] border border-slate-100 shadow-xl shadow-slate-200/50 mb-8 md:mb-12 flex flex-col lg:flex-row items-center gap-3 md:gap-4">
           
           {/* Search Input Area */}
           <div className="relative flex-1 w-full group">
@@ -63,7 +63,7 @@ export default function NewsList() {
             <input 
               type="text" 
               placeholder="Tìm kiếm tiêu đề, nội dung bài viết..."
-              className="w-full pl-14 pr-12 py-5 bg-slate-50 border-none rounded-2xl focus:ring-0 text-sm font-bold text-slate-900 placeholder:text-slate-400"
+              className="w-full pl-14 pr-12 py-4 md:py-5 bg-slate-50 border-none rounded-2xl focus:ring-0 text-base lg:text-sm font-bold text-slate-900 placeholder:text-slate-400"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -81,7 +81,7 @@ export default function NewsList() {
           <div className="hidden lg:block w-px h-10 bg-slate-100 mx-2"></div>
 
           {/* Filters Area */}
-          <div className="flex flex-wrap items-center justify-center gap-2 px-4 py-2 w-full lg:w-auto">
+          <div className="flex w-full items-center gap-2 overflow-x-auto px-2 md:px-4 py-2 lg:w-auto lg:flex-wrap lg:justify-center scrollbar-hide">
             <div className="flex items-center gap-2 text-slate-400 mr-2">
               <SlidersHorizontal size={16} />
               <span className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">Bộ lọc</span>
@@ -128,7 +128,7 @@ export default function NewsList() {
             </div>
             {debouncedSearchQuery && (
               <p className="text-slate-400 text-xs italic">
-                Kết quả cho: <span className="text-slate-900 font-bold">"{debouncedSearchQuery}"</span>
+                Kết quả cho: <span className="text-slate-900 font-bold">&quot;{debouncedSearchQuery}&quot;</span>
               </p>
             )}
           </div>
@@ -154,7 +154,7 @@ export default function NewsList() {
             </div>
             <h3 className="text-2xl font-black text-slate-900 mb-3 tracking-tight">Không tìm thấy bài viết</h3>
             <p className="text-slate-400 text-sm max-w-xs text-center leading-relaxed">
-              Chúng tôi không tìm thấy bài viết nào phù hợp với từ khóa <span className="text-slate-900 font-bold italic">"{searchQuery}"</span>.
+              Chúng tôi không tìm thấy bài viết nào phù hợp với từ khóa <span className="text-slate-900 font-bold italic">&quot;{searchQuery}&quot;</span>.
             </p>
             <button 
               onClick={handleClear}

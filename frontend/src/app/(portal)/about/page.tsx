@@ -1,143 +1,212 @@
-'use client';
+﻿import Link from "next/link";
+import {
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  Mail,
+  MapPin,
+  Phone,
+} from "lucide-react";
+import ScrollReveal from "@/components/ui/ScrollReveal";
+import { readIntroduceContent } from "@/lib/introduce-content";
 
-import React from 'react';
-import { useAboutUs } from '@/hooks/useAboutUs';
-import ScrollReveal from '@/components/ui/ScrollReveal';
-import Link from 'next/link';
-import { Loader2, ChevronRight, MapPin, Phone, Mail, Clock } from 'lucide-react';
+export const dynamic = "force-dynamic";
 
-export default function AboutUsPage() {
-  const { data, loading } = useAboutUs();
+const renderParagraphs = (text: string, className = "") =>
+  text
+    .split(/\n+/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph, index) => (
+      <p key={`${paragraph}-${index}`} className={className}>
+        {paragraph}
+      </p>
+    ));
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-12 h-12 text-brand-primary animate-spin" />
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-slate-500 font-bold">Không tìm thấy nội dung giới thiệu.</p>
-      </div>
-    );
-  }
+export default async function AboutUsPage() {
+  const data = await readIntroduceContent();
 
   return (
-    <div className="min-h-screen bg-white pt-20 lg:pt-28">
-      {/* Banner / Header Section */}
-      <div className="relative h-[450px] md:h-[550px] overflow-hidden bg-slate-900">
-        <img 
-          src={data.thumbnail} 
-          alt={data.title}
-          className="absolute inset-0 w-full h-full object-cover opacity-60 scale-105"
+    <div className="min-h-screen bg-white pt-16 lg:pt-20">
+      <section className="relative h-[420px] overflow-hidden bg-slate-900 sm:h-[500px] lg:h-[540px]">
+        <img
+          src={data.hero.thumbnail}
+          alt={data.hero.highlight}
+          className="absolute inset-0 h-full w-full scale-105 object-cover opacity-60"
         />
-        {/* Multi-layer overlay for maximum readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/90 via-brand-primary/40 to-transparent"></div>
-        <div className="absolute inset-0 bg-black/20"></div>
-        
-        <div className="relative container mx-auto px-6 lg:px-12 h-full flex flex-col justify-center">
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/95 via-brand-primary/55 to-slate-950/20" />
+        <div className="absolute inset-0 bg-black/20" />
+
+        <div className="container relative mx-auto flex h-full flex-col justify-center px-4 sm:px-6 lg:px-12">
           <ScrollReveal animation="reveal-left" className="max-w-4xl">
-            <nav className="flex items-center gap-2 text-brand-accent text-sm mb-8 font-black uppercase tracking-[0.3em]">
-              <Link href="/" className="hover:text-white transition-colors">Trang chủ</Link>
+            <nav className="mb-5 flex items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-brand-accent sm:mb-7 sm:text-sm sm:tracking-[0.26em]">
+              <Link href="/" className="transition-colors hover:text-white">
+                Trang chủ
+              </Link>
               <ChevronRight size={14} className="opacity-50" />
-              <span className="text-white/60">Về chúng tôi</span>
+              <span className="text-white/70">Về chúng tôi</span>
             </nav>
-            <h1 className="text-5xl md:text-8xl font-black text-white uppercase tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
-              {data.title.split(' - ')[0]} <br/>
-              <span className="text-brand-accent italic">{data.title.split(' - ')[1]}</span>
+            <h1 className="mb-5 text-4xl font-black uppercase leading-[0.96] tracking-tight font-montserrat text-white drop-shadow-2xl sm:text-6xl lg:text-8xl">
+              {data.hero.title}
+              <span className="mt-2 block text-3xl italic text-brand-accent sm:text-5xl lg:text-7xl">
+                {data.hero.highlight}
+              </span>
             </h1>
-            <div className="w-24 h-2 bg-brand-accent mb-8"></div>
-            <p className="text-white text-xl md:text-2xl max-w-2xl font-bold leading-relaxed drop-shadow-lg border-l-4 border-brand-accent pl-6">
-              {data.excerpt}
+            <div className="mb-5 h-1.5 w-20 bg-brand-accent sm:mb-7 sm:h-2 sm:w-24" />
+            <p className="max-w-2xl border-l-4 border-brand-accent pl-4 text-base font-bold leading-relaxed text-white drop-shadow-lg sm:pl-6 sm:text-xl lg:text-2xl">
+              {data.hero.excerpt}
             </p>
           </ScrollReveal>
         </div>
-      </div>
+      </section>
 
-      {/* Main Content Section */}
-      <div className="container mx-auto px-6 lg:px-12 py-24">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-          
-          {/* Dynamic Content (Admin Friendly) */}
+      <section className="container mx-auto px-4 py-12 sm:px-6 sm:py-16 lg:px-12 lg:py-24">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14 xl:gap-20">
           <div className="lg:col-span-8">
             <ScrollReveal animation="reveal">
-              <div 
-                className="rich-content-wrapper prose prose-xl max-w-none 
-                  prose-headings:text-brand-primary prose-headings:font-black prose-headings:uppercase prose-headings:tracking-tight
-                  prose-p:text-slate-600 prose-p:leading-relaxed
-                  prose-strong:text-brand-primary prose-strong:font-bold
-                  prose-img:rounded-3xl prose-img:shadow-2xl
-                  prose-ul:list-disc prose-li:marker:text-brand-accent"
-                dangerouslySetInnerHTML={{ __html: data.content }}
-              />
+              <article className="space-y-10 sm:space-y-12">
+                <section>
+                  <h2 className="mb-4 text-2xl font-black uppercase tracking-tight text-brand-primary sm:text-3xl">
+                    {data.story.heading}
+                  </h2>
+                  <div className="space-y-4 text-base font-medium leading-7 text-slate-600 sm:text-lg sm:leading-8">
+                    {renderParagraphs(data.story.body)}
+                  </div>
+                </section>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:gap-8">
+                  <section className="rounded-2xl bg-brand-primary p-6 text-white shadow-sm sm:p-8">
+                    <h3 className="mb-3 text-xl font-black uppercase sm:text-2xl">
+                      {data.vision.heading}
+                    </h3>
+                    <div className="space-y-3 text-sm font-medium leading-7 text-white/90 sm:text-base">
+                      {renderParagraphs(data.vision.body)}
+                    </div>
+                  </section>
+                  <section className="rounded-2xl bg-brand-accent p-6 text-brand-primary shadow-sm sm:p-8">
+                    <h3 className="mb-3 text-xl font-black uppercase sm:text-2xl">
+                      {data.mission.heading}
+                    </h3>
+                    <div className="space-y-3 text-sm font-bold leading-7 text-brand-primary/90 sm:text-base">
+                      {renderParagraphs(data.mission.body)}
+                    </div>
+                  </section>
+                </div>
+
+                <section>
+                  <h2 className="mb-5 text-2xl font-black uppercase tracking-tight text-brand-primary sm:text-3xl">
+                    {data.reasonsHeading}
+                  </h2>
+                  <ul className="space-y-4">
+                    {data.reasons.map((reason) => (
+                      <li key={reason.title} className="flex items-start gap-3 sm:gap-4">
+                        <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-500" />
+                        <div>
+                          <h4 className="text-base font-black text-slate-800 sm:text-lg">
+                            {reason.title}
+                          </h4>
+                          <p className="mt-1 text-sm font-medium leading-6 text-slate-500 sm:text-base">
+                            {reason.body}
+                          </p>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+
+                <figure className="relative h-[280px] overflow-hidden rounded-2xl shadow-2xl sm:h-[360px] lg:h-[400px]">
+                  <img
+                    src={data.showcase.image}
+                    alt={data.showcase.alt}
+                    className="h-full w-full object-cover"
+                  />
+                  <figcaption className="absolute inset-0 flex items-end bg-gradient-to-t from-brand-primary/85 to-transparent p-6 sm:p-10 lg:p-12">
+                    <p className="text-2xl font-black uppercase italic tracking-tight text-white sm:text-3xl">
+                      {data.showcase.caption}
+                    </p>
+                  </figcaption>
+                </figure>
+              </article>
             </ScrollReveal>
           </div>
 
-          {/* Sidebar / Contact Info */}
-          <div className="lg:col-span-4 space-y-12">
+          <aside className="lg:col-span-4">
             <ScrollReveal animation="reveal-right">
-              <div className="bg-slate-50 p-10 rounded-3xl border-2 border-slate-100 shadow-sm sticky top-32">
-                <h3 className="text-2xl font-black text-brand-primary uppercase mb-8 tracking-tight">Thông tin liên hệ</h3>
-                
-                <ul className="space-y-8">
+              <div className="rounded-2xl border border-slate-100 bg-slate-50 p-5 shadow-sm sm:p-8 lg:sticky lg:top-28">
+                <h3 className="mb-6 text-xl font-black uppercase tracking-tight text-brand-primary sm:text-2xl">
+                  {data.contact.heading}
+                </h3>
+
+                <ul className="space-y-6">
                   <li className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-brand-primary flex items-center justify-center shrink-0">
-                      <MapPin size={24} className="text-white" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary sm:h-12 sm:w-12">
+                      <MapPin size={22} className="text-white" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Địa chỉ</p>
-                      <p className="text-slate-800 font-bold leading-snug">208 Lò Siêu, Phường 12, Quận 11, TP. Hồ Chí Minh</p>
+                      <p className="mb-1 text-xs font-black uppercase tracking-widest text-slate-400">
+                        {data.contact.addressLabel}
+                      </p>
+                      <p className="font-bold leading-snug text-slate-800">
+                        {data.contact.address}
+                      </p>
                     </div>
                   </li>
 
                   <li className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-brand-accent flex items-center justify-center shrink-0">
-                      <Phone size={24} className="text-brand-primary" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-accent sm:h-12 sm:w-12">
+                      <Phone size={22} className="text-brand-primary" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Hotline</p>
-                      <p className="text-brand-primary font-black text-xl">0123.456.789</p>
+                      <p className="mb-1 text-xs font-black uppercase tracking-widest text-slate-400">
+                        {data.contact.hotlineLabel}
+                      </p>
+                      <p className="text-lg font-black text-brand-primary sm:text-xl">
+                        {data.contact.hotline}
+                      </p>
                     </div>
                   </li>
 
                   <li className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center shrink-0">
-                      <Mail size={24} className="text-white" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-800 sm:h-12 sm:w-12">
+                      <Mail size={22} className="text-white" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Email</p>
-                      <p className="text-slate-800 font-bold">info@hungthinh.vn</p>
+                      <p className="mb-1 text-xs font-black uppercase tracking-widest text-slate-400">
+                        {data.contact.emailLabel}
+                      </p>
+                      <p className="break-all font-bold text-slate-800">
+                        {data.contact.email}
+                      </p>
                     </div>
                   </li>
 
                   <li className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-200 flex items-center justify-center shrink-0">
-                      <Clock size={24} className="text-slate-600" />
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-slate-200 sm:h-12 sm:w-12">
+                      <Clock size={22} className="text-slate-600" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Giờ làm việc</p>
-                      <p className="text-slate-800 font-bold">Thứ 2 - Thứ 7: 08:00 - 17:30</p>
+                      <p className="mb-1 text-xs font-black uppercase tracking-widest text-slate-400">
+                        {data.contact.hoursLabel}
+                      </p>
+                      <p className="font-bold text-slate-800">{data.contact.hours}</p>
                     </div>
                   </li>
                 </ul>
 
-                <div className="mt-12">
-                  <Link 
+                <div className="mt-8 sm:mt-10">
+                  <Link
                     href="/contact"
-                    className="w-full py-4 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest flex items-center justify-center gap-3 hover:bg-blue-800 transition-all shadow-lg active:scale-95"
+                    className="flex min-h-12 w-full items-center justify-center gap-3 rounded-2xl bg-brand-primary px-4 py-4 text-center text-xs font-black uppercase tracking-widest text-white shadow-lg transition-all hover:bg-blue-800 active:scale-95 sm:text-sm"
                   >
-                    Gửi yêu cầu báo giá
+                    {data.contact.cta}
                   </Link>
                 </div>
               </div>
             </ScrollReveal>
-          </div>
-
+          </aside>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
+

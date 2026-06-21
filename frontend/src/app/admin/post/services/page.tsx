@@ -18,7 +18,8 @@ import {
     Image as ImageIcon,
     Save,
     Type,
-    FileText
+    FileText,
+    Layers
 } from 'lucide-react';
 import { AdminModal, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/AdminUI';
 
@@ -33,6 +34,9 @@ export default function ServicesManagementPage() {
     const [posts, setPosts] = useState(initialPosts);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingService, setEditingService] = useState<any>(null);
+
+    // State for Category Modal
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
     const openModal = (service: any = null) => {
         setEditingService(service || {
@@ -56,13 +60,22 @@ export default function ServicesManagementPage() {
                     </h1>
                     <p className="text-slate-500 font-bold">Quản lý các bài giới thiệu dịch vụ kỹ thuật của Hưng Thịnh.</p>
                 </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
-                >
-                    <Plus size={18} />
-                    Thêm dịch vụ mới
-                </button>
+                <div className="flex gap-4">
+                    <button 
+                        onClick={() => setIsCategoryModalOpen(true)}
+                        className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3 w-fit"
+                    >
+                        <Layers size={18} />
+                        Nhóm dịch vụ
+                    </button>
+                    <button 
+                        onClick={() => openModal()}
+                        className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
+                    >
+                        <Plus size={18} />
+                        Thêm dịch vụ mới
+                    </button>
+                </div>
             </div>
 
             {/* Filters Bar */}
@@ -205,6 +218,51 @@ export default function ServicesManagementPage() {
                             />
                         </div>
                     </div>
+                </div>
+            </AdminModal>
+
+            {/* CATEGORY MODAL */}
+            <AdminModal 
+                isOpen={isCategoryModalOpen} 
+                onClose={() => setIsCategoryModalOpen(false)}
+                title="Thêm nhóm dịch vụ mới"
+                size="md"
+                footer={
+                    <>
+                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsCategoryModalOpen(false)}>Hủy bỏ</button>
+                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                            <Save size={16} /> Tạo nhóm dịch vụ
+                        </button>
+                    </>
+                }
+            >
+                <div className="space-y-6">
+                    <AdminInput 
+                        label="Tên nhóm dịch vụ" 
+                        placeholder="Nhập tên nhóm dịch vụ..." 
+                        defaultValue=""
+                        required
+                    />
+                    <AdminSelect
+                        label="Nhóm cha"
+                        defaultValue=""
+                        options={[
+                            { value: '', label: 'Không có (Nhóm gốc)' },
+                            { value: '1', label: 'Bảo trì' },
+                            { value: '1.1', label: '--- Bảo trì định kỳ' },
+                            { value: '1.2', label: '--- Bảo trì đột xuất' },
+                            { value: '2', label: 'Gia công' },
+                            { value: '2.1', label: '--- Gia công CNC' },
+                            { value: '2.2', label: '--- Gia công cơ' },
+                            { value: '3', label: 'Sửa chữa' }
+                        ]}
+                    />
+                    <AdminTextarea 
+                        label="Mô tả"
+                        rows={4}
+                        placeholder="Nhập mô tả nhóm dịch vụ..."
+                        defaultValue=""
+                    />
                 </div>
             </AdminModal>
         </div>
