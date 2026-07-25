@@ -49,10 +49,14 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
         {/* Left Pane: Level 1 Categories (Sidebar) */}
         <div className="w-1/3 bg-slate-50 border-r border-slate-100 py-4 overflow-y-auto custom-scrollbar">
           {rootCategories.map((root) => (
-            <div
+            <Link
               key={root.category_id}
+              href={`${baseUrl}/${root.slug}`}
               onMouseEnter={() => setActiveRootId(root.category_id)}
-              className={`px-6 py-4 cursor-pointer transition-colors flex items-center justify-between group ${
+              onClick={() => {
+                if (onClose) onClose();
+              }}
+              className={`px-6 py-4 cursor-pointer transition-colors flex items-center justify-between group block ${
                 effectiveActiveRootId === root.category_id 
                   ? "bg-white text-brand-primary" 
                   : "text-slate-600 hover:bg-white hover:text-brand-primary"
@@ -65,7 +69,7 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
                   effectiveActiveRootId === root.category_id ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
                 }`} 
               />
-            </div>
+            </Link>
           ))}
         </div>
 
@@ -95,6 +99,9 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
                       <Link 
                         href={`${baseUrl}/${l2.slug}`}
                         className="text-brand-primary font-black text-sm uppercase tracking-tight hover:text-brand-accent-alt transition-colors block"
+                        onClick={() => {
+                          if (onClose) onClose();
+                        }}
                       >
                         {l2.name}
                       </Link>
@@ -106,6 +113,9 @@ export default function CategoryPopup({ categories, isOpen, onClose, type = "pro
                             <Link 
                               href={`${baseUrl}/${l3.slug}`}
                               className="text-slate-500 hover:text-brand-primary font-bold text-sm transition-colors flex items-center gap-2 group/item"
+                              onClick={() => {
+                                if (onClose) onClose();
+                              }}
                             >
                               <span className="w-1 h-1 rounded-full bg-slate-300 group-hover/item:bg-brand-accent transition-colors"></span>
                               {l3.name}

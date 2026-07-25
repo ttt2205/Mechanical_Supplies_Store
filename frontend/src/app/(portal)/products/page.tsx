@@ -21,7 +21,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
 
   return (
     <main>
-      <section className="relative overflow-hidden border-b border-white/5 bg-[#020617] pb-14 pt-24 md:pb-24 md:pt-40">
+      <section className="relative overflow-hidden border-b border-white/5 bg-[#020617] pb-12 pt-32 md:pb-16 md:pt-40">
         <div className="absolute inset-0 z-0">
           <div className="absolute -left-[10%] -top-[30%] h-[70%] w-[70%] animate-pulse rounded-full bg-brand-primary/25 blur-[180px]" />
           <div className="absolute -bottom-[30%] -right-[10%] h-[70%] w-[70%] rounded-full bg-brand-accent/15 blur-[180px]" />
@@ -44,10 +44,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
               </span>
               <span className="h-1 w-12 rounded-full bg-brand-accent shadow-[0_0_20px_rgba(245,158,11,0.6)]" />
             </div>
-            <h1 className="mb-5 text-4xl font-black uppercase leading-tight tracking-normal text-white drop-shadow-2xl md:mb-8 md:text-8xl md:tracking-tighter">
+            <h1 className="mb-4 text-3xl font-black uppercase leading-tight tracking-normal text-white drop-shadow-2xl md:mb-6 md:text-6xl md:tracking-tighter">
               TẤT CẢ <span className="text-gradient">SẢN PHẨM</span>
             </h1>
-            <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-slate-300 md:text-xl md:text-slate-400">
+            <p className="mx-auto max-w-2xl text-base font-medium leading-relaxed text-slate-300 md:text-lg md:text-slate-400">
               Khám phá toàn bộ danh mục thiết bị cơ khí và vật tư công nghiệp{" "}
               <span className="font-bold text-white">chính hãng</span>, được
               tuyển chọn kỹ lưỡng cho hiệu suất vận hành tối ưu.

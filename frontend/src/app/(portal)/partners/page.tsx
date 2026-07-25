@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import PartnerList from '@/features/portal/partners/PartnerList';
@@ -8,7 +8,7 @@ export default function PartnersPage() {
   return (
     <main>
       {/* Hero Section */}
-      <section className="bg-[#0f172a] pt-24 md:pt-40 pb-14 md:pb-24 overflow-hidden relative border-b border-white/5">
+      <section className="bg-[#0f172a] pt-32 md:pt-40 pb-12 md:pb-16 overflow-hidden relative border-b border-white/5">
         {/* Background Glow */}
         <div className="absolute inset-0 z-0">
           <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/20 rounded-full blur-[180px] animate-pulse"></div>
@@ -22,10 +22,10 @@ export default function PartnersPage() {
                 <span className="text-[10px] md:text-xs font-black uppercase tracking-[0.18em] md:tracking-[0.4em] text-brand-accent drop-shadow-lg">Hệ sinh thái chiến lược</span>
                 <span className="h-1 w-12 bg-brand-accent rounded-full shadow-[0_0_20px_rgba(245,158,11,0.6)]"></span>
             </div>
-            <h1 className="text-4xl md:text-8xl font-black font-montserrat text-white tracking-normal mb-6 md:mb-8 leading-tight uppercase drop-shadow-2xl">
+            <h1 className="text-3xl md:text-6xl font-black font-montserrat text-white tracking-normal mb-6 md:mb-8 leading-tight uppercase drop-shadow-2xl">
               MẠNG LƯỚI <span className="text-gradient">ĐỐI TÁC</span>
             </h1>
-            <p className="text-slate-300 md:text-slate-400 text-base md:text-xl leading-relaxed max-w-2xl mx-auto font-medium">
+            <p className="text-slate-300 md:text-slate-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto font-medium">
               Kết nối và cung cấp giải pháp kỹ thuật thông qua hệ thống đại lý và <span className="text-white font-bold">đối tác chiến lược</span> trên toàn quốc.
             </p>
           </div>

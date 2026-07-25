@@ -141,9 +141,11 @@ const CategoryProductSection: React.FC<CategoryProductSectionProps> = ({
                     )}
 
                     <div className="relative">
-                        <div className="bg-white rounded-3xl md:rounded-[2.5rem] border border-slate-100 overflow-hidden px-3 md:px-8 py-6 md:py-10 relative z-10 shadow-sm">
+                        {/* Glow effect to make the frame prominent */}
+                        <div className="absolute -inset-2 bg-gradient-to-br from-slate-200 to-slate-100 rounded-[3rem] blur-lg opacity-80"></div>
+                        <div className="bg-white rounded-3xl md:rounded-[2.5rem] border-2 border-slate-200 overflow-hidden px-3 md:px-8 py-6 md:py-10 relative z-10 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)] hover:shadow-[0_15px_50px_-10px_rgba(0,0,0,0.15)] transition-shadow duration-500">
                             <div 
-                                className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
+                                className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4"
                                 style={{ 
                                     transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (16 / itemsPerView)}px))` 
                                 }}

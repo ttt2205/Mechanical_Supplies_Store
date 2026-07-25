@@ -56,9 +56,10 @@ export default async function CategoryProductsPage({
 
   return (
     <main>
-      <section className="relative overflow-hidden bg-brand-primary pb-14 pt-24 md:pb-20 md:pt-40">
-        <div className="absolute inset-0 z-0 opacity-10">
-          <div className="absolute right-0 top-0 h-[500px] w-[500px] -translate-y-1/2 translate-x-1/2 rounded-full bg-white blur-[100px]" />
+      <section className="relative overflow-hidden border-b border-white/5 bg-[#020617] pb-12 pt-32 md:pb-16 md:pt-40">
+        <div className="absolute inset-0 z-0">
+          <div className="absolute -right-[10%] -top-[30%] h-[70%] w-[70%] animate-pulse rounded-full bg-brand-primary/20 blur-[150px]" />
+          <div className="absolute -bottom-[30%] -left-[10%] h-[70%] w-[70%] rounded-full bg-brand-accent/10 blur-[150px]" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4">
@@ -77,10 +78,10 @@ export default async function CategoryProductsPage({
             <span className="text-white">{category.name}</span>
           </nav>
 
-          <h1 className="mb-4 text-4xl font-black uppercase leading-tight tracking-normal text-white md:text-6xl md:tracking-tighter">
+          <h1 className="mb-4 text-3xl font-black uppercase leading-tight tracking-normal text-white md:text-5xl md:tracking-tighter">
             {category.name}
           </h1>
-          <p className="max-w-2xl text-lg leading-relaxed text-white/60">
+          <p className="max-w-2xl text-base leading-relaxed text-white/60 md:text-lg">
             {category.description ||
               `Khám phá các giải pháp tối ưu trong danh mục ${category.name} dành cho hệ thống máy móc của bạn.`}
           </p>

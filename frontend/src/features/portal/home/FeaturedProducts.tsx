@@ -104,7 +104,7 @@ const FeaturedProducts: React.FC = () => {
     };
 
     return (
-        <section className="relative py-12 md:py-16 bg-[#0f172a] overflow-hidden border-y border-white/5">
+        <section className="relative py-6 md:py-8 bg-[#0f172a] overflow-hidden border-y border-white/5">
             {/* Background Decorative Elements - Luxurious Glow */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-60">
                 <div className="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-brand-primary/20 rounded-full blur-[160px]"></div>
@@ -112,17 +112,17 @@ const FeaturedProducts: React.FC = () => {
             </div>
 
             <div className="container mx-auto px-4 md:px-12 relative z-10">
-                <ScrollReveal animation="reveal" className="text-center mb-8 md:mb-12">
-                    <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-brand-accent text-[10px] md:text-xs font-black uppercase tracking-[0.16em] md:tracking-[0.4em] mb-5 md:mb-6 shadow-2xl">
+                <ScrollReveal animation="reveal" className="text-center mb-4 md:mb-6">
+                    <div className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 text-brand-accent text-[10px] md:text-xs font-black uppercase tracking-[0.16em] md:tracking-[0.4em] mb-3 shadow-2xl">
                         <Sparkles className="w-4 h-4" />
                         <span>BST SẢN PHẨM ƯU VIỆT</span>
                     </div>
                     
-                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-black mb-5 md:mb-6 tracking-normal md:tracking-tighter text-white uppercase leading-tight md:leading-none">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-3 tracking-normal md:tracking-tighter text-white uppercase leading-tight md:leading-none">
                         Sản Phẩm <span className="text-gradient">Nổi Bật</span>
                     </h2>
                     
-                    <div className="section-divider max-w-lg mx-auto mb-6">
+                    <div className="section-divider max-w-lg mx-auto mb-4">
                         <div className="h-1.5 w-16 bg-gradient-to-r from-brand-primary to-brand-accent rounded-full mx-auto shadow-[0_0_20px_rgba(30,64,175,0.5)]"></div>
                     </div>
                     
@@ -135,7 +135,7 @@ const FeaturedProducts: React.FC = () => {
                 {loading ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                         {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="bg-white/5 rounded-3xl h-[480px] animate-pulse border border-white/10"></div>
+                            <div key={i} className="bg-white/5 rounded-3xl h-[360px] animate-pulse border border-white/10"></div>
                         ))}
                     </div>
                 ) : (
@@ -145,45 +145,22 @@ const FeaturedProducts: React.FC = () => {
                         onTouchStart={onTouchStart}
                         onTouchMove={onTouchMove}
                         onTouchEnd={onTouchEnd}
-                        className="relative group/slider max-w-[1400px] mx-auto"
+                        className="relative group/slider max-w-7xl mx-auto"
                     >
                         <ScrollReveal 
                             animation="reveal-scale" 
                             delay={200} 
                             className="relative group/slider"
                         >
-                            {/* Navigation Buttons - Enhanced Premium Glassmorphism */}
-                            {products.length > itemsPerView && (
-                                <>
-                                    <div className="absolute top-1/2 -translate-y-1/2 -left-2 md:-left-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
-                                        <button 
-                                            onClick={handlePrev}
-                                            className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white/10 md:bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
-                                            aria-label="Previous slide"
-                                        >
-                                            <ChevronLeft className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:-translate-x-1" />
-                                        </button>
-                                    </div>
 
-                                    <div className="absolute top-1/2 -translate-y-1/2 -right-2 md:-right-12 z-30 transition-all duration-500 opacity-100 md:opacity-0 md:group-hover/slider:opacity-100">
-                                        <button 
-                                            onClick={handleNext}
-                                            className="p-3 md:p-5 rounded-2xl md:rounded-3xl bg-white/10 md:bg-white/5 backdrop-blur-2xl shadow-2xl border border-white/10 text-white hover:bg-brand-primary hover:border-brand-primary transition-all active:scale-90 group/btn"
-                                            aria-label="Next slide"
-                                        >
-                                            <ChevronRight className="w-6 h-6 md:w-8 md:h-8 transition-transform group-hover/btn:translate-x-1" />
-                                        </button>
-                                    </div>
-                                </>
-                            )}
 
                             <div className="spotlight-container relative">
                                 {/* Subtle inner glow for the container */}
                                 <div className="absolute inset-0 bg-brand-primary/5 rounded-[3rem] blur-3xl"></div>
                                 
-                                <div className="bg-slate-900/40 backdrop-blur-sm rounded-3xl md:rounded-[2.5rem] border border-white/5 overflow-hidden px-3 md:px-6 py-6 md:py-12 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
+                                <div className="bg-slate-900/40 backdrop-blur-sm rounded-3xl md:rounded-[2.5rem] border border-white/5 overflow-hidden px-2 md:px-4 py-3 md:py-4 relative z-10 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)]">
                                     <div 
-                                        className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4 md:gap-8"
+                                        className="flex transition-transform duration-1000 ease-[cubic-bezier(0.23,1,0.32,1)] gap-4"
                                         style={{ 
                                             transform: `translateX(calc(-${currentIndex * (100 / itemsPerView)}% - ${currentIndex * (16 / itemsPerView)}px))` 
                                         }}
@@ -207,26 +184,44 @@ const FeaturedProducts: React.FC = () => {
                 )}
                 
                 {!loading && totalPages > 1 && (
-                    <div className="flex justify-center items-center gap-6 mt-12">
-                        <div className="flex gap-3">
-                            {Array.from({ length: totalPages }).map((_, i) => {
-                                const targetIndex = Math.min(i * itemsPerView, maxIndex);
-                                return (
-                                    <button
-                                        key={i}
-                                        onClick={() => {
-                                            setCurrentIndex(targetIndex);
-                                            handleManualInteraction();
-                                        }}
-                                        className={`h-2 rounded-full transition-all duration-700 ${
-                                            currentPage === i 
-                                            ? 'w-16 bg-brand-accent shadow-[0_0_20px_rgba(245,158,11,0.4)]' 
-                                            : 'w-2 bg-white/20 hover:bg-white/40'
-                                        }`}
-                                        aria-label={`Go to frame ${i + 1}`}
-                                    />
-                                );
-                            })}
+                    <div className="flex flex-col justify-center items-center gap-4 mt-4">
+                        <div className="flex items-center gap-4">
+                            <button 
+                                onClick={handlePrev}
+                                className="p-3 md:p-4 rounded-full bg-white/10 backdrop-blur-2xl border border-white/10 text-white hover:bg-brand-primary transition-all active:scale-90"
+                                aria-label="Previous slide"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            
+                            <div className="flex gap-3 mx-2 md:mx-4">
+                                {Array.from({ length: totalPages }).map((_, i) => {
+                                    const targetIndex = Math.min(i * itemsPerView, maxIndex);
+                                    return (
+                                        <button
+                                            key={i}
+                                            onClick={() => {
+                                                setCurrentIndex(targetIndex);
+                                                handleManualInteraction();
+                                            }}
+                                            className={`h-2 rounded-full transition-all duration-700 ${
+                                                currentPage === i 
+                                                ? 'w-16 bg-brand-accent shadow-[0_0_20px_rgba(245,158,11,0.4)]' 
+                                                : 'w-2 bg-white/20 hover:bg-white/40'
+                                            }`}
+                                            aria-label={`Go to frame ${i + 1}`}
+                                        />
+                                    );
+                                })}
+                            </div>
+
+                            <button 
+                                onClick={handleNext}
+                                className="p-3 md:p-4 rounded-full bg-white/10 backdrop-blur-2xl border border-white/10 text-white hover:bg-brand-primary transition-all active:scale-90"
+                                aria-label="Next slide"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
                         </div>
                         <span className="text-xs font-black tracking-widest text-slate-300">
                             {String(currentPage + 1).padStart(2, '0')} / {String(totalPages).padStart(2, '0')}

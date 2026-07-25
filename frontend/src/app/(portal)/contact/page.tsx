@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { 
@@ -18,7 +18,7 @@ export default function ContactPage() {
   return (
     <main className="bg-white">
       {/* Hero Section - Professional & Trustworthy */}
-      <section className="bg-[#0f172a] pt-24 pb-16 md:pt-40 md:pb-24 relative overflow-hidden">
+      <section className="bg-[#0f172a] pt-32 pb-12 md:pt-40 md:pb-16 relative overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute -top-[30%] -left-[10%] w-[70%] h-[70%] bg-brand-primary/20 rounded-full blur-[180px]"></div>
           <div className="absolute -bottom-[30%] -right-[10%] w-[70%] h-[70%] bg-brand-accent/10 rounded-full blur-[180px]"></div>
@@ -30,11 +30,11 @@ export default function ContactPage() {
               <MessageSquare size={14} />
               <span>Sẵn sàng hỗ trợ 24/7</span>
             </div>
-            <h1 className="text-3xl md:text-7xl font-black font-montserrat text-white tracking-normal uppercase mb-6 md:mb-8 leading-tight md:leading-none">
+            <h1 className="text-3xl md:text-6xl font-black font-montserrat text-white tracking-normal uppercase mb-6 md:mb-8 leading-tight md:leading-none">
               LIÊN HỆ VỚI <br className="hidden md:block" />
               <span className="text-gradient">HƯNG THỊNH</span>
             </h1>
-            <p className="text-slate-400 text-base md:text-xl font-medium leading-relaxed">
+            <p className="text-slate-400 text-base md:text-lg font-medium leading-relaxed">
               Bạn cần tư vấn kỹ thuật hoặc báo giá sản phẩm? Hãy kết nối với chúng tôi qua các kênh trực tiếp dưới đây để được hỗ trợ nhanh nhất.
             </p>
           </div>

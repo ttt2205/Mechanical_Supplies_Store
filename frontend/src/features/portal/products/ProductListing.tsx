@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -45,6 +45,16 @@ function ProductListingContent({
   const [isPending, startTransition] = useTransition();
   const [searchQuery, setSearchQuery] = useState(filters.q);
   const [maxPrice, setMaxPrice] = useState(filters.maxPrice);
+  const [localPriceInput, setLocalPriceInput] = useState<string>(
+    filters.maxPrice ? new Intl.NumberFormat('vi-VN').format(filters.maxPrice) : ""
+  );
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isInputFocused) {
+      setLocalPriceInput(maxPrice ? new Intl.NumberFormat('vi-VN').format(maxPrice) : "");
+    }
+  }, [maxPrice, isInputFocused]);
 
   const categoriesToDisplay = category
     ? subCategories
@@ -221,13 +231,34 @@ function ProductListingContent({
               />
             </div>
             <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between rounded-2xl border border-slate-100 bg-slate-50 p-4">
-                <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                  Đến mức:
+              <div className="flex items-center justify-between gap-4 rounded-2xl border border-slate-100 bg-slate-50 p-3">
+                <span className="shrink-0 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                  Tối đa:
                 </span>
-                <span className="text-lg font-black text-brand-primary">
-                  {new Intl.NumberFormat("vi-VN").format(maxPrice)}đ
-                </span>
+                <div className="flex items-center gap-1">
+                  <input
+                    type="text"
+                    value={localPriceInput}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => {
+                      setIsInputFocused(false);
+                      const rawValue = localPriceInput.replace(/\D/g, "");
+                      const val = rawValue ? Number(rawValue) : 0;
+                      const finalVal = val > MAX_PRICE ? MAX_PRICE : val;
+                      setMaxPrice(finalVal);
+                      setLocalPriceInput(finalVal ? new Intl.NumberFormat('vi-VN').format(finalVal) : "");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.currentTarget.blur();
+                      }
+                    }}
+                    onChange={(e) => setLocalPriceInput(e.target.value)}
+                    className="w-32 bg-transparent text-right text-lg font-black text-brand-primary outline-none"
+                    placeholder="0"
+                  />
+                  <span className="text-lg font-black text-brand-primary">đ</span>
+                </div>
               </div>
               <p className="text-center text-[10px] font-bold italic text-slate-400">
                 Kéo thanh trượt để điều chỉnh khoảng giá nhanh

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React from 'react';
 import Image from 'next/image';
@@ -35,7 +35,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isLarge = false }) =
     };
 
     return (
-        <div className={`group relative bg-white rounded-2xl md:rounded-[20px] border border-slate-100 shadow-sm hover:shadow-xl md:hover:shadow-2xl md:hover:-translate-y-2 transition-all duration-300 md:duration-500 overflow-hidden flex flex-col h-full ${isLarge ? 'md:flex-row' : ''}`}>
+        <div className={`group relative bg-white rounded-2xl md:rounded-[20px] border border-slate-400 shadow-sm hover:shadow-xl md:hover:shadow-2xl md:hover:-translate-y-2 transition-all duration-300 md:duration-500 overflow-hidden flex flex-col h-full ${isLarge ? 'md:flex-row' : ''}`}>
             <Link 
                 href={productUrl}
                 className="absolute inset-0 z-10"

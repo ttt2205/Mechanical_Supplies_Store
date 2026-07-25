@@ -1,4 +1,4 @@
-﻿import Link from "next/link";
+import Link from "next/link";
 import {
   CheckCircle2,
   ChevronRight,
@@ -28,7 +28,7 @@ export default async function AboutUsPage() {
 
   return (
     <div className="min-h-screen bg-white pt-16 lg:pt-20">
-      <section className="relative h-[420px] overflow-hidden bg-slate-900 sm:h-[500px] lg:h-[540px]">
+      <section className="relative h-[320px] overflow-hidden bg-slate-900 sm:h-[400px] lg:h-[460px]">
         <img
           src={data.hero.thumbnail}
           alt={data.hero.highlight}
@@ -46,7 +46,7 @@ export default async function AboutUsPage() {
               <ChevronRight size={14} className="opacity-50" />
               <span className="text-white/70">Về chúng tôi</span>
             </nav>
-            <h1 className="mb-5 text-4xl font-black uppercase leading-[0.96] tracking-tight font-montserrat text-white drop-shadow-2xl sm:text-6xl lg:text-8xl">
+            <h1 className="mb-5 text-3xl font-black uppercase leading-[0.96] tracking-tight font-montserrat text-white drop-shadow-2xl sm:text-5xl lg:text-6xl">
               {data.hero.title}
               <span className="mt-2 block text-3xl italic text-brand-accent sm:text-5xl lg:text-7xl">
                 {data.hero.highlight}

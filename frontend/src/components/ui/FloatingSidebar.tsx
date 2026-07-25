@@ -67,7 +67,7 @@ const FloatingSidebar = () => {
 
   return (
     <>
-      <div className="fixed right-3 bottom-4 md:right-8 md:bottom-24 z-[60] flex flex-col gap-2 md:gap-6">
+      <div className="fixed right-3 bottom-4 md:right-8 md:bottom-24 z-[60] flex flex-col gap-2 md:gap-4">
         {actions.map((action, index) => (
           <div 
             key={index}
@@ -84,10 +84,10 @@ const FloatingSidebar = () => {
             {/* Icon Button */}
             <Link 
               href={action.href}
-              className={`relative w-11 h-11 md:w-16 md:h-16 ${action.color} text-white flex items-center justify-center rounded-full shadow-xl md:shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/30 z-10 overflow-hidden`}
+              className={`relative w-10 h-10 md:w-12 md:h-12 ${action.color} text-white flex items-center justify-center rounded-full shadow-xl md:shadow-2xl hover:scale-110 active:scale-95 transition-all duration-300 border-2 border-white/30 z-10 overflow-hidden`}
               aria-label={action.label}
             >
-              <div className="flex items-center justify-center scale-[0.75] md:scale-100">
+              <div className="flex items-center justify-center scale-[0.6] md:scale-75">
                 {action.icon}
               </div>
             </Link>
@@ -98,10 +98,10 @@ const FloatingSidebar = () => {
         {showBackToTop && (
           <button 
             onClick={scrollToTop}
-            className="w-11 h-11 md:w-16 md:h-16 bg-slate-900 text-white flex items-center justify-center rounded-full shadow-xl md:shadow-2xl hover:bg-brand-accent hover:text-black transition-all duration-300 md:animate-bounce-subtle group border-2 border-white/20"
+            className="w-10 h-10 md:w-12 md:h-12 bg-slate-900 text-white flex items-center justify-center rounded-full shadow-xl md:shadow-2xl hover:bg-brand-accent hover:text-black transition-all duration-300 md:animate-bounce-subtle group border-2 border-white/20"
             aria-label="Lên đầu trang"
           >
-            <ChevronUp size={24} className="md:w-8 md:h-8 group-hover:-translate-y-1 transition-transform" />
+            <ChevronUp size={20} className="md:w-6 md:h-6 group-hover:-translate-y-1 transition-transform" />
           </button>
         )}
       </div>
