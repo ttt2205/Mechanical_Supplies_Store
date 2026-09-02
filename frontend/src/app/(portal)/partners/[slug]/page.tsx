@@ -15,12 +15,25 @@ export default function PartnerCategoryPage({ params }: { params: Promise<{ slug
   
   const subCategories = category ? getSubCategories(category.category_id) : [];
 
-  // Mock partners data for the list
-  const mockPartnerDetails = [
-    { id: 1, name: "Đại lý Thủy lực ABC", address: "123 Đường Số 1, KCN VSIP, Bình Dương", phone: "0901.234.567", email: "contact@abc-hydraulics.vn", type: "Đại lý ủy quyền" },
-    { id: 2, name: "Cơ khí Hưng Phát", address: "456 Lô C, KCN Amata, Đồng Nai", phone: "0908.765.432", email: "info@hungphat-mech.com", type: "Đối tác chiến lược" },
-    { id: 3, name: "Vật tư Công nghiệp Miền Nam", address: "789 Quốc lộ 1A, Quận 12, TP.HCM", phone: "028.3848.xxxx", email: "sales@mt-industrial.vn", type: "Nhà phân phối" },
+  // Mock partners data for the list mapped to category IDs
+  const ALL_MOCK_PARTNERS = [
+    // Miền Nam (3001)
+    { id: 1, category_id: 3001, name: "Trung tâm Phân phối Miền Nam", address: "Kho X, KCN Tân Tạo, TP.HCM", phone: "0901.111.111", email: "miennam@hungthinh.vn", type: "Tổng kho" },
+    // TP.HCM (30011)
+    { id: 2, category_id: 30011, name: "Văn phòng Hỗ trợ Kỹ thuật TP.HCM", address: "Tòa nhà Y, Quận Tân Bình, TP.HCM", phone: "0902.222.222", email: "hcm@hungthinh.vn", type: "Văn phòng" },
+    // Quận 1 (300111)
+    { id: 3, category_id: 300111, name: "Đại lý Thủy lực Trung Tâm Q1", address: "Đường Nguyễn Thái Học, Quận 1", phone: "0903.333.333", email: "quan1@hungthinh.vn", type: "Đại lý ủy quyền" },
+    // Quận 7 (300112)
+    { id: 4, category_id: 300112, name: "Cơ khí Nam Sài Gòn", address: "Khu chế xuất Tân Thuận, Quận 7", phone: "0904.444.444", email: "quan7@hungthinh.vn", type: "Đối tác chiến lược" },
+    // Bình Dương (30012)
+    { id: 5, category_id: 30012, name: "Cơ khí Hưng Phát Bình Dương", address: "Đại lộ Độc Lập, KCN VSIP 1, Bình Dương", phone: "0905.555.555", email: "bd@hungthinh.vn", type: "Nhà phân phối" },
+    // Đà Nẵng (30021)
+    { id: 6, category_id: 30021, name: "Vật tư Công nghiệp Đà Nẵng", address: "KCN Hòa Khánh, Đà Nẵng", phone: "0236.333.xxxx", email: "danang@mt-industrial.vn", type: "Đại lý ủy quyền" },
+    // Hà Nội (30031)
+    { id: 7, category_id: 30031, name: "Tổng kho Phía Bắc - Hà Nội", address: "KCN Thăng Long, Đông Anh, Hà Nội", phone: "0906.666.666", email: "hanoi@hungthinh.vn", type: "Tổng kho" },
   ];
+
+  const mockPartnerDetails = ALL_MOCK_PARTNERS.filter(p => p.category_id === category?.category_id);
 
   if (loading) {
     return (

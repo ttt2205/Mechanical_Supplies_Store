@@ -1,3 +1,5 @@
+import { AttachmentData } from './attachment';
+
 export interface Product {
     product_id: number;
     category_id: number;
@@ -8,7 +10,7 @@ export interface Product {
     base_price: number;
     status: 'active' | 'inactive';
     thumbnail: string;
-    images?: string[];
+    images?: AttachmentData[];
     view_count?: number;
     sold_count?: number;
     brand?: string;
@@ -34,6 +36,6 @@ export interface ProductVariant {
 export interface ProductDetail extends Product {
     description: string;
     details_content: string;
-    images: string[];
+    images: AttachmentData[];
     variants: ProductVariant[];
 }

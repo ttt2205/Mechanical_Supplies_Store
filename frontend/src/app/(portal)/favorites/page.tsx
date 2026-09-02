@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
@@ -7,12 +7,22 @@ import Link from 'next/link';
 import { useFavoritesStore } from '@/store/useFavoritesStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import Pagination from '@/components/ui/Pagination';
 
 export default function FavoritesPage() {
   const router = useRouter();
   const { isAuthenticated } = useAuthStore();
   const { favorites, clearFavorites, removeFavorite } = useFavoritesStore();
 
+
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  const totalPages = Math.max(1, Math.ceil(favorites.length / ITEMS_PER_PAGE));
+  const currentFavorites = React.useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return favorites.slice(start, start + ITEMS_PER_PAGE);
+  }, [favorites, currentPage]);
 
   if (!isAuthenticated) {
     return (
@@ -96,7 +106,7 @@ export default function FavoritesPage() {
           </ScrollReveal>
         ) : (
           <div className="flex flex-col gap-6">
-            {favorites.map((product, index) => (
+            {currentFavorites.map((product, index) => (
               <ScrollReveal 
                 key={product.product_id} 
                 animation="reveal-left" 
@@ -159,7 +169,7 @@ export default function FavoritesPage() {
               </ScrollReveal>
             ))}
 
-            <ScrollReveal animation="reveal-left" delay={favorites.length * 100}>
+            <ScrollReveal animation="reveal-left" delay={currentFavorites.length * 100}>
               <Link 
                 href="/products"
                 className="flex items-center justify-center p-8 border-2 border-dashed border-slate-300 rounded-3xl hover:border-brand-accent hover:bg-brand-accent/5 transition-all group"
@@ -170,10 +180,17 @@ export default function FavoritesPage() {
                 </p>
               </Link>
             </ScrollReveal>
+
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </div>
     </div>
   );
-}
 
+
+}

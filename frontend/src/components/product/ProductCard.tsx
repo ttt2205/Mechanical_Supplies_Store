@@ -18,7 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, isLarge = false }) =
     const router = useRouter();
     const { isAuthenticated } = useAuthStore();
     const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
-    const productUrl = `/product/${product.product_code.toLowerCase()}`;
+    const productUrl = `/product/${(product.product_code || "").toLowerCase()}`;
     const favorite = isAuthenticated && isFavorite(product.product_id);
 
     const toggleFavorite = (e: React.MouseEvent) => {

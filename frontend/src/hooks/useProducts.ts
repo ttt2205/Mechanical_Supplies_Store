@@ -21,10 +21,15 @@ export const useProducts = () => {
   );
 
   const getProductBySlug = useCallback(
-    (slug: string) =>
-      products.find(
-        (product) => product.product_code.toLowerCase() === slug.toLowerCase(),
-      ),
+    (slug: string | string[] | undefined | null) => {
+      if (!slug) return undefined;
+      let slugStr = Array.isArray(slug) ? slug[0] : slug;
+      if (!slugStr) return undefined;
+      slugStr = decodeURIComponent(slugStr).trim();
+      return products.find(
+        (product) => (product.product_code || "").trim().toLowerCase() === slugStr.toLowerCase(),
+      );
+    },
     [products],
   );
 

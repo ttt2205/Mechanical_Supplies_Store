@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { Suspense, useState } from 'react';
 import Link from 'next/link';
@@ -33,9 +33,9 @@ function LoginForm() {
         setTimeout(() => {
             login({
                 account_id: '1',
-                username: username || 'khachhang',
-                email: 'khachhang@gmail.com',
-                role_id: '2', // default user
+                username: username || 'admin',
+                email: 'admin@mechanical.com',
+                role_id: 'admin', // Changed to admin for testing
                 status: 'active'
             });
             setIsLoading(false);

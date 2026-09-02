@@ -5,11 +5,14 @@ import { Search, Newspaper, X, Check, SlidersHorizontal } from "lucide-react";
 import { usePosts } from "@/hooks/usePosts";
 import { useDebounce } from "@/hooks/useDebounce";
 import NewsCard from "./NewsCard";
+import Pagination from "@/components/ui/Pagination";
 
 export default function NewsList() {
   const { posts, loading } = usePosts();
   const [filter, setFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 12;
   
   // Add Debounce
   const debouncedSearchQuery = useDebounce(searchQuery, 400);
@@ -22,6 +25,17 @@ export default function NewsList() {
       return matchesFilter && matchesSearch;
     });
   }, [posts, filter, debouncedSearchQuery]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / ITEMS_PER_PAGE));
+  const currentPosts = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredPosts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredPosts, currentPage, ITEMS_PER_PAGE]);
+
+  // Reset page when filters change
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [filter, debouncedSearchQuery]);
 
   const categories = [
     { id: "all", name: "Tất cả" },
@@ -142,10 +156,18 @@ export default function NewsList() {
             ))}
           </div>
         ) : filteredPosts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {filteredPosts.map((post) => (
-              <NewsCard key={post.post_id} post={post} />
-            ))}
+          <div className="space-y-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {currentPosts.map((post) => (
+                <NewsCard key={post.post_id} post={post} />
+              ))}
+            </div>
+            
+            <Pagination 
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         ) : (
           <div className="py-24 flex flex-col items-center justify-center bg-white rounded-[40px] border border-slate-100 shadow-sm">

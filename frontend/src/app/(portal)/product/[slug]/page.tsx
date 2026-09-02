@@ -26,7 +26,7 @@ import {
 export default function ProductDetailPage() {
   const router = useRouter();
   const { slug } = useParams();
-  const { getProductBySlug, getProductsByCategory, loading: productsLoading } = useProducts();
+  const { getProductBySlug, getProductsByCategory, loading: productsLoading, products } = useProducts();
   const { categories, loading: categoriesLoading } = useProductCategories();
   const { logView } = useViewLog();
   const { isAuthenticated } = useAuthStore();
@@ -40,11 +40,12 @@ export default function ProductDetailPage() {
   const resumeAutoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   
   const product = getProductBySlug(slug as string);
+  console.log("ProductDetailPage Render: ", { slug, productsLoading, productsLength: products.length, productFound: !!product });
 
   const productImages = useMemo(() => {
     if (!product) return [];
 
-    const images = product.images?.length ? product.images : [product.thumbnail];
+    const images = product.images?.length ? product.images.map(img => img.url) : [product.thumbnail];
     return Array.from(new Set([product.thumbnail, ...images]));
   }, [product]);
 
@@ -162,14 +163,14 @@ export default function ProductDetailPage() {
             .filter(c => c.parent_id === category.parent_id)
             .map(c => c.category_id);
         
-        const parentSiblings = getProductsByCategory(0) // hack to get all or use filter on all products if hook allows
+        const parentSiblings = products
             .filter(p => subCategoryIds.includes(p.category_id) && p.product_id !== product.product_id);
         
         return [...directSiblings, ...parentSiblings].slice(0, 4);
     }
 
     return directSiblings.slice(0, 4);
-  }, [product, getProductsByCategory, categories]);
+  }, [product, getProductsByCategory, categories, products]);
 
   const favorite = product ? isAuthenticated && isFavorite(product.product_id) : false;
 
@@ -185,7 +186,7 @@ export default function ProductDetailPage() {
     else addFavorite(product);
   };
 
-  const loading = productsLoading || categoriesLoading;
+  const loading = productsLoading || categoriesLoading || !slug;
 
   if (loading) {
     return (
@@ -199,6 +200,9 @@ export default function ProductDetailPage() {
     return (
       <div className="pt-28 md:pt-40 pb-16 md:pb-20 container mx-auto px-4 text-center">
         <h1 className="text-4xl font-black mb-6 uppercase">Không tìm thấy sản phẩm</h1>
+        <p className="text-slate-500 mb-8">
+            Debug Info: slug={String(slug)}, products={products.length}, loading={loading ? "true" : "false"}
+        </p>
         <Link href="/products" className="text-brand-primary font-bold hover:underline uppercase text-xs tracking-widest flex items-center justify-center gap-2">
             <ArrowLeft size={14} />
             Quay lại danh sách sản phẩm
@@ -228,7 +232,7 @@ export default function ProductDetailPage() {
             
             {/* PRODUCT IMAGERY */}
             <div className="flex-1 space-y-6">
-                <div className="relative overflow-hidden rounded-3xl border border-slate-100 bg-slate-50 shadow-inner md:rounded-[40px]">
+                <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-50 shadow-sm md:rounded-2xl">
                     <div
                         className={`aspect-square overflow-hidden group relative touch-pan-y select-none ${
                             productImages.length > 1 ? "cursor-grab active:cursor-grabbing" : ""
@@ -324,10 +328,10 @@ export default function ProductDetailPage() {
                                 key={`${image}-thumb`}
                                 type="button"
                                 onClick={() => goToImage(index)}
-                                className={`aspect-square overflow-hidden rounded-2xl border-2 bg-slate-50 transition-all ${
+                                className={`aspect-square overflow-hidden rounded-lg border-2 bg-slate-50 transition-all ${
                                     selectedImageIndex === index
-                                        ? "border-brand-primary shadow-lg shadow-brand-primary/15"
-                                        : "border-slate-100 opacity-70 hover:opacity-100"
+                                        ? "border-brand-primary shadow-sm"
+                                        : "border-slate-200 opacity-70 hover:opacity-100 hover:border-slate-300"
                                 }`}
                                 aria-label={`Chọn ảnh ${index + 1}`}
                             >
@@ -430,7 +434,7 @@ export default function ProductDetailPage() {
                       <button className="shrink-0 pb-4 text-xs md:text-sm font-black uppercase tracking-wider md:tracking-widest text-slate-400 hover:text-slate-600 transition-colors">Đánh giá (0)</button>
                   </div>
                   
-                  <div className="bg-white p-5 md:p-10 rounded-3xl md:rounded-[40px] border border-slate-100 shadow-sm space-y-6">
+                  <div className="bg-white p-5 md:p-10 rounded-xl md:rounded-2xl border-[0.5px] border-slate-200 shadow-sm space-y-6">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 text-sm">
                           <div className="text-slate-400 font-bold uppercase tracking-wider">Vật liệu:</div>
                           <div className="text-slate-900 font-black">Thép không gỉ 304 / Inox 316</div>

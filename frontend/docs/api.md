@@ -701,6 +701,10 @@ Dữ liệu phản hồi:
 
 Query gửi đi: `q`, `categoryId`, `regionId`, `page`, `limit`.
 
+**⚠️ [Nghiệp vụ quan trọng - Business Logic]**
+- **Hiển thị hỗn hợp (Mixed Content):** Một danh mục đối tác bất kỳ (dù là Miền, Tỉnh/Thành hay Quận/Huyện) đều có thể chứa đồng thời **danh mục con** VÀ **bài viết (đối tác)** của riêng nó.
+- Nếu danh mục có chứa các danh mục con, danh sách các danh mục con sẽ được hiển thị ở phần "Khu vực trực thuộc". Nếu danh mục đó cũng có chứa các đối tác (bài viết), danh sách các đối tác này sẽ được hiển thị ngay bên dưới phần "Khu vực trực thuộc". Backend không cần giới hạn việc chỉ được tạo bài viết ở danh mục cấp thấp nhất.
+
 Dữ liệu phản hồi:
 
 ```json
