@@ -6,13 +6,13 @@ import { useProducts } from '@/hooks/useProducts';
 import CategoryProductSection from './CategoryProductSection';
 
 const CategoryProductsShowcase: React.FC = () => {
-    const { categories, loading: categoriesLoading } = useProductCategories();
+    const { categories, loading: categoriesLoading } = useProductCategories("PRODUCT");
     const { products, loading: productsLoading } = useProducts();
 
     if (categoriesLoading || productsLoading) return null;
 
     const parentCategories = categories
-        .filter(cat => cat.parent_id === null)
+        .filter(cat => !cat.parent_id)
         .sort((a, b) => a.display_order - b.display_order);
 
     return (

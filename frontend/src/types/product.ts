@@ -1,20 +1,34 @@
 import { AttachmentData } from './attachment';
 
 export interface Product {
+    id?: number;
     product_id: number;
     category_id: number;
+    categoryId?: number;
     product_code: string;
+    productCode?: string;
     name: string;
+    slug: string;
+    stock_quantity: number;
+    stockQuantity?: number;
     is_featured: boolean;
+    isFeatured?: boolean;
     is_contact_price: boolean;
+    isContactPrice?: boolean;
     base_price: number;
-    status: 'active' | 'inactive';
+    basePrice?: number;
+    sale_price?: number | null;
+    salePrice?: number | null;
+    status: 'active' | 'inactive' | 'ACTIVE' | 'INACTIVE' | 'DRAFT' | string;
     thumbnail: string;
     images?: AttachmentData[];
     view_count?: number;
     sold_count?: number;
     brand?: string;
     origin?: string;
+    short_description?: string;
+    shortDescription?: string;
+    content?: string;
     created_at: string;
     updated_at: string;
     deleted_at?: string;

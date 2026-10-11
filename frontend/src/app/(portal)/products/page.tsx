@@ -2,8 +2,8 @@ import React from "react";
 import ProductListing from "@/features/portal/products/ProductListing";
 import {
   filterAndPaginateProducts,
-  getProductCategories,
-  getProducts,
+  fetchCategoriesFromApi,
+  fetchProductsFromApi,
   parseProductFilters,
   type ProductSearchParams,
 } from "@/lib/product-catalog";
@@ -14,8 +14,10 @@ interface ProductsPageProps {
 
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const resolvedSearchParams = await searchParams;
-  const products = getProducts();
-  const categories = getProductCategories();
+  const [products, categories] = await Promise.all([
+    fetchProductsFromApi(),
+    fetchCategoriesFromApi()
+  ]);
   const filters = parseProductFilters(resolvedSearchParams);
   const listing = filterAndPaginateProducts(products, categories, filters);
 

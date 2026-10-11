@@ -11,11 +11,11 @@ import {
 import Link from 'next/link';
 
 const CategoryProductTabs: React.FC = () => {
-    const { categories, loading } = useProductCategories();
+    const { categories, loading } = useProductCategories("PRODUCT");
 
     const parentCategories = useMemo(() => {
         return categories
-            .filter(cat => cat.parent_id === null)
+            .filter(cat => !cat.parent_id)
             .sort((a, b) => a.display_order - b.display_order);
     }, [categories]);
 

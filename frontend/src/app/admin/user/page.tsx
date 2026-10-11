@@ -1,5 +1,5 @@
 'use client';
-
+import { useUsers, useRoles } from '@/hooks/useAdminModules';
 import React, { useState } from 'react';
 import { 
     Search, 
@@ -20,194 +20,216 @@ import {
     Save
 } from 'lucide-react';
 import { AdminModal, AdminInput, AdminSelect } from '@/components/admin/AdminUI';
-
-// Mock data for users
-const initialUsers = [
-    { id: '1', username: 'admin_thinh', email: 'admin@hungthinh.vn', fullname: 'Nguyễn Hưng Thịnh', role: 'Siêu quản trị', role_id: 'SUPER_ADMIN', status: 'active', phone: '0901.234.567', lastLogin: '2024-03-21 08:30' },
-    { id: '2', username: 'hoang_mech', email: 'hoang.le@gmail.com', fullname: 'Lê Minh Hoàng', role: 'Quản lý Nội dung', role_id: 'CONTENT_MANAGER', status: 'active', phone: '0908.765.432', lastLogin: '2024-03-20 14:15' },
-    { id: '3', username: 'customer_01', email: 'vantu@outlook.com', fullname: 'Trần Văn Tú', role: 'Khách hàng', role_id: 'USER', status: 'inactive', phone: '028.3848.xxxx', lastLogin: '2024-03-15 10:00' },
-    { id: '4', username: 'thuy_sales', email: 'thuy.nguyen@hungthinh.vn', fullname: 'Nguyễn Thị Thủy', role: 'Nhân viên Bán hàng', role_id: 'SALES', status: 'active', phone: '0912.333.444', lastLogin: '2024-03-21 09:12' },
-    { id: '5', username: 'phuc_kithuat', email: 'phuc.ho@hungthinh.vn', fullname: 'Hồ Hoàng Phúc', role: 'Kỹ thuật viên', role_id: 'TECHNICIAN', status: 'active', phone: '0988.999.888', lastLogin: '2024-03-19 16:45' },
-];
+import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
+import { useToastStore } from '@/store/useToastStore';
 
 export default function UserManagementPage() {
-    const [users, setUsers] = useState(initialUsers);
-    const [searchTerm, setSearchName] = useState('');
+    const { users, createUser, updateUser, deleteUser } = useUsers();
+    const { roles } = useRoles();
+    const { addToast } = useToastStore();
     const [roleFilter, setRoleFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('ALL');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingUser, setEditingUser] = useState<any>(null);
 
-    const filteredUsers = users.filter(user => {
-        const matchesSearch = 
-            user.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            user.username.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesRole = roleFilter === '' || user.role_id === roleFilter;
-        return matchesSearch && matchesRole;
+    const handleSave = async () => {
+        if (!editingUser?.username?.trim()) {
+            addToast('Vui lòng nhập tên đăng nhập', 'error');
+            return;
+        }
+
+        const roleIdInt = parseInt(editingUser.roleId?.toString() || editingUser.role_id?.toString() || '1') || 1;
+        const fullName = editingUser.fullName || editingUser.fullname || '';
+
+        try {
+            if (editingUser.id) {
+                const payload: any = {
+                    roleId: roleIdInt,
+                    email: editingUser.email || '',
+                    fullName: fullName,
+                    phone: editingUser.phone || '',
+                    status: (editingUser.status || 'ACTIVE').toUpperCase()
+                };
+                if (editingUser.password?.trim()) {
+                    payload.password = editingUser.password.trim();
+                }
+                await updateUser(editingUser.id, payload);
+                addToast('Cập nhật tài khoản thành công', 'success');
+            } else {
+                if (!editingUser.password?.trim()) {
+                    addToast('Vui lòng nhập mật khẩu khởi tạo', 'error');
+                    return;
+                }
+                const payload = {
+                    roleId: roleIdInt,
+                    username: editingUser.username.trim(),
+                    password: editingUser.password.trim(),
+                    email: editingUser.email || `${editingUser.username.trim()}@hungthinh.vn`,
+                    fullName: fullName || editingUser.username.trim(),
+                    phone: editingUser.phone || '',
+                    status: (editingUser.status || 'ACTIVE').toUpperCase()
+                };
+                await createUser(payload);
+                addToast('Thêm mới tài khoản thành công', 'success');
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            console.error('Save user error:', error);
+            addToast('Không thể lưu tài khoản. Vui lòng kiểm tra lại.', 'error');
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+            await deleteUser(id);
+            addToast('Đã xóa người dùng thành công', 'success');
+        }
+    };
+
+    const roleFilteredUsers = users.filter(user => {
+        const userRoleId = String(user.roleId ?? user.role_id ?? user.role?.id ?? '');
+        const userRoleCode = String(user.role?.code ?? '').toUpperCase();
+        if (roleFilter !== '' && userRoleId !== roleFilter && userRoleCode !== roleFilter) return false;
+        const currentStatus = String(user.status || 'ACTIVE').toUpperCase();
+        if (statusFilter !== 'ALL' && currentStatus !== statusFilter) return false;
+        return true;
     });
 
     const openModal = (user: any = null) => {
-        setEditingUser(user || {
-            fullname: '',
-            username: '',
-            email: '',
-            phone: '',
-            role_id: 'USER',
-            status: 'active'
-        });
+        if (user) {
+            setEditingUser({
+                ...user,
+                fullName: user.fullName || user.fullname || '',
+                fullname: user.fullName || user.fullname || '',
+                roleId: user.roleId || user.role_id || user.role?.id || 1,
+                role_id: user.roleId || user.role_id || user.role?.id || 1,
+                status: (user.status || 'ACTIVE').toUpperCase(),
+                password: ''
+            });
+        } else {
+            const defaultRoleId = roles.length > 0 ? roles[0].id : 1;
+            setEditingUser({
+                fullName: '',
+                fullname: '',
+                username: '',
+                email: '',
+                phone: '',
+                roleId: defaultRoleId,
+                role_id: defaultRoleId,
+                status: 'ACTIVE',
+                password: ''
+            });
+        }
         setIsModalOpen(true);
     };
 
     return (
         <div className="space-y-8 pb-20">
-            {/* Header Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý người dùng</h1>
-                    <p className="text-slate-500 font-bold">Danh sách tất cả tài khoản truy cập vào hệ thống.</p>
-                </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-brand-primary text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-3 w-fit"
-                >
-                    <Plus size={18} />
-                    Thêm người dùng mới
-                </button>
-            </div>
-
-            {/* Filters Bar */}
-            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4">
-                <div className="relative flex-grow">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input 
-                        type="text" 
-                        placeholder="Tìm theo tên, email, username..." 
-                        className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl pl-12 pr-6 py-3 focus:bg-white focus:border-brand-primary outline-none transition-all text-sm font-bold text-slate-900 placeholder:text-slate-400"
-                        value={searchTerm}
-                        onChange={(e) => setSearchName(e.target.value)}
-                    />
-                </div>
-                <div className="flex gap-4">
-                    <select 
-                        className="bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-3 outline-none text-sm font-bold text-slate-700 focus:border-brand-primary transition-all appearance-none cursor-pointer min-w-[140px]"
-                        value={roleFilter}
-                        onChange={(e) => setRoleFilter(e.target.value)}
+            <AdminPageLayout
+                title="Quản lý người dùng"
+                description="Danh sách tất cả tài khoản truy cập vào hệ thống."
+                actionButton={
+                    <button 
+                        onClick={() => openModal()}
+                        className="bg-brand-primary text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2.5 w-fit"
                     >
-                        <option value="">Tất cả Vai trò</option>
-                        <option value="SUPER_ADMIN">Siêu quản trị</option>
-                        <option value="CONTENT_MANAGER">Quản lý nội dung</option>
-                        <option value="TECHNICIAN">Kỹ thuật viên</option>
-                        <option value="SALES">Nhân viên Bán hàng</option>
-                        <option value="USER">Khách hàng</option>
-                    </select>
-                    <button className="bg-slate-900 text-white px-6 py-3 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
-                        <Filter size={14} /> Lọc
+                        <Plus size={16} />
+                        Thêm người dùng mới
                     </button>
-                </div>
-            </div>
+                }
+                data={roleFilteredUsers}
+                filters={
+                    <>
+                        <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="bg-white border border-slate-200 rounded-lg text-sm px-3 py-2 outline-none focus:border-brand-primary text-slate-700 font-medium">
+                            <option value="">Tất cả Vai trò</option>
+                            {roles.map(r => (
+                                <option key={r.id} value={r.id.toString()}>{r.name} ({r.code})</option>
+                            ))}
+                        </select>
+                        <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="bg-white border border-slate-200 rounded-lg text-sm px-3 py-2 outline-none focus:border-brand-primary text-slate-700 font-medium">
+                            <option value="ALL">Tất cả trạng thái</option>
+                            <option value="ACTIVE">Hoạt động</option>
+                            <option value="INACTIVE">Bị khóa</option>
+                        </select>
+                    </>
+                }
+                searchKey={(user) => (user.fullName || user.fullname || '') + ' ' + (user.email || '') + ' ' + (user.username || '')}
+                searchPlaceholder="Tìm theo tên, email, username..."
+                colSpan={6}
+                tableHeader={
+                    <tr>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Người dùng</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Liên hệ</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Vai trò</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Trạng thái</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Truy cập cuối</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600 text-right">Thao tác</th>
+                    </tr>
+                }
+                renderRow={(user, index) => {
+                    const fullName = user.fullName || user.fullname || user.username || 'Người dùng';
+                    const roleItem = user.role || roles.find(r => r.id === (user.roleId || user.role_id));
+                    const roleName = roleItem?.name || 'Thành viên';
+                    const isSuper = roleItem?.code === 'SUPER_ADMIN' || user.role_id === 'SUPER_ADMIN';
+                    const isActive = String(user.status || 'ACTIVE').toUpperCase() === 'ACTIVE';
+                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'Chưa đăng nhập';
 
-            {/* Users Table */}
-            <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Người dùng</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Liên hệ</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Vai trò</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Trạng thái</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Truy cập cuối</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50">
-                            {filteredUsers.length > 0 ? (
-                                filteredUsers.map((user) => (
-                                    <tr key={user.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(user)}>
-                                        <td className="px-8 py-5">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0">
-                                                    {user.fullname.charAt(0)}
-                                                </div>
-                                                <div>
-                                                    <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{user.fullname}</p>
-                                                    <p className="text-[10px] font-bold text-brand-primary">@{user.username}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <div className="space-y-1">
-                                                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                    <Mail size={12} className="text-slate-300" />
-                                                    {user.email}
-                                                </div>
-                                                <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                    <Phone size={12} className="text-slate-300" />
-                                                    {user.phone}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <div className="flex items-center gap-2">
-                                                <Shield size={14} className={user.role_id === 'SUPER_ADMIN' ? 'text-brand-accent' : 'text-slate-400'} />
-                                                <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{user.role}</span>
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5">
-                                            <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
-                                                user.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'
-                                            }`}>
-                                                {user.status === 'active' ? <UserCheck size={12} /> : <UserX size={12} />}
-                                                {user.status === 'active' ? 'Hoạt động' : 'Bị khóa'}
-                                            </div>
-                                        </td>
-                                        <td className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-tighter">
-                                            {user.lastLogin}
-                                        </td>
-                                        <td className="px-8 py-5 text-right">
-                                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                <button className="p-2 text-slate-400 hover:text-brand-primary hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => { e.stopPropagation(); openModal(user); }}>
-                                                    <Edit2 size={16} />
-                                                </button>
-                                                <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
-                                                    <Trash2 size={16} />
-                                                </button>
-                                                <button className="p-2 text-slate-400 hover:text-slate-900 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => e.stopPropagation()}>
-                                                    <MoreVertical size={16} />
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan={6} className="px-8 py-10 text-center text-slate-400 font-bold text-sm">
-                                        Không tìm thấy người dùng nào phù hợp.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
-
-                {/* Pagination */}
-                <div className="p-6 border-t border-slate-50 flex items-center justify-between bg-slate-50/30">
-                    <p className="text-xs text-slate-400 font-bold uppercase tracking-widest">Hiển thị 1 - 5 trong số 24 người dùng</p>
-                    <div className="flex items-center gap-2">
-                        <button className="p-2 text-slate-300 cursor-not-allowed">
-                            <ChevronLeft size={20} />
-                        </button>
-                        {[1, 2, 3].map(p => (
-                            <button key={p} className={`w-8 h-8 rounded-lg text-xs font-black transition-all ${p === 1 ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'text-slate-400 hover:bg-white'}`}>
-                                {p}
-                            </button>
-                        ))}
-                        <button className="p-2 text-slate-400 hover:text-brand-primary transition-all">
-                            <ChevronRight size={20} />
-                        </button>
-                    </div>
-                </div>
-            </div>
+                    return (
+                        <tr key={user.id || index} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(user)}>
+                            <td className="px-8 py-5">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center font-black text-xs shrink-0 uppercase">
+                                        {fullName.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{fullName}</p>
+                                        <p className="text-[10px] font-bold text-brand-primary">@{user.username}</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                        <Mail size={12} className="text-slate-300" />
+                                        {user.email || 'Chưa cập nhật'}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                        <Phone size={12} className="text-slate-300" />
+                                        {user.phone || 'Chưa cập nhật'}
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className="flex items-center gap-2">
+                                    <Shield size={14} className={isSuper ? 'text-brand-accent' : 'text-slate-400'} />
+                                    <span className="text-xs font-black text-slate-700 uppercase tracking-widest">{roleName}</span>
+                                </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter ${
+                                    isActive ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'
+                                }`}>
+                                    {isActive ? <UserCheck size={12} /> : <UserX size={12} />}
+                                    {isActive ? 'Hoạt động' : 'Bị khóa'}
+                                </div>
+                            </td>
+                            <td className="px-8 py-5 text-xs font-bold text-slate-400 uppercase tracking-tighter">
+                                {lastLogin}
+                            </td>
+                            <td className="px-8 py-5 text-right">
+                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button className="p-2 text-slate-400 hover:text-brand-primary hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => { e.stopPropagation(); openModal(user); }}>
+                                        <Edit2 size={16} />
+                                    </button>
+                                    <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg shadow-sm transition-all" onClick={(e) => { e.stopPropagation(); handleDelete(user.id); }}>
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    );
+                }}
+            />
 
             {/* USER MODAL */}
             <AdminModal
@@ -217,8 +239,8 @@ export default function UserManagementPage() {
                 size="md"
                 footer={
                     <>
-                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
-                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                        <button className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-semibold text-xs hover:bg-slate-200 transition-colors" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
+                        <button className="px-6 py-2.5 bg-brand-primary text-white rounded-lg font-semibold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2" onClick={handleSave}>
                             <Save size={16} /> Lưu thông tin
                         </button>
                     </>
@@ -230,14 +252,17 @@ export default function UserManagementPage() {
                             label="Họ và tên"
                             placeholder="Nhập tên đầy đủ..."
                             icon={UserIcon}
-                            defaultValue={editingUser?.fullname}
+                            value={editingUser?.fullName || editingUser?.fullname || ''} 
+                            onChange={(e) => setEditingUser({...editingUser, fullName: e.target.value, fullname: e.target.value})}
                             required
                         />
                         <AdminInput 
                             label="Tên đăng nhập (Username)"
                             placeholder="username_01"
                             icon={Shield}
-                            defaultValue={editingUser?.username}
+                            value={editingUser?.username || ''} 
+                            onChange={(e) => setEditingUser({...editingUser, username: e.target.value})}
+                            disabled={!!editingUser?.id}
                             required
                         />
                     </div>
@@ -248,15 +273,16 @@ export default function UserManagementPage() {
                             placeholder="name@hungthinh.vn"
                             icon={Mail}
                             type="email"
-                            defaultValue={editingUser?.email}
+                            value={editingUser?.email || ''} 
+                            onChange={(e) => setEditingUser({...editingUser, email: e.target.value})}
                             required
                         />
                         <AdminInput 
                             label="Số điện thoại"
                             placeholder="0123.456.789"
                             icon={Phone}
-                            defaultValue={editingUser?.phone}
-                            required
+                            value={editingUser?.phone || ''} 
+                            onChange={(e) => setEditingUser({...editingUser, phone: e.target.value})}
                         />
                     </div>
 
@@ -264,34 +290,44 @@ export default function UserManagementPage() {
                         <AdminSelect 
                             label="Vai trò hệ thống"
                             icon={KeyRound}
-                            defaultValue={editingUser?.role_id}
-                            options={[
-                                { value: 'SUPER_ADMIN', label: 'Siêu quản trị (Super Admin)' },
-                                { value: 'CONTENT_MANAGER', label: 'Quản lý Nội dung (Content Manager)' },
-                                { value: 'TECHNICIAN', label: 'Kỹ thuật viên (Technician)' },
-                                { value: 'SALES', label: 'Nhân viên Bán hàng (Sales)' },
-                                { value: 'USER', label: 'Khách hàng (User)' }
+                            value={String(editingUser?.roleId || editingUser?.role_id || '')} 
+                            onChange={(e) => setEditingUser({...editingUser, roleId: parseInt(e.target.value) || 1, role_id: parseInt(e.target.value) || 1})}
+                            options={roles.length > 0 ? roles.map(r => ({ value: r.id.toString(), label: `${r.name} (${r.code})` })) : [
+                                { value: '1', label: 'Quản trị viên (ADMIN)' },
+                                { value: '2', label: 'Khách hàng (USER)' }
                             ]}
                             required
                         />
                         <AdminSelect 
                             label="Trạng thái tài khoản"
-                            defaultValue={editingUser?.status}
+                            value={editingUser?.status || 'ACTIVE'} 
+                            onChange={(e) => setEditingUser({...editingUser, status: e.target.value})}
                             options={[
-                                { value: 'active', label: 'Đang hoạt động' },
-                                { value: 'inactive', label: 'Bị khóa/Tạm ngưng' }
+                                { value: 'ACTIVE', label: 'Đang hoạt động' },
+                                { value: 'INACTIVE', label: 'Bị khóa/Tạm ngưng' }
                             ]}
                             required
                         />
                     </div>
 
-                    {!editingUser?.id && (
+                    {!editingUser?.id ? (
                         <AdminInput 
                             label="Mật khẩu khởi tạo"
                             placeholder="••••••••"
                             icon={KeyRound}
                             type="password"
+                            value={editingUser?.password || ''}
+                            onChange={(e) => setEditingUser({...editingUser, password: e.target.value})}
                             required
+                        />
+                    ) : (
+                        <AdminInput 
+                            label="Đổi mật khẩu mới (để trống nếu không đổi)"
+                            placeholder="••••••••"
+                            icon={KeyRound}
+                            type="password"
+                            value={editingUser?.password || ''}
+                            onChange={(e) => setEditingUser({...editingUser, password: e.target.value})}
                         />
                     )}
                 </div>

@@ -4,7 +4,21 @@
     "title": "VỀ CHÚNG TÔI",
     "highlight": "CÔNG TY TNHH HƯNG THỊNH",
     "excerpt": "CÔNG TY TNHH MÁY VÀ THIẾT BỊ HƯNG THỊNH - Đối tác tin cậy trong lĩnh vực cung cấp giải pháp máy móc công nghiệp và thiết bị thủy lực tại Việt Nam.",
-    "thumbnail": "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?q=80&w=1200&auto=format&fit=crop"
+    "thumbnail": "/images/about/1790581774807-49378165.jpg",
+    "stats": [
+      {
+        "number": "15+",
+        "label": "Năm kinh nghiệm"
+      },
+      {
+        "number": "10.000+",
+        "label": "Khách hàng"
+      },
+      {
+        "number": "50+",
+        "label": "Đối tác"
+      }
+    ]
   },
   "story": {
     "heading": "Câu chuyện của chúng tôi",
@@ -34,7 +48,7 @@
     }
   ],
   "showcase": {
-    "image": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=1200&auto=format&fit=crop",
+    "image": "/images/about/1790532251323-781611772.png",
     "alt": "Xưởng máy",
     "caption": "Uy tín làm nên thương hiệu"
   },
@@ -49,5 +63,6 @@
     "hoursLabel": "Giờ làm việc",
     "hours": "Thứ 2 - Thứ 7: 08:00 - 17:30",
     "cta": "Gửi yêu cầu báo giá"
-  }
+  },
+  "quote": "Chất lượng là lời cam kết, không phải khẩu hiệu. Chúng tôi đồng hành cùng sự phát triển bền vững của doanh nghiệp bạn."
 }

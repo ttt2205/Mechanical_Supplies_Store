@@ -33,7 +33,21 @@ export default function PartnerCategoryPage({ params }: { params: Promise<{ slug
     { id: 7, category_id: 30031, name: "Tổng kho Phía Bắc - Hà Nội", address: "KCN Thăng Long, Đông Anh, Hà Nội", phone: "0906.666.666", email: "hanoi@hungthinh.vn", type: "Tổng kho" },
   ];
 
-  const mockPartnerDetails = ALL_MOCK_PARTNERS.filter(p => p.category_id === category?.category_id);
+  const mockPartnerDetails = ALL_MOCK_PARTNERS.filter(p => 
+    p.category_id === category?.category_id || 
+    (category?.slug && (
+      (category.slug.includes('mien-nam') && p.category_id === 3001) ||
+      (category.slug.includes('ho-chi-minh') && p.category_id === 30011) ||
+      (category.slug.includes('binh-duong') && p.category_id === 30012) ||
+      (category.slug.includes('dong-nai') && p.category_id === 3001) ||
+      (category.slug.includes('mien-trung') && p.category_id === 3002) ||
+      (category.slug.includes('da-nang') && p.category_id === 30021) ||
+      (category.slug.includes('khanh-hoa') && p.category_id === 3002) ||
+      (category.slug.includes('mien-bac') && p.category_id === 3003) ||
+      (category.slug.includes('ha-noi') && p.category_id === 30031) ||
+      (category.slug.includes('hai-phong') && p.category_id === 3003)
+    ))
+  );
 
   if (loading) {
     return (

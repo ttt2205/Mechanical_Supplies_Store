@@ -36,23 +36,10 @@ export default function AccountInfo() {
 
   if (!isHydrated) return null;
 
-  if (!isAuthenticated) {
-    return (
-      <Link 
-        href="/login"
-        className="flex items-center gap-2 text-white/80 hover:text-white transition-colors group"
-      >
-        <div className="bg-white/10 border border-white/20 rounded-full p-2 group-hover:bg-white/20 transition-all">
-          <LogIn size={18} />
-        </div>
-        <span className="text-xs font-bold uppercase tracking-wider hidden sm:block">
-          Đăng nhập
-        </span>
-      </Link>
-    );
-  }
+  if (!isAuthenticated) return null;
 
-  const isAdmin = user?.role_id === 'admin';
+  const isAdmin = user?.role_id !== 'customer';
+  const roleName = isAdmin && user?.role_id ? user.role_id.toUpperCase() : "KHÁCH HÀNG";
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -65,7 +52,7 @@ export default function AccountInfo() {
         </div>
         <div className="text-left hidden sm:block leading-tight">
           <p className="text-[10px] font-black uppercase tracking-widest text-brand-accent">
-            {isAdmin ? "Quản trị viên" : "Khách hàng"}
+            {roleName}
           </p>
           <p className="text-xs font-bold truncate max-w-[120px]">
             {user?.username || user?.email}

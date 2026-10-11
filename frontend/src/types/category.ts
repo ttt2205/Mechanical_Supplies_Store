@@ -3,12 +3,14 @@ export interface Category {
     parent_id: number | null;
     name: string;
     slug: string;
+    code?: string;
+    type?: string;
     description?: string;
     image?: string;
     icon?: string;
-    level: number;
+    level?: number;
     display_order: number;
     status: 'active' | 'inactive';
-    created_at: string;
-    updated_at: string;
+    created_at?: string;
+    updated_at?: string;
 }

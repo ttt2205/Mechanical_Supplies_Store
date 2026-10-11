@@ -1,11 +1,13 @@
 import type { Product } from "@/types/product";
 
-export const MOCK_PRODUCTS: Product[] = [
+export const MOCK_PRODUCTS: any[] = [
   {
     product_id: 1,
     category_id: 101,
     product_code: "MS-BOLT-S304",
     name: "Bu lông lục giác inox 304 - M8x50mm",
+  slug: 'slug',
+  stock_quantity: 0,
     is_featured: false,
     is_contact_price: false,
     base_price: 15000,
@@ -31,6 +33,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category_id: 101,
     product_code: "MS-NUT-S316",
     name: "Đai ốc inox 316 chống ăn mòn - M12",
+  slug: 'slug',
+  stock_quantity: 0,
     is_featured: false,
     is_contact_price: false,
     base_price: 8500,
@@ -55,6 +59,8 @@ export const MOCK_PRODUCTS: Product[] = [
     category_id: 102,
     product_code: "MS-PIPE-C45",
     name: "Ống thép đúc phi 60 độ dày 5mm - Thép C45",
+  slug: 'slug',
+  stock_quantity: 0,
     is_featured: true,
     is_contact_price: true,
     base_price: 0,

@@ -15,24 +15,50 @@ import {
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
+import { fetchApi } from '@/lib/api';
+
 export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
+
+    const [form, setForm] = useState({
+        username: '',
+        fullName: '',
+        email: '',
+        phone: '',
+        password: ''
+    });
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setErrorMessage('');
         
-        // Simulate registration process
-        setTimeout(() => {
-            setIsLoading(false);
+        try {
+            await fetchApi('/Authentication/register', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: form.username.trim(),
+                    password: form.password,
+                    email: form.email.trim(),
+                    fullName: form.fullName.trim(),
+                    phone: form.phone.trim()
+                })
+            });
+
             setIsSuccess(true);
             setTimeout(() => {
                 router.push('/login');
             }, 2000);
-        }, 1500);
+        } catch (err: any) {
+            console.error('Registration failed:', err);
+            setErrorMessage(err?.message || 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     if (isSuccess) {
@@ -65,6 +91,12 @@ export default function RegisterPage() {
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-5">
+                    {errorMessage && (
+                        <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-bold text-center animate-fade-in">
+                            {errorMessage}
+                        </div>
+                    )}
+
                     {/* Username Field */}
                     <div className="space-y-2">
                         <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 ml-4">
@@ -77,6 +109,8 @@ export default function RegisterPage() {
                             <input 
                                 type="text" 
                                 required
+                                value={form.username}
+                                onChange={(e) => setForm({...form, username: e.target.value})}
                                 placeholder="hungthinh_user"
                                 className="w-full pl-14 pr-6 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />
@@ -95,6 +129,8 @@ export default function RegisterPage() {
                             <input 
                                 type="text" 
                                 required
+                                value={form.fullName}
+                                onChange={(e) => setForm({...form, fullName: e.target.value})}
                                 placeholder="Nguyễn Văn A"
                                 className="w-full pl-14 pr-6 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />
@@ -113,6 +149,8 @@ export default function RegisterPage() {
                             <input 
                                 type="email" 
                                 required
+                                value={form.email}
+                                onChange={(e) => setForm({...form, email: e.target.value})}
                                 placeholder="name@example.com"
                                 className="w-full pl-14 pr-6 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />
@@ -131,6 +169,8 @@ export default function RegisterPage() {
                             <input 
                                 type="tel" 
                                 required
+                                value={form.phone}
+                                onChange={(e) => setForm({...form, phone: e.target.value})}
                                 placeholder="0123.456.789"
                                 className="w-full pl-14 pr-6 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />
@@ -149,6 +189,8 @@ export default function RegisterPage() {
                             <input 
                                 type={showPassword ? "text" : "password"} 
                                 required
+                                value={form.password}
+                                onChange={(e) => setForm({...form, password: e.target.value})}
                                 placeholder="••••••••"
                                 className="w-full pl-14 pr-14 py-4 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />

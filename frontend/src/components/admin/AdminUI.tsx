@@ -1,6 +1,6 @@
-﻿import React, { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { X, Settings } from 'lucide-react';
+import { X, ChevronDown, Minus, Plus } from 'lucide-react';
 
 interface ModalProps {
     isOpen: boolean;
@@ -19,8 +19,8 @@ export const AdminModal: React.FC<ModalProps> = ({
     footer,
     size = 'md' 
 }) => {
-
-    useEffect(() => {        if (isOpen) {
+    useEffect(() => {
+        if (isOpen) {
             document.body.style.overflow = 'hidden';
         } else {
             document.body.style.overflow = 'unset';
@@ -41,38 +41,38 @@ export const AdminModal: React.FC<ModalProps> = ({
     };
 
     const modalContent = (
-        <div className="fixed inset-0 z-[9999] flex items-end justify-center overflow-hidden p-0 sm:items-center sm:p-6">
-            {/* Backdrop - High Contrast & Blur */}
+        <div className="fixed inset-0 z-[9999] flex items-end justify-center overflow-hidden p-0 sm:items-center sm:p-4 md:p-6">
+            {/* Backdrop - Soft, natural overlay */}
             <div 
-                className="absolute inset-0 bg-slate-950/70 backdrop-blur-md animate-fade-in duration-300" 
+                className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] transition-opacity animate-fade-in duration-200" 
                 onClick={onClose}
-            ></div>
+            />
             
-            {/* Modal Content - 'Pop-out' Effect */}
-            <div className={`relative bg-white w-full ${sizeClasses[size]} rounded-t-[28px] sm:rounded-[40px] lg:rounded-[48px] shadow-[0_30px_100px_-10px_rgba(0,0,0,0.5)] border border-white/20 flex flex-col max-h-[92vh] sm:max-h-[90vh] overflow-hidden animate-reveal-scale duration-500`}>
+            {/* Modal Dialog - Clean, modern, crisp */}
+            <div className={`relative bg-white w-full ${sizeClasses[size]} rounded-t-2xl sm:rounded-2xl shadow-xl border border-slate-200/80 flex flex-col max-h-[92vh] sm:max-h-[90vh] overflow-hidden animate-reveal-scale duration-300`}>
                 {/* Header */}
-                <div className="px-5 py-5 sm:px-8 sm:py-7 lg:px-12 lg:py-10 border-b border-slate-50 flex items-center justify-between gap-4 shrink-0 bg-slate-50/80 backdrop-blur-xl">
+                <div className="px-6 py-4.5 sm:px-8 sm:py-5 border-b border-slate-100 flex items-center justify-between gap-4 shrink-0 bg-white">
                     <div>
-                        <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase tracking-tight">{title}</h3>
-                        <div className="h-1 w-12 bg-brand-primary rounded-full mt-2"></div>
+                        <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">{title}</h3>
+                        <div className="h-0.5 w-10 bg-brand-primary rounded-full mt-1.5"></div>
                     </div>
                     <button 
                         onClick={onClose}
-                        className="flex h-11 w-11 shrink-0 items-center justify-center bg-white text-slate-400 hover:text-red-500 rounded-2xl shadow-sm hover:shadow-md transition-all border border-slate-100"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
                         aria-label="Đóng"
                     >
-                        <X size={20} />
+                        <X size={18} />
                     </button>
                 </div>
 
                 {/* Body */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar p-5 sm:p-8 lg:p-10">
+                <div className="flex-1 overflow-y-auto custom-scrollbar p-6 sm:p-8">
                     {children}
                 </div>
 
                 {/* Footer */}
                 {footer && (
-                    <div className="px-5 py-4 sm:px-8 lg:px-10 lg:py-6 border-t border-slate-50 shrink-0 bg-slate-50/30 flex flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-3 sm:gap-4">
+                    <div className="px-6 py-4 sm:px-8 border-t border-slate-100 shrink-0 bg-slate-50/60 flex flex-col-reverse sm:flex-row justify-end items-stretch sm:items-center gap-2.5 sm:gap-3">
                         {footer}
                     </div>
                 )}
@@ -106,69 +106,128 @@ interface AdminTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaEl
     label?: string;
 }
 
-export const AdminInput: React.FC<AdminInputProps> = ({ label, icon: Icon, error, ...props }) => (
-    <div className="space-y-2">
-        {label && (
-                <label className="text-[10px] sm:text-xs font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-700 ml-2 sm:ml-4 flex items-center gap-2">
-                {label} {props.required && <span className="text-red-500">*</span>}
-            </label>
-        )}
-        <div className="relative group">
-            {Icon && (
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors">
-                    <Icon size={18} />
+export const AdminInput: React.FC<AdminInputProps> = ({ label, icon: Icon, error, type, ...props }) => {
+    if (type === 'number') {
+        const handleMinus = (e: any) => {
+            e.preventDefault();
+            const val = Number(props.value || 0);
+            if (props.onChange && !props.disabled) {
+                // @ts-ignore
+                props.onChange({ target: { value: Math.max(0, val - 1) } });
+            }
+        };
+        const handlePlus = (e: any) => {
+            e.preventDefault();
+            const val = Number(props.value || 0);
+            if (props.onChange && !props.disabled) {
+                // @ts-ignore
+                props.onChange({ target: { value: val + 1 } });
+            }
+        };
+        
+        return (
+            <div className="space-y-1.5">
+                {label && (
+                    <label className="block text-xs font-semibold text-slate-700 ml-0.5">
+                        {label} {props.required && <span className="text-red-500 font-bold">*</span>}
+                    </label>
+                )}
+                <div className={`relative flex items-center bg-white border border-slate-200 rounded-lg hover:border-slate-300 focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/10 transition-all ${props.disabled ? 'bg-slate-50 opacity-60 cursor-not-allowed' : ''} ${error ? 'border-red-300 focus-within:border-red-500 focus-within:ring-red-100' : ''}`}>
+                    {Icon && (
+                        <div className="pl-3.5 text-slate-400 shrink-0 pointer-events-none">
+                            <Icon size={16} />
+                        </div>
+                    )}
+                    <button 
+                        type="button" 
+                        onClick={handleMinus} 
+                        disabled={props.disabled} 
+                        className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100/70 active:bg-slate-200 rounded-md my-0.5 ml-0.5 transition-colors disabled:opacity-30 disabled:pointer-events-none shrink-0"
+                        title="Giảm"
+                    >
+                        <Minus size={15} />
+                    </button>
+                    <input 
+                        {...props}
+                        type="number"
+                        className="flex-1 w-full min-w-0 py-2 px-2 bg-transparent outline-none text-center font-medium text-sm text-slate-800 placeholder:text-slate-400 disabled:cursor-not-allowed [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" 
+                    />
+                    <button 
+                        type="button" 
+                        onClick={handlePlus} 
+                        disabled={props.disabled} 
+                        className="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-100/70 active:bg-slate-200 rounded-md my-0.5 mr-0.5 transition-colors disabled:opacity-30 disabled:pointer-events-none shrink-0"
+                        title="Tăng"
+                    >
+                        <Plus size={15} />
+                    </button>
                 </div>
+                {error && <p className="text-xs font-medium text-red-500 ml-1">{error}</p>}
+            </div>
+        );
+    }
+
+    return (
+        <div className="space-y-1.5">
+            {label && (
+                <label className="block text-xs font-semibold text-slate-700 ml-0.5">
+                    {label} {props.required && <span className="text-red-500 font-bold">*</span>}
+                </label>
             )}
-            <input 
-                {...props}
-                className={`w-full ${Icon ? 'pl-14' : 'px-5 sm:px-8'} pr-5 sm:pr-6 py-3.5 sm:py-4 bg-slate-50 border-2 border-slate-200 shadow-sm rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-base text-slate-900 placeholder:text-slate-400 ${error ? 'border-red-200 focus:border-red-500' : ''}`} 
-            />
+            <div className="relative group">
+                {Icon && (
+                    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors pointer-events-none">
+                        <Icon size={16} />
+                    </div>
+                )}
+                <input 
+                    {...props}
+                    className={`w-full ${Icon ? 'pl-10' : 'px-3.5'} pr-3.5 py-2.5 bg-white border border-slate-200 rounded-lg hover:border-slate-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all text-sm font-medium text-slate-800 placeholder:text-slate-400 placeholder:font-normal disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed ${error ? 'border-red-300 focus:border-red-500 focus:ring-red-100' : ''} ${props.className || ''}`} 
+                />
+            </div>
+            {error && <p className="text-xs font-medium text-red-500 ml-1">{error}</p>}
         </div>
-        {error && <p className="text-[10px] font-bold text-red-500 ml-4 italic">{error}</p>}
-    </div>
-);
+    );
+};
 
 export const AdminSelect: React.FC<AdminSelectProps> = ({ label, options, icon: Icon, ...props }) => (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
         {label && (
-            <label className="text-[10px] sm:text-xs font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-700 ml-2 sm:ml-4 flex items-center gap-2">
-                {label} {props.required && <span className="text-red-500">*</span>}
+            <label className="block text-xs font-semibold text-slate-700 ml-0.5">
+                {label} {props.required && <span className="text-red-500 font-bold">*</span>}
             </label>
         )}
         <div className="relative group">
             {Icon && (
-                <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors pointer-events-none">
-                    <Icon size={18} />
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors pointer-events-none">
+                    <Icon size={16} />
                 </div>
             )}
             <select 
                 {...props}
-                className={`w-full ${Icon ? 'pl-14' : 'px-5 sm:px-8'} pr-12 py-3.5 sm:py-4 bg-slate-50 border-2 border-slate-200 shadow-sm rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-base text-slate-900 appearance-none cursor-pointer`}
+                className={`w-full ${Icon ? 'pl-10' : 'px-3.5'} pr-10 py-2.5 bg-white border border-slate-200 rounded-lg hover:border-slate-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all text-sm font-medium text-slate-800 appearance-none cursor-pointer disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed ${props.className || ''}`}
             >
                 {options.map((opt) => (
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
             </select>
-            <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                <Settings size={14} className="rotate-90" />
+            <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 group-hover:text-slate-600 transition-colors">
+                <ChevronDown size={16} />
             </div>
         </div>
     </div>
 );
 
 export const AdminTextarea: React.FC<AdminTextareaProps> = ({ label, ...props }) => (
-    <div className="space-y-2">
+    <div className="space-y-1.5">
         {label && (
-            <label className="text-[10px] sm:text-xs font-black uppercase tracking-[0.16em] sm:tracking-[0.2em] text-slate-700 ml-2 sm:ml-4 flex items-center gap-2">
-                {label} {props.required && <span className="text-red-500">*</span>}
+            <label className="block text-xs font-semibold text-slate-700 ml-0.5">
+                {label} {props.required && <span className="text-red-500 font-bold">*</span>}
             </label>
         )}
         <textarea 
             {...props}
-            className="w-full px-5 py-4 sm:px-8 sm:py-5 bg-slate-50 border-2 border-slate-200 shadow-sm rounded-2xl sm:rounded-3xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-base text-slate-900 placeholder:text-slate-400 resize-none" 
+            className={`w-full px-3.5 py-2.5 bg-white border border-slate-200 rounded-lg hover:border-slate-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/10 outline-none transition-all text-sm font-normal text-slate-800 placeholder:text-slate-400 resize-y min-h-[96px] disabled:bg-slate-50 disabled:text-slate-400 disabled:cursor-not-allowed ${props.className || ''}`} 
         />
     </div>
 );
-
-
-

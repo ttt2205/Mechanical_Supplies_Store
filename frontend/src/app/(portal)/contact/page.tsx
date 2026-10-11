@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
     Phone, 
     Mail, 
@@ -10,11 +10,60 @@ import {
     Send,
     ChevronRight,
     BadgeCheck,
-    Smartphone
+    Smartphone,
+    Loader2,
+    CheckCircle2
 } from 'lucide-react';
 import ScrollReveal from '@/components/ui/ScrollReveal';
+import { fetchApi } from '@/lib/api';
+import { useToastStore } from '@/store/useToastStore';
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phone: '',
+    email: '',
+    service: 'Tư vấn mua máy bấm ống',
+    message: ''
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const { addToast } = useToastStore();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.fullName.trim()) {
+      addToast('Vui lòng nhập họ và tên của bạn', 'error');
+      return;
+    }
+    if (!formData.phone.trim()) {
+      addToast('Vui lòng nhập số điện thoại liên hệ', 'error');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await fetchApi('/contacts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      setIsSuccess(true);
+      addToast('Gửi yêu cầu tư vấn thành công! Chúng tôi sẽ liên hệ lại với bạn sớm nhất.', 'success');
+      setFormData({
+        fullName: '',
+        phone: '',
+        email: '',
+        service: 'Tư vấn mua máy bấm ống',
+        message: ''
+      });
+    } catch (err: any) {
+      addToast(err?.message || 'Có lỗi xảy ra khi gửi yêu cầu. Vui lòng thử lại sau!', 'error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <main className="bg-white">
       {/* Hero Section - Professional & Trustworthy */}
@@ -130,53 +179,109 @@ export default function ContactPage() {
                         </h2>
                         <p className="text-slate-500 text-sm md:text-base font-medium mb-8 md:mb-12">Hãy để lại thông tin, đội ngũ kỹ thuật của chúng tôi sẽ liên hệ lại với bạn trong vòng 30 phút.</p>
                         
-                        <form className="space-y-4 md:space-y-6">
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                                <div className="space-y-2">
-                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Họ và tên</label>
-                                    <input 
-                                        type="text" 
-                                        placeholder="Nguyễn Văn A"
-                                        className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900" 
-                                    />
+                        {isSuccess ? (
+                            <div className="p-8 bg-emerald-50 border border-emerald-200 rounded-2xl text-center space-y-4">
+                                <div className="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
+                                    <CheckCircle2 size={32} />
                                 </div>
-                                <div className="space-y-2">
-                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Số điện thoại</label>
-                                    <input 
-                                        type="tel" 
-                                        placeholder="0123.456.789"
-                                        className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900" 
-                                    />
-                                </div>
+                                <h3 className="text-xl font-black text-slate-900 uppercase">Gửi yêu cầu thành công!</h3>
+                                <p className="text-sm font-medium text-slate-600 max-w-md mx-auto">
+                                    Cảm ơn quý khách đã gửi thông tin. Đội ngũ chuyên gia kỹ thuật của Hưng Thịnh sẽ liên hệ lại với bạn trong vòng 30 phút.
+                                </p>
+                                <button 
+                                    onClick={() => setIsSuccess(false)}
+                                    className="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider transition-all"
+                                >
+                                    Gửi thêm yêu cầu khác
+                                </button>
                             </div>
-                            
-                            <div className="space-y-2">
-                                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Dịch vụ quan tâm</label>
-                                <div className="relative">
-                                    <select className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900 appearance-none">
-                                        <option>Tư vấn mua máy bấm ống</option>
-                                        <option>Bảo trì hệ thống thủy lực</option>
-                                        <option>Gia công ống thành phẩm</option>
-                                        <option>Khác</option>
-                                    </select>
-                                    <ChevronRight className="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" size={16} />
+                        ) : (
+                            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Họ và tên *</label>
+                                        <input 
+                                            type="text" 
+                                            required
+                                            value={formData.fullName}
+                                            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                                            placeholder="Nguyễn Văn A"
+                                            className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900" 
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Số điện thoại *</label>
+                                        <input 
+                                            type="tel" 
+                                            required
+                                            value={formData.phone}
+                                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                                            placeholder="0123.456.789"
+                                            className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900" 
+                                        />
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div className="space-y-2">
-                                <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Nội dung tin nhắn</label>
-                                <textarea 
-                                    rows={5}
-                                    placeholder="Mô tả chi tiết nhu cầu của bạn..."
-                                    className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900 resize-none"
-                                ></textarea>
-                            </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Email (Tùy chọn)</label>
+                                        <input 
+                                            type="email" 
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                            placeholder="example@gmail.com"
+                                            className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900" 
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Dịch vụ quan tâm</label>
+                                        <div className="relative">
+                                            <select 
+                                                value={formData.service}
+                                                onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                                                className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900 appearance-none"
+                                            >
+                                                <option value="Tư vấn mua máy bấm ống">Tư vấn mua máy bấm ống</option>
+                                                <option value="Bảo trì hệ thống thủy lực">Bảo trì hệ thống thủy lực</option>
+                                                <option value="Gia công ống thành phẩm">Gia công ống thành phẩm</option>
+                                                <option value="Báo giá thiết bị cơ khí">Báo giá thiết bị cơ khí</option>
+                                                <option value="Khác">Khác</option>
+                                            </select>
+                                            <ChevronRight className="absolute right-6 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" size={16} />
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <button className="w-full py-4 md:py-5 bg-brand-primary hover:bg-slate-900 text-white rounded-2xl text-xs md:text-sm font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-4 group">
-                                Gửi yêu cầu ngay
-                                <Send size={20} className="group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
-                            </button>
-                        </form>
+                                <div className="space-y-2">
+                                    <label className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 ml-4">Nội dung tin nhắn</label>
+                                    <textarea 
+                                        rows={5}
+                                        value={formData.message}
+                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                        placeholder="Mô tả chi tiết nhu cầu hoặc câu hỏi kỹ thuật của bạn..."
+                                        className="w-full px-6 md:px-8 py-4 md:py-5 bg-slate-50 border-2 border-slate-50 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-900 resize-none"
+                                    ></textarea>
+                                </div>
+
+                                <button 
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="w-full py-4 md:py-5 bg-brand-primary hover:bg-slate-900 disabled:opacity-50 text-white rounded-2xl text-xs md:text-sm font-black uppercase tracking-[0.2em] shadow-xl hover:shadow-2xl transition-all flex items-center justify-center gap-4 group"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 size={20} className="animate-spin" />
+                                            <span>Đang gửi thông tin...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <span>Gửi yêu cầu ngay</span>
+                                            <Send size={20} className="group-hover:translate-x-2 group-hover:-translate-y-1 transition-transform" />
+                                        </>
+                                    )}
+                                </button>
+                            </form>
+                        )}
                     </ScrollReveal>
                 </div>
 

@@ -1,168 +1,63 @@
 import { useState, useEffect } from "react";
 import { Category } from "@/types/category";
+import { fetchApi } from "@/lib/api";
 
-const MOCK_PARTNERS: Category[] = [
-  {
-    category_id: 3001,
-    parent_id: null,
-    name: "Miền Nam",
-    slug: "mien-nam",
-    description: "Khu vực kinh tế trọng điểm phía Nam với hệ thống đối tác rộng khắp.",
-    level: 1,
-    display_order: 1,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 3002,
-    parent_id: null,
-    name: "Miền Trung",
-    slug: "mien-trung",
-    description: "Kết nối các đối tác tại khu vực duyên hải và Tây Nguyên.",
-    level: 1,
-    display_order: 2,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 3003,
-    parent_id: null,
-    name: "Miền Bắc",
-    slug: "mien-bac",
-    description: "Mạng lưới đối tác tại thủ đô Hà Nội và các tỉnh phía Bắc.",
-    level: 1,
-    display_order: 3,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  // Level 2 - Miền Nam
-  {
-    category_id: 30011,
-    parent_id: 3001,
-    name: "TP. Hồ Chí Minh",
-    slug: "tp-ho-chi-minh",
-    level: 2,
-    display_order: 1,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 30012,
-    parent_id: 3001,
-    name: "Bình Dương",
-    slug: "binh-duong",
-    level: 2,
-    display_order: 2,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 30013,
-    parent_id: 3001,
-    name: "Đồng Nai",
-    slug: "dong-nai",
-    level: 2,
-    display_order: 3,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  // Level 2 - Miền Trung
-  {
-    category_id: 30021,
-    parent_id: 3002,
-    name: "Đà Nẵng",
-    slug: "da-nang",
-    level: 2,
-    display_order: 1,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 30022,
-    parent_id: 3002,
-    name: "Khánh Hòa",
-    slug: "khanh-hoa",
-    level: 2,
-    display_order: 2,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  // Level 2 - Miền Bắc
-  {
-    category_id: 30031,
-    parent_id: 3003,
-    name: "Hà Nội",
-    slug: "ha-noi",
-    level: 2,
-    display_order: 1,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 30032,
-    parent_id: 3003,
-    name: "Hải Phòng",
-    slug: "hai-phong",
-    level: 2,
-    display_order: 2,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  // Level 3 - TP.HCM (Ví dụ)
-  {
-    category_id: 300111,
-    parent_id: 30011,
-    name: "Quận 1",
-    slug: "quan-1",
-    level: 3,
-    display_order: 1,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    category_id: 300112,
-    parent_id: 30011,
-    name: "Quận 7",
-    slug: "quan-7",
-    level: 3,
-    display_order: 2,
-    status: "active",
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-];
+const mapCategory = (c: any): Category => ({
+  category_id: c.id ?? c.Id,
+  parent_id: (c.parentId ?? c.ParentId) ?? null,
+  code: c.code ?? c.Code,
+  name: c.name ?? c.Name,
+  slug: c.slug ?? c.Slug,
+  type: c.type ?? c.Type ?? 'PARTNER',
+  description: c.description ?? c.Description ?? '',
+  icon: c.icon ?? c.Icon ?? 'Package',
+  display_order: c.displayOrder ?? c.DisplayOrder ?? 0,
+  status: c.status ?? c.Status ?? 'ACTIVE'
+});
 
 export const usePartnerCategories = () => {
   const [partners, setPartners] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tick, setTick] = useState(0);
+  const refresh = () => setTick(t => t + 1);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setPartners(MOCK_PARTNERS);
-      setLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
-  }, []);
+    let isMounted = true;
+    const loadData = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchApi<any[]>('/Categories?type=PARTNER');
+        if (isMounted) {
+          if (Array.isArray(data)) {
+            setPartners(data.map(mapCategory));
+          } else {
+            setPartners([]);
+          }
+        }
+      } catch (err) {
+        console.error("usePartnerCategories load error:", err);
+        if (isMounted) {
+          setPartners([]);
+        }
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
+      }
+    };
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [tick]);
 
   const getCategoryBySlug = (slug: string) => {
-    return partners.find(s => s.slug === slug);
+    return partners.find(s => s.slug === slug || s.code?.toLowerCase() === slug.toLowerCase());
   };
 
   const getSubCategories = (parentId: number) => {
     return partners.filter(s => s.parent_id === parentId);
   };
 
-  return { partners, loading, getCategoryBySlug, getSubCategories };
+  return { partners, loading, refresh, getCategoryBySlug, getSubCategories };
 };

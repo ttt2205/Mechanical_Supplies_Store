@@ -50,26 +50,26 @@ function SearchableCategorySelect({ categories, selectedValue, onChange }: { cat
   const selectedName = selectedValue ? categories.find(c => c.category_id === selectedValue)?.name : "Tất cả danh mục";
 
   return (
-    <div className="relative min-w-[180px] lg:minw-[220px]" ref={dropdownRef}>
+    <div className="relative min-w-[200px]" ref={dropdownRef}>
       <button 
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2 border-b border-slate-200/60 bg-transparent px-1 py-2.5 text-sm font-medium text-slate-700 outline-none transition-all hover:border-slate-400 focus:border-brand-primary"
+        className="w-full flex items-center justify-between gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-800 outline-none transition-all hover:border-slate-300 focus:border-brand-primary"
       >
         <span className="truncate">{selectedName}</span>
-        <ChevronDown size={14} className={`text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+        <ChevronDown size={15} className={`text-slate-500 transition-transform duration-200 ${isOpen ? 'rotate-180 text-brand-primary' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 mt-2 w-[280px] rounded-xl border border-slate-100/50 bg-white shadow-xl shadow-slate-200/50 max-h-80 flex flex-col overflow-hidden top-full left-0 backdrop-blur-md">
-          <div className="p-2 border-b border-slate-50">
+        <div className="absolute z-50 mt-2 w-[280px] rounded-xl border border-slate-200 bg-white shadow-xl max-h-80 flex flex-col overflow-hidden top-full left-0">
+          <div className="p-2 border-b border-slate-100">
             <div className="relative flex items-center">
-                <Search size={14} className="absolute left-3 text-slate-400" />
+                <Search size={14} className="absolute left-3 text-slate-500" />
                 <input 
                 type="text" 
                 placeholder="Tìm danh mục..." 
                 autoFocus
-                className="w-full pl-9 pr-3 py-2.5 text-sm bg-slate-50/50 border border-slate-100 rounded-lg outline-none focus:border-slate-300 font-medium placeholder:text-slate-400 placeholder:font-normal transition-all"
+                className="w-full pl-9 pr-3 py-2 text-sm bg-slate-50 border border-slate-200 rounded-lg outline-none focus:border-brand-primary font-medium text-slate-800 placeholder:text-slate-400 transition-all"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 />
@@ -77,7 +77,7 @@ function SearchableCategorySelect({ categories, selectedValue, onChange }: { cat
           </div>
           <div className="overflow-y-auto p-1.5 flex-1 custom-scrollbar">
             <button 
-              className={`w-full flex items-center justify-between text-left px-3 py-2.5 text-sm rounded-lg transition-colors ${!selectedValue ? 'font-medium text-brand-primary bg-brand-primary/5' : 'text-slate-600 hover:bg-slate-50'}`}
+              className={`w-full flex items-center justify-between text-left px-3 py-2.5 text-sm rounded-lg transition-colors ${!selectedValue ? 'font-medium text-brand-primary bg-brand-primary/5' : 'text-slate-700 hover:bg-slate-50'}`}
               onClick={() => { onChange(null); setIsOpen(false); setQuery(""); }}
             >
               Tất cả danh mục
@@ -86,7 +86,7 @@ function SearchableCategorySelect({ categories, selectedValue, onChange }: { cat
             {filtered.map(c => (
               <button 
                 key={c.category_id}
-                className={`w-full flex items-center justify-between text-left px-3 py-2.5 text-sm rounded-lg transition-colors ${selectedValue === c.category_id ? 'font-medium text-brand-primary bg-brand-primary/5' : 'text-slate-600 hover:bg-slate-50'}`}
+                className={`w-full flex items-center justify-between text-left px-3 py-2.5 text-sm rounded-lg transition-colors ${selectedValue === c.category_id ? 'font-medium text-brand-primary bg-brand-primary/5' : 'text-slate-700 hover:bg-slate-50'}`}
                 onClick={() => { onChange(c.category_id); setIsOpen(false); setQuery(""); }}
               >
                 {c.name}
@@ -94,7 +94,7 @@ function SearchableCategorySelect({ categories, selectedValue, onChange }: { cat
               </button>
             ))}
             {filtered.length === 0 && (
-              <div className="px-3 py-6 text-center text-xs text-slate-400 font-medium">Không tìm thấy</div>
+              <div className="px-3 py-6 text-center text-xs text-slate-500 font-medium">Không tìm thấy</div>
             )}
           </div>
         </div>
@@ -207,23 +207,23 @@ function ProductListingContent({
     <div className="mx-auto flex max-w-[1600px] flex-col px-4 md:px-12">
       
       {/* Sleek Filter Bar - All filters at the top */}
-      <div className="mb-10 w-full rounded-2xl border border-slate-100 bg-white p-6 shadow-[0_2px_20px_-10px_rgba(0,0,0,0.05)] md:p-8">
+      <div className="mb-10 w-full rounded-2xl border border-slate-300 bg-white p-6 shadow-sm md:p-8">
         
         {/* Top Header / Title */}
-        <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-slate-50 pb-6 md:flex-row md:items-end">
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 border-b border-slate-200 pb-6 md:flex-row md:items-end">
             <div>
                 <h2 className="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl">
                 {listingTitle}
                 </h2>
-                <p className="mt-1.5 text-sm font-medium text-slate-500">
-                Hiển thị <span className="font-semibold text-slate-900">{totalResults}</span> kết quả
-                {isPending && <span className="ml-2 animate-pulse text-slate-300">...</span>}
+                <p className="mt-1.5 text-sm font-medium text-slate-600">
+                Hiển thị <span className="font-semibold text-brand-primary">{totalResults}</span> kết quả
+                {isPending && <span className="ml-2 animate-pulse text-slate-400">...</span>}
                 </p>
             </div>
             
             {/* Show per page toggle (Optional/Sleek) */}
             <div className="flex items-center gap-3">
-                <span className="text-xs font-medium text-slate-400">Hiển thị:</span>
+                <span className="text-xs font-medium text-slate-500">Hiển thị:</span>
                 <div className="flex items-center gap-1">
                     {[50, 100].map((size) => (
                     <button
@@ -232,7 +232,7 @@ function ProductListingContent({
                         className={`px-3 py-1 text-xs rounded-md transition-all ${
                         filters.limit === size
                             ? "bg-slate-900 text-white font-medium"
-                            : "text-slate-500 hover:bg-slate-50"
+                            : "text-slate-600 hover:bg-slate-100"
                         }`}
                     >
                         {size}
@@ -250,13 +250,13 @@ function ProductListingContent({
                 {/* Search Input */}
                 <div className="relative flex-1 group">
                     <Search
-                        className="absolute left-1 top-1/2 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-brand-primary"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 transition-colors group-focus-within:text-brand-primary pointer-events-none"
                         size={16}
                     />
                     <input
                         type="text"
                         placeholder="Tìm kiếm sản phẩm..."
-                        className="w-full border-b border-slate-200/60 bg-transparent py-2.5 pl-8 pr-4 text-sm font-medium text-slate-800 transition-all placeholder:text-slate-400 placeholder:font-normal focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-4 text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all focus:border-brand-primary focus:outline-none"
                         value={searchQuery}
                         onChange={(event) => setSearchQuery(event.target.value)}
                     />
@@ -275,11 +275,11 @@ function ProductListingContent({
             </div>
 
             {/* Right side: Price & Sort */}
-            <div className="flex flex-col sm:flex-row gap-6 md:pl-8 md:border-l md:border-slate-100">
+            <div className="flex flex-col sm:flex-row gap-6 md:pl-8 md:border-l md:border-slate-200">
                 
                 {/* Price Input */}
-                <div className="flex flex-col gap-1.5 min-w-[140px]">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Mức giá tối đa</span>
+                <div className="flex flex-col gap-1.5 min-w-[150px]">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Mức giá tối đa</span>
                     <div className="relative group">
                         <input
                         type="text"
@@ -301,21 +301,21 @@ function ProductListingContent({
                             }
                         }}
                         onChange={(e) => setLocalPriceInput(e.target.value)}
-                        className="w-full border-b border-slate-200/60 bg-transparent py-2.5 px-1 pr-6 text-sm font-medium text-slate-800 transition-all placeholder:text-slate-300 focus:border-brand-primary focus:outline-none"
+                        className="w-full rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm font-medium text-slate-800 placeholder:text-slate-400 transition-all focus:border-brand-primary focus:outline-none"
                         placeholder="0"
                         />
-                        <span className="absolute right-1 top-1/2 -translate-y-1/2 text-xs font-medium text-slate-400">đ</span>
+                        <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-500">₫</span>
                     </div>
                 </div>
 
                 {/* Sort */}
-                <div className="flex flex-col gap-1.5 min-w-[160px]">
-                    <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Sắp xếp theo</span>
-                    <div className="relative">
+                <div className="flex flex-col gap-1.5 min-w-[170px]">
+                    <span className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Sắp xếp theo</span>
+                    <div className="relative group">
                         <select
                             value={filters.sort}
                             onChange={(event) => updateUrl({ sort: event.target.value })}
-                            className="w-full appearance-none border-b border-slate-200/60 bg-transparent py-2.5 pl-1 pr-6 text-sm font-medium text-slate-800 outline-none transition-all focus:border-brand-primary"
+                            className="w-full appearance-none rounded-lg border border-slate-200 bg-white py-2 pl-3 pr-8 text-sm font-medium text-slate-800 outline-none transition-all focus:border-brand-primary"
                         >
                             {sortOptions.map((option) => (
                                 <option key={option.value} value={option.value}>
@@ -323,7 +323,7 @@ function ProductListingContent({
                                 </option>
                             ))}
                         </select>
-                        <SlidersHorizontal size={14} className="absolute right-1 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                        <SlidersHorizontal size={14} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none group-hover:text-brand-primary transition-colors" />
                     </div>
                 </div>
 
@@ -336,7 +336,7 @@ function ProductListingContent({
       <div className="flex-1 w-full">
         {products.length > 0 ? (
           <div className="space-y-16">
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 xl:grid-cols-4 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {products.map((product) => (
                 <div key={product.product_id} className="h-full w-full">
                   <ProductCard product={product} />
@@ -352,15 +352,15 @@ function ProductListingContent({
             />
           </div>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-slate-200 bg-white/50 py-32">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
-              <Package className="text-slate-300" size={28} />
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-white py-24 px-4 shadow-sm">
+            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+              <Package size={32} />
             </div>
-            <h3 className="mb-2 text-center text-lg font-medium text-slate-800">
-              Không tìm thấy sản phẩm
+            <h3 className="mb-1 text-center text-lg font-semibold text-slate-800">
+              Không tìm thấy sản phẩm phù hợp
             </h3>
-            <p className="mb-8 px-6 text-center text-sm text-slate-500">
-              Vui lòng thử điều chỉnh lại bộ lọc hoặc từ khóa tìm kiếm.
+            <p className="mb-6 max-w-sm text-center text-sm text-slate-500">
+              Không có sản phẩm nào khớp với bộ lọc hoặc từ khóa tìm kiếm hiện tại của bạn.
             </p>
             <button
               onClick={() =>
@@ -373,9 +373,9 @@ function ProductListingContent({
                   sort: null,
                 })
               }
-              className="text-sm font-medium text-brand-primary hover:underline underline-offset-4"
+              className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-brand-primary text-white text-sm font-semibold hover:bg-brand-primary/90 transition-colors shadow-sm"
             >
-              Xóa tất cả bộ lọc
+              Xóa bộ lọc
             </button>
           </div>
         )}

@@ -6,10 +6,10 @@ import { ArrowRight, Package, LayoutGrid } from "lucide-react";
 import { useProductCategories } from "@/hooks/useProductCategories";
 
 export default function CategoryIndex() {
-  const { categories, loading } = useProductCategories();
+  const { categories, loading } = useProductCategories("PRODUCT");
   
   // Filter for root categories (Level 1)
-  const rootCategories = categories.filter(c => c.parent_id === null);
+  const rootCategories = categories.filter(c => !c.parent_id);
 
   if (loading) {
     return (

@@ -11,6 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import SearchHeader from "@/features/layout/header/search";
 import Navigation from "@/features/layout/header/navigation";
 import AccountInfo from "@/features/layout/header/account-info";
@@ -101,10 +102,13 @@ export default function Header() {
             aria-label="Về trang chủ"
           >
             <div className="relative w-full h-full flex items-center justify-center lg:justify-start py-1 lg:py-2">
-              <img
+              <Image
                 src="/Logo.png"
                 alt="CSH Group Logo"
-                className="object-cover w-full h-full"
+                fill
+                sizes="(max-width: 1024px) 144px, 288px"
+                priority
+                className="object-cover"
               />
             </div>
           </Link>
@@ -208,10 +212,12 @@ export default function Header() {
               className="h-11 w-40 max-w-[70%] rounded-xl bg-white px-3 py-1.5 shadow-lg"
               aria-label="Về trang chủ"
             >
-              <img
+              <Image
                 src="/Logo.png"
                 alt="Logo"
-                className="h-full w-full object-contain"
+                fill
+                sizes="160px"
+                className="object-contain"
               />
             </Link>
             <button
@@ -244,7 +250,7 @@ export default function Header() {
             </div>
             <div className="mt-8 pt-8 border-t space-y-6">
               <Link
-                href={isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "/admin/dashboard" : "/account") : "/login"}
+                href={isHydrated && isAuthenticated ? (user?.role_id !== 'customer' ? "/admin/dashboard" : "/account") : "/login"}
                 className="flex items-center gap-4 text-brand-primary font-semibold px-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
@@ -253,7 +259,7 @@ export default function Header() {
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-                    {isHydrated && isAuthenticated ? (user?.role_id === 'admin' ? "Quản trị viên" : "Khách hàng") : "Khách hàng"}
+                    {isHydrated && isAuthenticated ? (user?.role_id !== 'customer' ? user?.role_id?.toUpperCase() : "Khách hàng") : "Khách hàng"}
                   </p>
                   <p className="text-base">
                     {isHydrated && isAuthenticated

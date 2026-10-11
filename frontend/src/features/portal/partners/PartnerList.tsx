@@ -17,7 +17,7 @@ const PartnerList: React.FC = () => {
 
     const parentPartners = useMemo(() => {
         return partners
-            .filter(p => p.parent_id === null)
+            .filter(p => !p.parent_id)
             .sort((a, b) => a.display_order - b.display_order);
     }, [partners]);
 

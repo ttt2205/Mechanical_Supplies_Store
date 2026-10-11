@@ -5,7 +5,7 @@ namespace backend
     public class BasicService : IBasicService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        protected BasicService(IHttpContextAccessor httpContextAccessor)
+        public BasicService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

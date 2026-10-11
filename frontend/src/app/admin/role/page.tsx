@@ -1,181 +1,247 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRoles } from '@/hooks/useAdminModules';
 import { 
     Plus, 
     Edit2, 
     Trash2, 
     Shield, 
-    ChevronRight,
-    Users,
+    Type, 
+    Save, 
+    Users, 
+    Hash, 
     Lock,
-    Settings,
-    Save,
-    Type,
-    CheckSquare
+    ShieldAlert
 } from 'lucide-react';
-import { AdminModal, AdminInput, AdminSelect } from '@/components/admin/AdminUI';
-
-// Mock data for roles
-const initialRoles = [
-    { id: 1, name: 'Siêu quản trị (Super Admin)', code: 'SUPER_ADMIN', users: 2, permissions: ['all'], status: 'active' },
-    { id: 2, name: 'Quản lý Nội dung', code: 'CONTENT_MANAGER', users: 5, permissions: ['products', 'posts', 'partners'], status: 'active' },
-    { id: 3, name: 'Kỹ thuật viên', code: 'TECHNICIAN', users: 12, permissions: ['view_logs', 'products'], status: 'active' },
-    { id: 4, name: 'Nhân viên Bán hàng', code: 'SALES', users: 8, permissions: ['products', 'customers'], status: 'inactive' },
-];
-
-const availablePermissions = [
-    { id: 'dashboard', label: 'Xem Thống kê (Dashboard)' },
-    { id: 'products', label: 'Quản lý Sản phẩm' },
-    { id: 'posts', label: 'Quản lý Bài viết' },
-    { id: 'partners', label: 'Quản lý Đối tác' },
-    { id: 'users', label: 'Quản lý Người dùng' },
-    { id: 'roles', label: 'Quản lý Phân quyền' },
-    { id: 'view_logs', label: 'Xem Lịch sử hệ thống' },
-    { id: 'error_logs', label: 'Xem Log lỗi' },
-];
+import { AdminModal, AdminInput, AdminTextarea } from '@/components/admin/AdminUI';
+import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
+import { useToastStore } from '@/store/useToastStore';
 
 export default function RoleManagementPage() {
-    const [roles, setRoles] = useState(initialRoles);
+    const { roles, loading, createRole, updateRole, deleteRole } = useRoles();
+    const { addToast } = useToastStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<any>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const openModal = (role: any = null) => {
-        setEditingRole(role || {
-            name: '',
-            code: '',
-            permissions: [],
-            status: 'active'
-        });
+        if (role) {
+            const isAdmin = Boolean(role.isAdmin || role.is_admin || (role.code || '').toUpperCase() === 'ADMIN');
+            if (isAdmin) {
+                addToast('Quyền của tài khoản Quản trị viên (Admin) là hệ thống cố định, không được phép chỉnh sửa.', 'error');
+                return;
+            }
+            setEditingRole({ ...role });
+        } else {
+            setEditingRole({
+                name: '',
+                code: '',
+                description: '',
+                isAdmin: false
+            });
+        }
         setIsModalOpen(true);
+    };
+
+    const handleSave = async () => {
+        if (!editingRole?.name?.trim() || !editingRole?.code?.trim()) {
+            addToast('Vui lòng nhập tên và mã định danh vai trò', 'error');
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            const payload = {
+                name: editingRole.name.trim(),
+                code: editingRole.code.trim().toUpperCase(),
+                description: editingRole.description?.trim() || '',
+                isAdmin: Boolean(editingRole.isAdmin)
+            };
+
+            if (editingRole.id) {
+                await updateRole(editingRole.id, payload);
+                addToast('Cập nhật vai trò thành công!', 'success');
+            } else {
+                await createRole(payload);
+                addToast('Tạo vai trò mới thành công!', 'success');
+            }
+            setIsModalOpen(false);
+        } catch (error: any) {
+            console.error('Save role error:', error);
+            addToast(error?.message || 'Không thể lưu vai trò. Vui lòng thử lại.', 'error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleDelete = async (id: number, roleName: string, isAdminRole: boolean) => {
+        if (isAdminRole) {
+            addToast('Tài khoản Quản trị viên (Admin) là hệ thống cố định, không được phép xóa.', 'error');
+            return;
+        }
+        if (confirm(`Bạn có chắc chắn muốn xóa vai trò "${roleName}"?`)) {
+            try {
+                await deleteRole(id);
+                addToast('Xóa vai trò thành công', 'success');
+            } catch (error: any) {
+                console.error('Delete role error:', error);
+                addToast('Không thể xóa vai trò này', 'error');
+            }
+        }
     };
 
     return (
         <div className="space-y-8 pb-20">
-            {/* Header Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý Phân quyền</h1>
-                    <p className="text-slate-500 font-bold">Thiết lập các nhóm quyền và gán cho người dùng hệ thống.</p>
-                </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
-                >
-                    <Plus size={18} />
-                    Tạo vai trò mới
-                </button>
-            </div>
+            <AdminPageLayout
+                title="Quản lý Danh mục Vai trò"
+                description="Danh sách các vai trò (Roles) trong hệ thống dùng để phân quyền người dùng."
+                actionButton={
+                    <button 
+                        onClick={() => openModal()}
+                        className="bg-brand-primary text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2.5 w-fit"
+                    >
+                        <Plus size={16} />
+                        Thêm vai trò mới
+                    </button>
+                }
+                data={roles}
+                searchKey={(role) => (role.name || '') + ' ' + (role.code || '') + ' ' + (role.description || '')}
+                searchPlaceholder="Tìm kiếm vai trò theo tên hoặc mã..."
+                isLoading={loading}
+                colSpan={6}
+                tableHeader={
+                    <tr>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Mã vai trò (Code)</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Tên hiển thị</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Loại vai trò (IsAdmin)</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Mô tả</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Số tài khoản</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600 text-right">Thao tác</th>
+                    </tr>
+                }
+                renderRow={(role, index) => {
+                    const accountCount = role.accounts?.length || role.userCount || 0;
+                    const isAdmin = Boolean(role.isAdmin || role.is_admin || (role.code || '').toUpperCase() === 'ADMIN');
 
-            {/* Roles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {roles.map((role) => (
-                    <div key={role.id} className="bg-white rounded-[40px] p-8 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-500 group relative overflow-hidden cursor-pointer" onClick={() => openModal(role)}>
-                        {/* Decorative Background Icon */}
-                        <Shield className="absolute -bottom-10 -right-10 w-48 h-48 text-slate-50 group-hover:text-brand-primary/5 transition-colors -z-0" />
-                        
-                        <div className="relative z-10">
-                            <div className="flex justify-between items-start mb-6">
-                                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${role.status === 'active' ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20' : 'bg-slate-100 text-slate-400'}`}>
-                                    <Shield size={28} />
-                                </div>
-                                <div className="flex gap-2">
-                                    <button className="p-2.5 bg-slate-50 text-slate-400 rounded-xl hover:bg-brand-primary hover:text-white transition-all" onClick={(e) => { e.stopPropagation(); openModal(role); }}><Edit2 size={16} /></button>
-                                    <button className="p-2.5 bg-slate-50 text-slate-400 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all" onClick={(e) => e.stopPropagation()}><Trash2 size={16} /></button>
-                                </div>
-                            </div>
-
-                            <div className="mb-8">
-                                <h3 className="text-xl font-black text-slate-900 uppercase tracking-tight mb-1">{role.name}</h3>
-                                <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">{role.code}</span>
-                            </div>
-
-                            <div className="space-y-4 border-t border-slate-50 pt-6">
-                                <div className="flex items-center justify-between text-xs">
-                                    <div className="flex items-center gap-2 text-slate-400 font-bold uppercase tracking-widest">
-                                        <Users size={14} /> Số lượng User
+                    return (
+                        <tr key={role.id || index} className="group hover:bg-slate-50/50 transition-colors">
+                            <td className="px-8 py-5">
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${isAdmin ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-600'}`}>
+                                        <Shield size={18} />
                                     </div>
-                                    <span className="font-black text-slate-900">{role.users}</span>
-                                </div>
-                                <div className="flex items-center justify-between text-xs">
-                                    <div className="flex items-center gap-2 text-slate-400 font-bold uppercase tracking-widest">
-                                        <Lock size={14} /> Trạng thái
-                                    </div>
-                                    <span className={`font-black uppercase tracking-tighter ${role.status === 'active' ? 'text-emerald-500' : 'text-slate-300'}`}>
-                                        {role.status === 'active' ? 'Đang kích hoạt' : 'Ngưng dùng'}
+                                    <span className="font-mono text-xs font-bold text-brand-primary uppercase tracking-wider">
+                                        {role.code}
                                     </span>
                                 </div>
-                            </div>
-
-                            <button className="w-full mt-8 py-4 bg-slate-50 group-hover:bg-brand-primary group-hover:text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition-all border border-slate-100 flex items-center justify-center gap-2">
-                                Chi tiết phân quyền <ChevronRight size={14} />
-                            </button>
-                        </div>
-                    </div>
-                ))}
-            </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <span className="text-sm font-bold text-slate-900">{role.name}</span>
+                            </td>
+                            <td className="px-8 py-5">
+                                {isAdmin ? (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200/80 rounded-full text-[10px] font-black uppercase tracking-wider">
+                                        <ShieldAlert size={12} /> Quản trị viên (IsAdmin: True)
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                                        Người dùng (IsAdmin: False)
+                                    </span>
+                                )}
+                            </td>
+                            <td className="px-8 py-5 text-xs text-slate-500 font-medium max-w-xs truncate">
+                                {role.description || 'Chưa có mô tả cho vai trò này.'}
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg">
+                                    <Users size={14} className="text-slate-400" />
+                                    {accountCount} tài khoản
+                                </div>
+                            </td>
+                            <td className="px-8 py-5 text-right">
+                                {isAdmin ? (
+                                    <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-lg">
+                                        <Lock size={13} /> Cố định
+                                    </div>
+                                ) : (
+                                    <div className="flex items-center justify-end gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button 
+                                            className="p-2 text-slate-400 hover:text-brand-primary hover:bg-white rounded-lg shadow-xs transition-all" 
+                                            onClick={() => openModal(role)}
+                                            title="Chỉnh sửa vai trò"
+                                        >
+                                            <Edit2 size={16} />
+                                        </button>
+                                        <button 
+                                            className="p-2 text-slate-400 hover:text-red-500 hover:bg-white rounded-lg shadow-xs transition-all" 
+                                            onClick={() => handleDelete(role.id, role.name, isAdmin)}
+                                            title="Xóa vai trò"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                )}
+                            </td>
+                        </tr>
+                    );
+                }}
+            />
 
             {/* ROLE MODAL */}
             <AdminModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                title={editingRole?.id ? "Thiết lập vai trò" : "Tạo vai trò mới"}
-                size="lg"
+                title={editingRole?.id ? "Chỉnh sửa vai trò" : "Thêm vai trò mới"}
+                size="md"
                 footer={
                     <>
-                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
-                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
-                            <Save size={16} /> Lưu cấu hình
+                        <button 
+                            type="button" 
+                            disabled={isSubmitting} 
+                            className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-semibold text-xs hover:bg-slate-200 transition-colors disabled:opacity-50" 
+                            onClick={() => setIsModalOpen(false)}
+                        >
+                            Hủy bỏ
+                        </button>
+                        <button 
+                            type="button" 
+                            disabled={isSubmitting} 
+                            onClick={handleSave} 
+                            className="px-6 py-2.5 bg-brand-primary text-white rounded-lg font-semibold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2 disabled:opacity-50"
+                        >
+                            <Save size={16} />
+                            {isSubmitting ? 'Đang lưu...' : 'Lưu vai trò'}
                         </button>
                     </>
                 }
             >
-                <div className="space-y-10">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <AdminInput 
                             label="Tên vai trò"
                             icon={Type}
-                            placeholder="Ví dụ: Quản lý kho..."
-                            defaultValue={editingRole?.name}
+                            placeholder="Ví dụ: Quản lý sản phẩm..."
+                            value={editingRole?.name || ''} 
+                            onChange={(e) => setEditingRole({...editingRole, name: e.target.value})}
                             required
                         />
                         <AdminInput 
                             label="Mã định danh (Code)"
-                            icon={Lock}
-                            placeholder="PRODUCT_MANAGER"
-                            defaultValue={editingRole?.code}
+                            icon={Hash}
+                            placeholder="VD: PRODUCT_MANAGER"
+                            value={editingRole?.code || ''} 
+                            onChange={(e) => setEditingRole({...editingRole, code: e.target.value.toUpperCase()})}
+                            disabled={!!editingRole?.id}
                             required
                         />
                     </div>
 
-                    <div className="space-y-6">
-                        <div className="flex items-center gap-4 ml-4">
-                            <CheckSquare size={18} className="text-brand-primary" />
-                            <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Danh sách quyền hạn</h4>
-                        </div>
-                        
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-8 rounded-[32px] border border-slate-100">
-                            {availablePermissions.map((perm) => (
-                                <label key={perm.id} className="flex items-center gap-4 p-4 bg-white rounded-2xl border border-slate-100 cursor-pointer hover:border-brand-primary transition-all group shadow-sm">
-                                    <input 
-                                        type="checkbox" 
-                                        className="w-5 h-5 rounded-lg border-2 border-slate-200 text-brand-primary focus:ring-brand-primary transition-all" 
-                                        defaultChecked={editingRole?.permissions?.includes('all') || editingRole?.permissions?.includes(perm.id)}
-                                    />
-                                    <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 transition-colors uppercase tracking-tight">{perm.label}</span>
-                                </label>
-                            ))}
-                        </div>
-                    </div>
-
-                    <AdminSelect 
-                        label="Trạng thái kích hoạt"
-                        defaultValue={editingRole?.status}
-                        options={[
-                            { value: 'active', label: 'Kích hoạt vai trò này' },
-                            { value: 'inactive', label: 'Vô hiệu hóa (Ngưng dùng)' }
-                        ]}
-                        required
+                    <AdminTextarea 
+                        label="Mô tả chi tiết"
+                        placeholder="Mô tả nhiệm vụ hoặc phạm vi của vai trò này..."
+                        value={editingRole?.description || ''} 
+                        onChange={(e) => setEditingRole({...editingRole, description: e.target.value})}
                     />
                 </div>
             </AdminModal>

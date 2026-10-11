@@ -8,16 +8,18 @@ import {
     Eye, 
     EyeOff, 
     ArrowRight, 
-    Globe, 
-    MessageCircle,
-    Loader2
+    Loader2,
+    AlertCircle,
+    ShieldAlert
 } from 'lucide-react';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { fetchApi } from '@/lib/api';
 
 function LoginForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     
@@ -25,24 +27,68 @@ function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
 
+    const errorParam = searchParams.get('error');
+    let warningMessage = '';
+    if (errorParam === 'unauthorized') {
+        warningMessage = 'Tài khoản của bạn không có quyền truy cập trang quản trị. Vui lòng đăng nhập bằng tài khoản Quản trị viên.';
+    } else if (errorParam === 'unauthenticated') {
+        warningMessage = 'Vui lòng đăng nhập để truy cập trang quản trị.';
+    } else if (errorParam === 'expired') {
+        warningMessage = 'Phiên làm việc đã hết hạn. Vui lòng đăng nhập lại.';
+    }
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
+        setErrorMessage('');
         
-        // Simulate API call
-        setTimeout(() => {
-            login({
-                account_id: '1',
-                username: username || 'admin',
-                email: 'admin@mechanical.com',
-                role_id: 'admin', // Changed to admin for testing
-                status: 'active'
+        try {
+            const res = await fetchApi<any>('/Authentication/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username.trim(), password })
             });
+            
+            if (res && res.accessToken) {
+                const roleCode = res.user?.roleCode || 'ADMIN';
+                const isCustomer = roleCode.toUpperCase() === 'CUSTOMER';
+
+                login({
+                    account_id: res.user?.id?.toString() || '1',
+                    username: res.user?.username || username.trim(),
+                    email: res.user?.email || username.trim(),
+                    role_id: roleCode,
+                    roleCode: roleCode,
+                    roleId: res.user?.roleId,
+                    status: res.user?.status || 'active'
+                }, res.permissions || ['admin'], { accessToken: res.accessToken, refreshToken: res.refreshToken });
+                
+                const redirect = searchParams.get('redirect');
+                
+                let targetUrl = '/';
+                if (!isCustomer) {
+                    targetUrl = '/admin/dashboard';
+                }
+
+                if (redirect?.startsWith('/') && !redirect.startsWith('//')) {
+                    if (redirect.startsWith('/admin') && isCustomer) {
+                        setErrorMessage('Tài khoản này là Khách hàng, không có quyền truy cập vào trang quản trị.');
+                        setIsLoading(false);
+                        return;
+                    }
+                    targetUrl = redirect;
+                }
+                
+                router.push(targetUrl);
+            } else {
+                setErrorMessage('Tên đăng nhập hoặc mật khẩu không chính xác.');
+            }
+        } catch (error: any) {
+            console.error('Login error', error);
+            setErrorMessage(error?.response?.data?.message || error?.message || 'Đăng nhập không thành công. Vui lòng thử lại.');
+        } finally {
             setIsLoading(false);
-            const redirect = searchParams.get('redirect');
-            const safeRedirect = redirect?.startsWith('/') && !redirect.startsWith('//') ? redirect : '/';
-            router.push(safeRedirect);
-        }, 1500);
+        }
     };
 
     return (
@@ -51,10 +97,26 @@ function LoginForm() {
                 {/* Visual Accent */}
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-brand-primary to-brand-accent"></div>
                 
-                <div className="text-center mb-10 mt-20 sm:mt-0">
+                <div className="text-center mb-8 mt-16 sm:mt-0">
                     <h1 className="text-3xl font-black text-slate-950 uppercase tracking-tight mb-2">Đăng nhập</h1>
                     <p className="text-slate-600 text-sm font-semibold">Chào mừng bạn quay trở lại với Hưng Thịnh</p>
                 </div>
+
+                {/* Warning / Error Banner */}
+                {(errorMessage || warningMessage) && (
+                    <div className={`mb-6 p-4 rounded-2xl flex items-start gap-3 text-xs font-bold ${
+                        errorMessage 
+                            ? 'bg-rose-50 text-rose-700 border border-rose-200' 
+                            : 'bg-amber-50 text-amber-800 border border-amber-200'
+                    }`}>
+                        {errorMessage ? (
+                            <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-500" />
+                        ) : (
+                            <ShieldAlert className="w-5 h-5 shrink-0 mt-0.5 text-amber-600" />
+                        )}
+                        <span className="leading-relaxed">{errorMessage || warningMessage}</span>
+                    </div>
+                )}
 
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {/* Username Field */}
@@ -69,7 +131,7 @@ function LoginForm() {
                                 required
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                placeholder="hungthinh_user"
+                                placeholder="username"
                                 className="w-full pl-14 pr-6 py-5 bg-white border-2 border-slate-200 rounded-2xl focus:bg-white focus:border-brand-primary outline-none transition-all font-bold text-slate-950 placeholder:text-slate-400" 
                             />
                         </div>
@@ -77,9 +139,7 @@ function LoginForm() {
 
                     {/* Password Field */}
                     <div className="space-y-2">
-                        <div className="flex justify-between items-center ml-4">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600">Mật khẩu</label>
-                            <Link href="/forgot-password" className="text-[10px] font-black uppercase tracking-widest text-brand-primary hover:underline">Quên mật khẩu?</Link>                        </div>
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 ml-4">Mật khẩu</label>
                         <div className="relative group">
                             <div className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-brand-primary transition-colors">
                                 <Lock size={18} />
@@ -111,40 +171,12 @@ function LoginForm() {
                             <Loader2 className="animate-spin" size={20} />
                         ) : (
                             <>
-                                Đăng nhập ngay
+                                <span>Đăng nhập ngay</span>
                                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
                             </>
                         )}
                     </button>
                 </form>
-
-                {/* Social Login */}
-                <div className="mt-10">
-                    <div className="relative flex items-center justify-center mb-8">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-slate-200"></div>
-                        </div>
-                        <span className="relative px-4 bg-slate-50 text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">Hoặc tiếp tục với</span>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                        <button className="flex items-center justify-center gap-3 py-4 bg-white border border-slate-200 rounded-2xl hover:bg-slate-100 transition-all font-bold text-slate-700 text-sm">
-                            <Globe size={18} className="text-red-600" />
-                            Google
-                        </button>
-                        <button className="flex items-center justify-center gap-3 py-4 bg-white border border-slate-200 rounded-2xl hover:bg-slate-100 transition-all font-bold text-slate-700 text-sm">
-                            <MessageCircle size={18} className="text-blue-700" />
-                            Facebook
-                        </button>
-                    </div>
-                </div>
-
-                <div className="mt-10 text-center mb-6 sm:mb-0">
-                    <p className="text-slate-600 text-sm font-semibold">
-                        Chưa có tài khoản?{' '}
-                        <Link href="/register" className="text-brand-primary font-black uppercase tracking-widest text-[10px] hover:underline">Đăng ký ngay</Link>
-                    </p>
-                </div>
             </div>
             
             <p className="text-center mt-8 text-slate-400 text-[10px] font-bold uppercase tracking-widest leading-loose px-8 pb-10 sm:pb-0">
@@ -153,6 +185,7 @@ function LoginForm() {
         </div>
     );
 }
+
 export default function LoginPage() {
     return (
         <Suspense fallback={null}>

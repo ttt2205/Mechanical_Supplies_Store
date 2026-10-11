@@ -8,36 +8,92 @@ import {
     Edit2, 
     Trash2, 
     ChevronLeft, 
-    ChevronRight,
-    Handshake,
-    MapPin,
-    Phone,
-    Globe,
-    CheckCircle2,
-    XCircle,
-    Mail,
-    User,
-    Save
+    ChevronRight, 
+    Handshake, 
+    MapPin, 
+    Phone, 
+    Globe, 
+    CheckCircle2, 
+    XCircle, 
+    Mail, 
+    User, 
+    Save,
+    Layers
 } from 'lucide-react';
 import { AdminModal, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/AdminUI';
-
-// Mock data for partners/suppliers
-const initialPartners = [
-    { id: 1, name: 'Đại lý Thủy lực ABC', region: 'Miền Nam', region_id: 'mn', address: 'Bình Dương', phone: '0901.234.567', email: 'contact@abc.vn', status: 'active', website: 'www.abc.vn', description: '' },
-    { id: 2, name: 'Cơ khí Hưng Phát', region: 'Miền Nam', region_id: 'mn', address: 'Đồng Nai', phone: '0908.765.432', email: 'info@hungphat.com', status: 'active', website: 'www.hungphat.com', description: '' },
-    { id: 3, name: 'Vật tư Miền Trung', region: 'Miền Trung', region_id: 'mt', address: 'Đà Nẵng', phone: '0236.3848.xxx', email: 'sales@mt-ind.vn', status: 'inactive', website: '', description: '' },
-];
+import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
+import { usePartners } from '@/hooks/useAdminModules';
+import { useProductCategories } from '@/hooks/useProductCategories';
+import { useToastStore } from '@/store/useToastStore';
+import { fetchApi } from '@/lib/api';
 
 export default function PartnerManagementPage() {
-    const [partners] = useState(initialPartners);
+    const { partners, createPartner, updatePartner, deletePartner } = usePartners();
+    const { categories, refresh: refreshCategories } = useProductCategories("PARTNER");
+    const addToast = useToastStore(state => state.addToast);
+
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingPartner, setEditingPartner] = useState<any>(null);
+
+    // State for Region Modal (đồng bộ với phần thêm danh mục trong sản phẩm)
     const [isRegionModalOpen, setIsRegionModalOpen] = useState(false);
+    const [regionFormData, setRegionFormData] = useState({
+        name: '',
+        code: '',
+        description: '',
+        parentId: '',
+        displayOrder: 0,
+        status: 'ACTIVE',
+        icon: 'MapPin'
+    });
+    const [isSubmittingRegion, setIsSubmittingRegion] = useState(false);
+
+    // Filters
+    const [filterStatus, setFilterStatus] = useState('ALL');
+    const [filterRegion, setFilterRegion] = useState('ALL');
+
+    const filteredPartners = partners.filter((item: any) => {
+        if (filterStatus !== 'ALL' && item.status !== filterStatus) return false;
+        if (filterRegion !== 'ALL' && String(item.region_id || item.region) !== filterRegion) return false;
+        return true;
+    });
+
+    const handleSave = async () => {
+        if (!editingPartner?.name?.trim()) {
+            addToast('Vui lòng nhập tên đối tác hoặc đại lý', 'error');
+            return;
+        }
+
+        try {
+            if (editingPartner.id) {
+                await updatePartner(editingPartner.id, editingPartner);
+                addToast('Cập nhật thông tin đối tác thành công', 'success');
+            } else {
+                await createPartner(editingPartner);
+                addToast('Thêm đối tác mới thành công', 'success');
+            }
+            setIsModalOpen(false);
+        } catch (error) {
+            addToast('Không thể lưu đối tác. Vui lòng kiểm tra lại.', 'error');
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        if (confirm('Bạn có chắc chắn muốn xóa đối tác này?')) {
+            try {
+                await deletePartner(id);
+                addToast('Đã xóa đối tác thành công', 'success');
+            } catch (error) {
+                addToast('Không thể xóa đối tác.', 'error');
+            }
+        }
+    };
 
     const openModal = (partner: any = null) => {
         setEditingPartner(partner || {
             name: '',
-            region_id: 'mn',
+            region_id: categories.length > 0 ? categories[0].category_id.toString() : '',
+            region: categories.length > 0 ? categories[0].name : '',
             address: '',
             phone: '',
             email: '',
@@ -48,120 +104,167 @@ export default function PartnerManagementPage() {
         setIsModalOpen(true);
     };
 
+    const handleRegionSubmit = async () => {
+        if (!regionFormData.name.trim() || !regionFormData.code.trim()) {
+            addToast('Vui lòng điền tên và mã khu vực đối tác', 'error');
+            return;
+        }
+
+        if (!regionFormData.parentId) {
+            addToast('Vui lòng chọn khu vực cha tương ứng. Các khu vực mới bắt buộc phải thuộc một khu vực cha.', 'error');
+            return;
+        }
+
+        try {
+            setIsSubmittingRegion(true);
+            const slug = regionFormData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+            const res = await fetchApi('/Categories', {
+                method: 'POST',
+                body: JSON.stringify({
+                    name: regionFormData.name.trim(),
+                    code: regionFormData.code.trim(),
+                    slug: slug || regionFormData.code.toLowerCase().trim(),
+                    description: regionFormData.description,
+                    parentId: regionFormData.parentId ? Number(regionFormData.parentId) : null,
+                    displayOrder: regionFormData.displayOrder,
+                    status: regionFormData.status,
+                    icon: regionFormData.icon || 'MapPin',
+                    type: 'PARTNER'
+                })
+            });
+
+            if (res) {
+                addToast('Tạo khu vực đối tác mới thành công', 'success');
+                await refreshCategories();
+                setIsRegionModalOpen(false);
+                setRegionFormData({
+                    name: '', code: '', description: '', parentId: '', displayOrder: 0, status: 'ACTIVE', icon: 'MapPin'
+                });
+            } else {
+                addToast('Không thể tạo khu vực đối tác', 'error');
+            }
+        } catch (error: any) {
+            addToast(error?.message || 'Lỗi khi tạo khu vực đối tác', 'error');
+        } finally {
+            setIsSubmittingRegion(false);
+        }
+    };
+
     return (
         <div className="space-y-8 pb-20">
-            {/* Header Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                <div>
-                    <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý Đối tác</h1>
-                    <p className="text-slate-500 font-bold">Quản lý mạng lưới đại lý và đối tác chiến lược trên toàn quốc.</p>
-                </div>
-                <div className="flex gap-4">
-                    <button 
-                        onClick={() => setIsRegionModalOpen(true)}
-                        className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3"
-                    >
-                        <MapPin size={18} />
-                        Khu vực
-                    </button>
-                    <button 
-                        onClick={() => openModal()}
-                        className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
-                    >
-                        <Plus size={18} />
-                        Thêm đối tác mới
-                    </button>
-                </div>
-            </div>
-
-            {/* Filters Bar */}
-            <div className="bg-white p-4 rounded-3xl border border-slate-100 shadow-sm flex flex-col md:flex-row gap-4">
-                <div className="relative flex-grow">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-                    <input 
-                        type="text" 
-                        placeholder="Tìm theo tên đối tác, khu vực..." 
-                        className="w-full bg-slate-50 border-2 border-slate-50 rounded-2xl pl-12 pr-6 py-3 focus:bg-white focus:border-brand-primary outline-none transition-all text-sm font-bold text-slate-900 placeholder:text-slate-400"
-                    />
-                </div>
-                <div className="flex gap-4">
-                    <select className="bg-slate-50 border-2 border-slate-50 rounded-2xl px-6 py-3 outline-none text-sm font-bold text-slate-700 focus:border-brand-primary appearance-none cursor-pointer min-w-[160px]">
-                        <option value="">Tất cả Khu vực</option>
-                        <option value="mn">Miền Nam</option>
-                        <option value="mt">Miền Trung</option>
-                        <option value="mb">Miền Bắc</option>
-                    </select>
-                </div>
-            </div>
-
-            {/* Partners Table */}
-            <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Đối tác</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Khu vực</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Liên hệ</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Trạng thái</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50">
-                            {partners.map((partner) => (
-                                <tr key={partner.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(partner)}>
-                                    <td className="px-8 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-100 group-hover:bg-brand-primary group-hover:text-white transition-all">
-                                                <Handshake size={24} />
-                                            </div>
-                                            <div>
-                                                <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{partner.name}</p>
-                                                <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400">
-                                                    <MapPin size={10} />
-                                                    {partner.address}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <span className="px-3 py-1 bg-slate-50 text-slate-600 text-[9px] font-black uppercase tracking-widest rounded-md border border-slate-100">
-                                            {partner.region}
-                                        </span>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className="space-y-1">
-                                            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                <Phone size={12} className="text-slate-300" />
-                                                {partner.phone}
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                                                <Mail size={12} className="text-slate-300" />
-                                                {partner.email}
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                                            partner.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
-                                        }`}>
-                                            {partner.status === 'active' ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
-                                            {partner.status === 'active' ? 'Hợp tác' : 'Ngưng'}
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-2 text-slate-400 hover:text-brand-primary transition-all" onClick={(e) => { e.stopPropagation(); openModal(partner); }}><Edit2 size={16} /></button>
-                                            <button className="p-2 text-slate-400 hover:text-red-500 transition-all" onClick={(e) => e.stopPropagation()}><Trash2 size={16} /></button>
-                                            <button className="p-2 text-slate-400 hover:text-slate-900 transition-all" onClick={(e) => e.stopPropagation()}><Globe size={16} /></button>
-                                        </div>
-                                    </td>
-                                </tr>
+            <AdminPageLayout
+                title="Quản lý Đối tác"
+                description="Quản lý mạng lưới đại lý và đối tác chiến lược trên toàn quốc."
+                actionButton={
+                    <div className="flex flex-wrap items-center gap-3">
+                        <button 
+                            type="button"
+                            onClick={() => setIsRegionModalOpen(true)}
+                            className="bg-slate-50 text-slate-600 px-6 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] border border-slate-100 hover:bg-white transition-all flex items-center gap-3 w-fit"
+                        >
+                            <MapPin size={16} />
+                            Thêm khu vực
+                        </button>
+                        <button 
+                            type="button"
+                            onClick={() => openModal()}
+                            className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
+                        >
+                            <Plus size={16} />
+                            Thêm đối tác mới
+                        </button>
+                    </div>
+                }
+                data={filteredPartners}
+                filters={
+                    <>
+                        <select 
+                            value={filterRegion} 
+                            onChange={(e) => setFilterRegion(e.target.value)} 
+                            className="bg-white border border-slate-200 rounded-lg text-sm px-3 py-2 outline-none focus:border-brand-primary text-slate-700 font-medium"
+                        >
+                            <option value="ALL">Tất cả khu vực</option>
+                            {categories.map((c: any) => (
+                                <option key={c.category_id} value={c.category_id.toString()}>{c.name}</option>
                             ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                        </select>
+                        <select 
+                            value={filterStatus} 
+                            onChange={(e) => setFilterStatus(e.target.value)} 
+                            className="bg-white border border-slate-200 rounded-lg text-sm px-3 py-2 outline-none focus:border-brand-primary text-slate-700 font-medium"
+                        >
+                            <option value="ALL">Tất cả trạng thái</option>
+                            <option value="active">Đang hợp tác</option>
+                            <option value="inactive">Ngừng hợp tác</option>
+                        </select>
+                    </>
+                }
+                searchKey={(item: any) => item.name + ' ' + (item.region || '') + ' ' + (item.address || '')}
+                searchPlaceholder="Tìm theo tên đối tác, khu vực..."
+                colSpan={5}
+                tableHeader={
+                    <tr>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Đối tác</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Khu vực</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Liên hệ</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Trạng thái</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600 text-right">Thao tác</th>
+                    </tr>
+                }
+                renderRow={(partner: any) => {
+                    const matchedCategory = categories.find(c => c.category_id.toString() === (partner.region_id || partner.region)?.toString());
+                    return (
+                        <tr key={partner.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(partner)}>
+                            <td className="px-8 py-5">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-12 h-12 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 border border-slate-100 group-hover:bg-brand-primary group-hover:text-white transition-all">
+                                        <Handshake size={24} />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-black text-slate-900 uppercase tracking-tight">{partner.name}</p>
+                                        <div className="flex items-center gap-1 text-[10px] font-bold text-slate-400">
+                                            <MapPin size={10} />
+                                            {partner.address}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <span className="px-3 py-1 bg-slate-50 text-slate-600 text-[9px] font-black uppercase tracking-widest rounded-md border border-slate-100">
+                                    {matchedCategory?.name || partner.region || 'Chưa phân vùng'}
+                                </span>
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                        <Phone size={12} className="text-slate-300" />
+                                        {partner.phone}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                                        <Mail size={12} className="text-slate-300" />
+                                        {partner.email}
+                                    </div>
+                                </div>
+                            </td>
+                            <td className="px-8 py-5">
+                                <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
+                                    partner.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-600'
+                                }`}>
+                                    {partner.status === 'active' ? <CheckCircle2 size={12} /> : <XCircle size={12} />}
+                                    {partner.status === 'active' ? 'Hợp tác' : 'Ngưng'}
+                                </div>
+                            </td>
+                            <td className="px-8 py-5 text-right">
+                                <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <button className="p-2 text-slate-400 hover:text-brand-primary transition-all" onClick={(e) => { e.stopPropagation(); openModal(partner); }}><Edit2 size={16} /></button>
+                                    <button className="p-2 text-slate-400 hover:text-red-500 transition-all" onClick={(e) => { e.stopPropagation(); handleDelete(partner.id); }}><Trash2 size={16} /></button>
+                                    <button className="p-2 text-slate-400 hover:text-slate-900 transition-all" onClick={(e) => e.stopPropagation()}><Globe size={16} /></button>
+                                </div>
+                            </td>
+                        </tr>
+                    );
+                }}
+            />
 
             {/* PARTNER MODAL */}
             <AdminModal
@@ -171,8 +274,8 @@ export default function PartnerManagementPage() {
                 size="lg"
                 footer={
                     <>
-                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
-                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
+                        <button className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-semibold text-xs hover:bg-slate-200 transition-colors" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
+                        <button onClick={handleSave} className="px-6 py-2.5 bg-brand-primary text-white rounded-lg font-semibold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2">
                             <Save size={16} /> Lưu thông tin
                         </button>
                     </>
@@ -181,19 +284,31 @@ export default function PartnerManagementPage() {
                 <div className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <AdminInput 
-                            label="Tên đối tác/Đại lý"
+                            label="Tên đối tác / Đại lý"
                             placeholder="Công ty TNHH ABC..."
                             icon={Handshake}
-                            defaultValue={editingPartner?.name}
+                            value={editingPartner?.name || ''}
+                            onChange={(e) => setEditingPartner({...editingPartner, name: e.target.value})}
                             required
                         />
                         <AdminSelect 
                             label="Khu vực quản lý"
-                            defaultValue={editingPartner?.region_id}
+                            icon={MapPin}
+                            value={editingPartner?.region_id?.toString() || ''}
+                            onChange={(e) => {
+                                const selectedCat = categories.find(c => c.category_id.toString() === e.target.value);
+                                setEditingPartner({
+                                    ...editingPartner, 
+                                    region_id: e.target.value,
+                                    region: selectedCat ? selectedCat.name : ''
+                                });
+                            }}
                             options={[
-                                { value: 'mn', label: 'Miền Nam' },
-                                { value: 'mt', label: 'Miền Trung' },
-                                { value: 'mb', label: 'Miền Bắc' }
+                                { value: '', label: '-- Chọn khu vực quản lý --' },
+                                ...categories.map(c => ({ 
+                                    value: c.category_id.toString(), 
+                                    label: `${!c.parent_id ? '[Khu vực] ' : '  └ '}${c.name}` 
+                                }))
                             ]}
                             required
                         />
@@ -201,17 +316,19 @@ export default function PartnerManagementPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <AdminInput 
-                            label="Địa chỉ văn phòng"
+                            label="Địa chỉ văn phòng / Kho"
                             placeholder="Số 123, Đường..."
                             icon={MapPin}
-                            defaultValue={editingPartner?.address}
+                            value={editingPartner?.address || ''}
+                            onChange={(e) => setEditingPartner({...editingPartner, address: e.target.value})}
                             required
                         />
                         <AdminInput 
                             label="Website (nếu có)"
                             placeholder="www.partner-site.com"
                             icon={Globe}
-                            defaultValue={editingPartner?.website}
+                            value={editingPartner?.website || ''}
+                            onChange={(e) => setEditingPartner({...editingPartner, website: e.target.value})}
                         />
                     </div>
 
@@ -220,7 +337,8 @@ export default function PartnerManagementPage() {
                             label="Số điện thoại"
                             placeholder="09xx.xxx.xxx"
                             icon={Phone}
-                            defaultValue={editingPartner?.phone}
+                            value={editingPartner?.phone || ''}
+                            onChange={(e) => setEditingPartner({...editingPartner, phone: e.target.value})}
                             required
                         />
                         <AdminInput 
@@ -228,12 +346,14 @@ export default function PartnerManagementPage() {
                             placeholder="contact@partner.vn"
                             icon={Mail}
                             type="email"
-                            defaultValue={editingPartner?.email}
+                            value={editingPartner?.email || ''}
+                            onChange={(e) => setEditingPartner({...editingPartner, email: e.target.value})}
                             required
                         />
                         <AdminSelect 
                             label="Trạng thái hợp tác"
-                            defaultValue={editingPartner?.status}
+                            value={editingPartner?.status || 'active'}
+                            onChange={(e) => setEditingPartner({...editingPartner, status: e.target.value})}
                             options={[
                                 { value: 'active', label: 'Đang hợp tác' },
                                 { value: 'inactive', label: 'Ngừng hợp tác' }
@@ -246,48 +366,97 @@ export default function PartnerManagementPage() {
                         label="Ghi chú nội bộ"
                         rows={4}
                         placeholder="Các thỏa thuận hoặc thông tin bổ sung về đối tác này..."
-                        defaultValue={editingPartner?.description}
+                        value={editingPartner?.description || ''}
+                        onChange={(e) => setEditingPartner({...editingPartner, description: e.target.value})}
                     />
                 </div>
             </AdminModal>
 
-            {/* REGION MODAL */}
+            {/* REGION MODAL - ĐỒNG BỘ HOÀN TOÀN VỚI PHẦN THÊM DANH MỤC TRONG SẢN PHẨM */}
             <AdminModal 
                 isOpen={isRegionModalOpen} 
                 onClose={() => setIsRegionModalOpen(false)}
-                title="Thêm khu vực mới"
+                title="Thêm khu vực đối tác mới"
                 size="md"
                 footer={
                     <>
-                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsRegionModalOpen(false)}>Hủy bỏ</button>
-                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
-                            <Save size={16} /> Tạo khu vực
+                        <button 
+                            type="button"
+                            className="px-5 py-2.5 bg-slate-100 text-slate-600 rounded-lg font-semibold text-xs hover:bg-slate-200 transition-colors" 
+                            onClick={() => setIsRegionModalOpen(false)}
+                        >
+                            Hủy bỏ
+                        </button>
+                        <button 
+                            type="button"
+                            disabled={isSubmittingRegion}
+                            onClick={handleRegionSubmit}
+                            className="px-6 py-2.5 bg-brand-primary text-white rounded-lg font-semibold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2 disabled:opacity-50"
+                        >
+                            {isSubmittingRegion ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div> : <Save size={16} />} 
+                            Tạo khu vực
                         </button>
                     </>
                 }
             >
                 <div className="space-y-6">
-                    <AdminInput 
-                        label="Tên khu vực" 
-                        placeholder="Ví dụ: Miền Nam, Đồng bằng Sông Cửu Long..." 
-                        defaultValue=""
-                        required
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <AdminInput 
+                            label="Tên khu vực" 
+                            placeholder="Ví dụ: KCN VSIP 1, Bình Dương..." 
+                            value={regionFormData.name}
+                            onChange={(e: any) => setRegionFormData(p => ({ ...p, name: e.target.value }))}
+                            required
+                        />
+                        <AdminInput 
+                            label="Mã khu vực" 
+                            placeholder="Ví dụ: DT-MN-VSIP..." 
+                            value={regionFormData.code}
+                            onChange={(e: any) => setRegionFormData(p => ({ ...p, code: e.target.value }))}
+                            required
+                        />
+                    </div>
                     <AdminSelect
-                        label="Khu vực cha"
-                        defaultValue=""
+                        label="Khu vực cha (Bắt buộc)"
+                        value={regionFormData.parentId}
+                        onChange={(e: any) => setRegionFormData(p => ({ ...p, parentId: e.target.value }))}
+                        required
                         options={[
-                            { value: '', label: 'Không có (Khu vực gốc)' },
-                            { value: 'mn', label: 'Miền Nam' },
-                            { value: 'mt', label: 'Miền Trung' },
-                            { value: 'mb', label: 'Miền Bắc' }
+                            { value: '', label: '-- Chọn khu vực cha tương ứng (Bắt buộc) --' },
+                            ...categories
+                                .sort((a, b) => {
+                                    if (!a.parent_id && b.parent_id) return -1;
+                                    if (a.parent_id && !b.parent_id) return 1;
+                                    return (a.display_order ?? 0) - (b.display_order ?? 0);
+                                })
+                                .map(c => ({
+                                    value: c.category_id.toString(),
+                                    label: `${!c.parent_id ? '[Cấp 1] ' : '  └ [Cấp 2] '}[${c.code}] ${c.name}`
+                                }))
                         ]}
                     />
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <AdminInput 
+                            label="Thứ tự hiển thị" 
+                            type="number"
+                            value={regionFormData.displayOrder}
+                            onChange={(e: any) => setRegionFormData(p => ({ ...p, displayOrder: parseInt(e.target.value) || 0 }))}
+                        />
+                        <AdminSelect
+                            label="Trạng thái"
+                            value={regionFormData.status}
+                            onChange={(e: any) => setRegionFormData(p => ({ ...p, status: e.target.value }))}
+                            options={[
+                                { value: 'ACTIVE', label: 'Hoạt động' },
+                                { value: 'INACTIVE', label: 'Tạm ẩn' }
+                            ]}
+                        />
+                    </div>
                     <AdminTextarea 
-                        label="Mô tả"
-                        rows={4}
-                        placeholder="Nhập ghi chú cho khu vực này..."
-                        defaultValue=""
+                        label="Mô tả / Ghi chú" 
+                        placeholder="Mô tả chi tiết khu vực đối tác này..." 
+                        value={regionFormData.description}
+                        onChange={(e: any) => setRegionFormData(p => ({ ...p, description: e.target.value }))}
                     />
                 </div>
             </AdminModal>

@@ -1,0 +1,259 @@
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\appsettings.Development.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\appsettings.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.staticwebassets.endpoints.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.deps.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.runtimeconfig.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.pdb
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.AssemblyReference.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.GeneratedMSBuildEditorConfig.editorconfig
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.AssemblyInfoInputs.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.AssemblyInfo.cs
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.CoreCompileInputs.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cs
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.sourcelink.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\scopedcss\bundle\backend.styles.css
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.development.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\swae.build.ex.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.Up2Date
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\refint\backend.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.pdb
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\ref\backend.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\BCrypt-Net-Next.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Humanizer.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Mono.TextTemplating.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\MySqlConnector.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.CodeDom.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.AttributedModel.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Convention.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Hosting.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Runtime.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.TypedParts.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\appsettings.Development.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\appsettings.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.staticwebassets.endpoints.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.exe
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.deps.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.runtimeconfig.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.pdb
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\BCrypt-Net-Next.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Humanizer.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Bcl.Cryptography.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.CSharp.Workspaces.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.CodeAnalysis.Workspaces.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.Memory.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Logging.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Primitives.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Mono.TextTemplating.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\MySqlConnector.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.CodeDom.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.AttributedModel.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Convention.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Hosting.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.Runtime.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Composition.TypedParts.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Diagnostics.DiagnosticSource.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.Formats.Asn1.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\cs\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\de\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\es\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\fr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\it\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ja\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ko\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pl\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\pt-BR\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.AssemblyReference.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rpswa.dswa.cache.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.GeneratedMSBuildEditorConfig.editorconfig
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.AssemblyInfoInputs.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.AssemblyInfo.cs
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.CoreCompileInputs.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cs
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.sourcelink.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjimswa.dswa.cache.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\scopedcss\bundle\backend.styles.css
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.json.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.development.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.build.endpoints.json
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\swae.build.ex.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.csproj.Up2Date
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\refint\backend.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.pdb
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\ref\backend.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\DEV HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\StackExchange.Redis.dll
+D:\DEV_HINNOVA\FREELANCER\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Microsoft.Extensions.Caching.StackExchangeRedis.dll
+D:\DEV_HINNOVA\FREELANCER\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\Pipelines.Sockets.Unofficial.dll
+D:\DEV_HINNOVA\FREELANCER\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\StackExchange.Redis.dll
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\bin\Debug\net8.0\backend.exe
+D:\DEV_HINNOVA\Freelancer\Mechanical_Supplies_Store\Mechanical_Supplies_Store\backend\backend\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

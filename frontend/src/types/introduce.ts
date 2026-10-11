@@ -9,6 +9,7 @@ export interface IntroduceHeroContent {
   highlight: string;
   excerpt: string;
   thumbnail: string;
+  stats?: { number: string; label: string }[];
 }
 
 export interface IntroduceTextBlock {
@@ -38,6 +39,7 @@ export interface IntroduceContactContent {
 export interface IntroducePageContent {
   hero: IntroduceHeroContent;
   story: IntroduceTextBlock;
+  quote?: string;
   vision: IntroduceTextBlock;
   mission: IntroduceTextBlock;
   reasonsHeading: string;

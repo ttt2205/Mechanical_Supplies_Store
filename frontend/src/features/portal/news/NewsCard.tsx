@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Calendar, User, ArrowRight } from "lucide-react";
 import { Post } from "@/types/post";
 
@@ -10,7 +11,7 @@ interface NewsCardProps {
 }
 
 export default function NewsCard({ post }: NewsCardProps) {
-  const formattedDate = new Date(post.created_at).toLocaleDateString("vi-VN", {
+  const formattedDate = new Date(post.creationTime).toLocaleDateString("vi-VN", {
     day: "2-digit",
     month: "2-digit",
     year: "numeric",
@@ -29,14 +30,16 @@ export default function NewsCard({ post }: NewsCardProps) {
     <div className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 md:duration-500 flex flex-col h-full">
       {/* Thumbnail */}
       <div className="relative aspect-[16/10] overflow-hidden">
-        <img 
-          src={post.thumbnail} 
+        <Image 
+          src={post.thumbnail || '/placeholder.jpg'} 
           alt={post.title} 
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-700 group-hover:scale-110" 
         />
         <div className="absolute top-4 left-4">
           <span className="px-3 py-1 bg-brand-primary/90 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg">
-            {getPostTypeLabel(post.post_type)}
+            {getPostTypeLabel(post.postType)}
           </span>
         </div>
       </div>
@@ -50,7 +53,7 @@ export default function NewsCard({ post }: NewsCardProps) {
           </div>
           <div className="flex items-center gap-1.5">
             <User size={14} className="text-brand-accent" />
-            {post.author}
+            {post.authorId?.toString() || 'Admin'}
           </div>
         </div>
 

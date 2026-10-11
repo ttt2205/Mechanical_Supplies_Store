@@ -1,8 +1,9 @@
-﻿"use client";
+"use client";
 
 import { useState, useEffect, useCallback } from "react";
 import { ArrowRight, Phone, FileText, ChevronLeft, ChevronRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const slides = [
   {
@@ -160,10 +161,12 @@ export default function Hero() {
                 onClick={handleSwitch}
               >
                 <div className="relative w-full h-full">
-                  <img 
+                  <Image 
                     src={slides[nextIndex].image} 
                     alt="Next product" 
-                    className="w-full h-full object-contain drop-shadow-xl"
+                    fill
+                    sizes="(max-width: 768px) 55vw, 60vw"
+                    className="object-contain drop-shadow-xl"
                   />
                   {/* DATA TAG */}
                   <div className="hidden sm:block absolute top-1/4 -left-4 bg-brand-primary text-white text-[9px] font-bold px-2 py-1 rounded-sm shadow-lg tracking-widest uppercase opacity-0 group-hover/bg:opacity-100 transition-opacity">
@@ -177,10 +180,13 @@ export default function Hero() {
                 isAnimating ? 'opacity-0 scale-110 -translate-x-10' : 'opacity-100 translate-x-0 translate-y-0 scale-100'
               }`}>
                 <div className="relative w-full h-full">
-                  <img 
+                  <Image 
                     src={slides[activeIndex].image} 
                     alt={slides[activeIndex].label} 
-                    className="relative z-10 w-full h-full object-contain drop-shadow-[0_50px_50px_rgba(0,0,0,0.15)]"
+                    fill
+                    sizes="(max-width: 768px) 80vw, 85vw"
+                    priority
+                    className="relative z-10 object-contain drop-shadow-[0_50px_50px_rgba(0,0,0,0.15)]"
                   />
                   
                   {/* PRODUCT INFO BADGE */}

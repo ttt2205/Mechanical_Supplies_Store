@@ -19,7 +19,7 @@ const list_nav = [
 
 export default function Navigation() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const { categories: productCategories } = useProductCategories();
+  const { categories: productCategories } = useProductCategories("PRODUCT");
   const { services: serviceCategories } = useServiceCategories();
   const { partners: partnerCategories } = usePartnerCategories();
 

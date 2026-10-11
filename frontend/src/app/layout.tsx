@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Montserrat, Geist_Mono } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 import "./globals.css";
 import "./index.css";
 
@@ -30,10 +31,14 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="vi"
       className={`${inter.variable} ${montserrat.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        {children}
+        <Toaster position="bottom-right" reverseOrder={false} />
+      </body>
     </html>
   );
 }

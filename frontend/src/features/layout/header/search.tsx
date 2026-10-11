@@ -3,12 +3,14 @@
 import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { ArrowRight, Search, X } from "lucide-react";
-import { MOCK_PRODUCTS } from "@/data/mock-products";
+import { useProducts } from "@/hooks/useProducts";
 
 const normalize = (value: string) => value.trim().toLowerCase();
 
 export default function SearchHeader() {
+  const { products } = useProducts();
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -17,12 +19,12 @@ export default function SearchHeader() {
     const keyword = normalize(query);
 
     if (keyword.length < 2) {
-      return MOCK_PRODUCTS.filter(
+      return products.filter(
         (product) => product.status === "active" && !product.is_deleted && product.is_featured
       ).slice(0, 6);
     }
 
-    return MOCK_PRODUCTS.filter((product) => {
+    return products.filter((product) => {
       return (
         product.status === "active" &&
         !product.is_deleted &&
@@ -105,12 +107,8 @@ export default function SearchHeader() {
                   onClick={() => setIsFocused(false)}
                   className="group flex min-h-20 items-center gap-3 rounded-2xl p-3 transition-colors hover:bg-slate-50"
                 >
-                  <div className="h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-100">
-                    <img
-                      src={product.thumbnail}
-                      alt={product.name}
-                      className="h-full w-full object-cover"
-                    />
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-slate-100">
+                    <Image src={product.thumbnail || "/placeholder.jpg"} alt={product.name} fill sizes="56px" className="object-cover" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-[10px] font-black uppercase tracking-widest text-brand-primary/60">
@@ -153,3 +151,6 @@ export default function SearchHeader() {
     </form>
   );
 }
+
+
+

@@ -1,169 +1,299 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-    Search, 
-    Plus, 
-    Filter, 
-    Edit2, 
-    Trash2, 
-    Key, 
-    ChevronRight,
-    CheckCircle2,
-    ShieldAlert,
-    Save,
-    Type,
-    Lock
+    Shield, 
+    ShieldCheck, 
+    Save, 
+    CheckSquare, 
+    RotateCcw,
+    Loader2,
+    Layers,
+    Lock,
+    ShieldAlert
 } from 'lucide-react';
-import { AdminModal, AdminInput, AdminSelect, AdminTextarea } from '@/components/admin/AdminUI';
+import { fetchApi } from '@/lib/api';
+import { useToastStore } from '@/store/useToastStore';
+import { useRoles } from '@/hooks/useAdminModules';
 
-// Mock data for permissions
-const initialPermissions = [
-    { id: 1, name: 'Xem báo cáo', code: 'VIEW_DASHBOARD', group: 'Thống kê', status: 'active' },
-    { id: 2, name: 'Thêm sản phẩm', code: 'CREATE_PRODUCT', group: 'Sản phẩm', status: 'active' },
-    { id: 3, name: 'Xóa người dùng', code: 'DELETE_USER', group: 'Người dùng', status: 'active' },
-    { id: 4, name: 'Duyệt bài viết', code: 'PUBLISH_POST', group: 'Bài viết', status: 'inactive' },
-];
+interface PermissionItem {
+    id: number;
+    code: string;
+    name: string;
+    groupName?: string;
+}
 
 export default function PermissionManagementPage() {
-    const [permissions] = useState(initialPermissions);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingPermission, setEditingPermission] = useState<any>(null);
+    const { roles, loading: rolesLoading } = useRoles();
+    const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
+    const [allPermissions, setAllPermissions] = useState<PermissionItem[]>([]);
+    const [selectedPermissionIds, setSelectedPermissionIds] = useState<number[]>([]);
+    const [loadingPermissions, setLoadingPermissions] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    const { addToast } = useToastStore();
 
-    const openModal = (perm: any = null) => {
-        setEditingPermission(perm || {
-            name: '',
-            code: '',
-            group: 'Sản phẩm',
-            status: 'active'
-        });
-        setIsModalOpen(true);
+    // 1. Set default selected role when roles are loaded
+    useEffect(() => {
+        if (roles.length > 0 && !selectedRoleId) {
+            setSelectedRoleId(roles[0].id);
+        }
+    }, [roles, selectedRoleId]);
+
+    // 2. Fetch all system permissions once
+    useEffect(() => {
+        const fetchPermissions = async () => {
+            try {
+                const data = await fetchApi<PermissionItem[]>('/roles/permissions');
+                if (data && Array.isArray(data)) {
+                    setAllPermissions(data);
+                }
+            } catch (err) {
+                console.error('Fetch permissions error:', err);
+                addToast('Không thể tải danh sách quyền hệ thống', 'error');
+            }
+        };
+        fetchPermissions();
+    }, [addToast]);
+
+    // 3. Fetch active permission codes for selected role
+    useEffect(() => {
+        if (!selectedRoleId || allPermissions.length === 0) return;
+
+        const fetchRolePermissions = async () => {
+            setLoadingPermissions(true);
+            try {
+                const assignedCodes = await fetchApi<string[]>(`/roles/${selectedRoleId}/permissions`);
+                if (assignedCodes && Array.isArray(assignedCodes)) {
+                    const assignedSet = new Set(assignedCodes.map(c => c.toLowerCase()));
+                    const activeIds = allPermissions
+                        .filter(p => assignedSet.has(p.code.toLowerCase()))
+                        .map(p => p.id);
+                    setSelectedPermissionIds(activeIds);
+                } else {
+                    setSelectedPermissionIds([]);
+                }
+            } catch (err) {
+                console.error('Fetch role permissions error:', err);
+                addToast('Không thể tải quyền cho vai trò đã chọn', 'error');
+            } finally {
+                setLoadingPermissions(false);
+            }
+        };
+
+        fetchRolePermissions();
+    }, [selectedRoleId, allPermissions, addToast]);
+
+    const currentRole = roles.find(r => r.id === selectedRoleId);
+    const isAdminRole = Boolean(currentRole?.isAdmin || currentRole?.is_admin || (currentRole?.code || '').toUpperCase() === 'ADMIN');
+
+    // 4. Toggle single permission ID
+    const togglePermission = (permId: number) => {
+        if (isAdminRole) {
+            addToast('Quyền hạn của tài khoản Admin là mặc định (toàn quyền) và không được phép chỉnh sửa.', 'error');
+            return;
+        }
+        setSelectedPermissionIds(prev => 
+            prev.includes(permId) ? prev.filter(id => id !== permId) : [...prev, permId]
+        );
     };
+
+    // 5. Select all or deselect all
+    const selectAll = () => {
+        if (isAdminRole) return;
+        setSelectedPermissionIds(allPermissions.map(p => p.id));
+    };
+
+    const deselectAll = () => {
+        if (isAdminRole) return;
+        setSelectedPermissionIds([]);
+    };
+
+    // 6. Save assignment to backend API
+    const handleSavePermissions = async () => {
+        if (!selectedRoleId) {
+            addToast('Vui lòng chọn vai trò để phân quyền', 'error');
+            return;
+        }
+
+        if (isAdminRole) {
+            addToast('Quyền hạn của tài khoản Admin là cố định và không được phép thay đổi.', 'error');
+            return;
+        }
+
+        setIsSaving(true);
+        try {
+            await fetchApi(`/roles/${selectedRoleId}/assign`, {
+                method: 'POST',
+                body: JSON.stringify(selectedPermissionIds)
+            });
+            addToast('Cấu hình phân quyền đã được lưu thành công!', 'success');
+        } catch (err: any) {
+            console.error('Save permissions error:', err);
+            addToast(err?.message || 'Không thể lưu cấu hình phân quyền', 'error');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    // Group permissions by groupName
+    const groupedPermissions = allPermissions.reduce((acc, perm) => {
+        const group = perm.groupName || 'Hệ thống chung';
+        if (!acc[group]) acc[group] = [];
+        acc[group].push(perm);
+        return acc;
+    }, {} as Record<string, PermissionItem[]>);
 
     return (
         <div className="space-y-8 pb-20">
-            {/* Header Actions */}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            {/* Header */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-100 shadow-xs">
                 <div>
-                    <h1 className="text-3xl font-black text-slate-900 uppercase tracking-tight mb-2">Quản lý Quyền hạn</h1>
-                    <p className="text-slate-500 font-bold">Danh mục các quyền chi tiết (fine-grained) trong hệ thống.</p>
+                    <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">Phân quyền cho Vai trò</h1>
+                    <p className="text-sm text-slate-500 font-medium mt-1">
+                        Gán các danh mục quyền hạn thực tế từ API cho từng vai trò người dùng trong hệ thống.
+                    </p>
                 </div>
-                <button 
-                    onClick={() => openModal()}
-                    className="bg-slate-900 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl hover:bg-brand-primary transition-all flex items-center gap-3 w-fit"
+                <button
+                    onClick={handleSavePermissions}
+                    disabled={isSaving || !selectedRoleId || isAdminRole}
+                    className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                    <Plus size={18} />
-                    Thêm quyền mới
+                    {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                    {isAdminRole ? 'Quyền Admin cố định' : 'Lưu phân quyền'}
                 </button>
             </div>
 
-            {/* Permissions List */}
-            <div className="bg-white rounded-[40px] border border-slate-100 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-left border-collapse">
-                        <thead>
-                            <tr className="bg-slate-50 border-b border-slate-100">
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Tên quyền</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Mã định danh</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Nhóm chức năng</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Trạng thái</th>
-                                <th className="px-8 py-5 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 text-right">Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-50">
-                            {permissions.map((perm) => (
-                                <tr key={perm.id} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(perm)}>
-                                    <td className="px-8 py-5">
-                                        <div className="flex items-center gap-4">
-                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-brand-primary group-hover:text-white transition-all">
-                                                <Key size={18} />
-                                            </div>
-                                            <span className="text-sm font-black text-slate-900 uppercase tracking-tight">{perm.name}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5 font-mono text-xs font-bold text-slate-400">
-                                        {perm.code}
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <span className="px-3 py-1 bg-slate-100 text-slate-500 text-[9px] font-black uppercase tracking-widest rounded-md">
-                                            {perm.group}
-                                        </span>
-                                    </td>
-                                    <td className="px-8 py-5">
-                                        <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${
-                                            perm.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'
-                                        }`}>
-                                            {perm.status === 'active' ? 'Khả dụng' : 'Khóa'}
-                                        </div>
-                                    </td>
-                                    <td className="px-8 py-5 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                            <button className="p-2 text-slate-400 hover:text-brand-primary transition-all" onClick={(e) => { e.stopPropagation(); openModal(perm); }}><Edit2 size={16} /></button>
-                                            <button className="p-2 text-slate-400 hover:text-red-500 transition-all" onClick={(e) => e.stopPropagation()}><Trash2 size={16} /></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+            {/* Protective Admin Notice */}
+            {isAdminRole && (
+                <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-center gap-3.5 text-amber-900 shadow-xs">
+                    <div className="w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center shrink-0 text-amber-700">
+                        <ShieldAlert size={20} />
+                    </div>
+                    <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800">Quyền hạn Admin Bảo mật & Cố định (IsAdmin: True)</h4>
+                        <p className="text-xs text-amber-700 font-medium mt-0.5">
+                            Tài khoản Quản trị viên (Admin) tự động sở hữu 100% tất cả các quyền hạn trong hệ thống. Không được phép chỉnh sửa hoặc hạ quyền.
+                        </p>
+                    </div>
                 </div>
-            </div>
+            )}
 
-            {/* PERMISSION MODAL */}
-            <AdminModal
-                isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title={editingPermission?.id ? "Chỉnh sửa quyền hạn" : "Tạo quyền mới"}
-                size="md"
-                footer={
-                    <>
-                        <button className="px-8 py-3 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-slate-200 transition-all" onClick={() => setIsModalOpen(false)}>Hủy bỏ</button>
-                        <button className="px-10 py-3 bg-brand-primary text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-brand-primary/20 hover:bg-blue-800 transition-all flex items-center gap-2">
-                            <Save size={16} /> Lưu quyền
+            {/* Role Selection & Actions Bar */}
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 shadow-xs space-y-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+                    <div className="space-y-1.5 flex-1 max-w-md">
+                        <label className="block text-xs font-semibold text-slate-700">Chọn Vai trò cần phân quyền (*)</label>
+                        <div className="relative">
+                            <select
+                                value={selectedRoleId || ''}
+                                onChange={(e) => setSelectedRoleId(Number(e.target.value))}
+                                className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-brand-primary focus:bg-white transition-all cursor-pointer"
+                            >
+                                {rolesLoading ? (
+                                    <option value="">Đang tải danh sách vai trò...</option>
+                                ) : (
+                                    roles.map(r => (
+                                        <option key={r.id} value={r.id}>
+                                            {r.name} [{r.code}] {Boolean(r.isAdmin || r.is_admin || (r.code || '').toUpperCase() === 'ADMIN') ? '⭐ (Admin cố định)' : ''}
+                                        </option>
+                                    ))
+                                )}
+                            </select>
+                        </div>
+                    </div>
+
+                    {currentRole && (
+                        <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border ${isAdminRole ? 'bg-amber-50/70 border-amber-200' : 'bg-slate-50 border-slate-200/60'}`}>
+                            <Shield className={isAdminRole ? "text-amber-600" : "text-brand-primary"} size={20} />
+                            <div>
+                                <p className="text-xs font-bold text-slate-900">{currentRole.name}</p>
+                                <p className="text-[10px] font-mono font-semibold text-brand-primary uppercase">
+                                    {currentRole.code} {isAdminRole ? '• (IsAdmin: True)' : ''}
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
+                    <div className="flex items-center gap-2 pt-2 md:pt-0">
+                        <button
+                            type="button"
+                            onClick={selectAll}
+                            disabled={isAdminRole}
+                            className="px-3.5 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            <CheckSquare size={14} /> Chọn tất cả
                         </button>
-                    </>
-                }
-            >
-                <div className="space-y-8">
-                    <AdminInput 
-                        label="Tên quyền hạn"
-                        icon={Type}
-                        placeholder="Ví dụ: Chỉnh sửa bài viết..."
-                        defaultValue={editingPermission?.name}
-                        required
-                    />
-
-                    <AdminInput 
-                        label="Mã định danh hệ thống"
-                        icon={Lock}
-                        placeholder="EDIT_POST"
-                        defaultValue={editingPermission?.code}
-                        required
-                    />
-
-                    <AdminSelect 
-                        label="Nhóm chức năng"
-                        defaultValue={editingPermission?.group}
-                        options={[
-                            { value: 'Thống kê', label: 'Thống kê & Dashboard' },
-                            { value: 'Sản phẩm', label: 'Quản lý Sản phẩm' },
-                            { value: 'Người dùng', label: 'Quản lý Người dùng' },
-                            { value: 'Bài viết', label: 'Quản lý Bài viết' }
-                        ]}
-                        required
-                    />
-
-                    <AdminSelect 
-                        label="Trạng thái"
-                        defaultValue={editingPermission?.status}
-                        options={[
-                            { value: 'active', label: 'Kích hoạt ngay' },
-                            { value: 'inactive', label: 'Tạm ẩn' }
-                        ]}
-                        required
-                    />
+                        <button
+                            type="button"
+                            onClick={deselectAll}
+                            disabled={isAdminRole}
+                            className="px-3.5 py-2 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold hover:bg-slate-200 transition-colors flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+                        >
+                            <RotateCcw size={14} /> Bỏ chọn tất cả
+                        </button>
+                    </div>
                 </div>
-            </AdminModal>
+
+                {/* Permissions Grid Grouped by Module */}
+                {loadingPermissions ? (
+                    <div className="py-16 text-center space-y-3">
+                        <Loader2 className="w-8 h-8 text-brand-primary animate-spin mx-auto" />
+                        <p className="text-sm font-medium text-slate-500">Đang tải quyền cho vai trò {currentRole?.name}...</p>
+                    </div>
+                ) : allPermissions.length === 0 ? (
+                    <div className="py-16 text-center text-slate-400 font-medium text-sm">
+                        Chưa có quyền hạn hệ thống nào được thiết lập trong CSDL.
+                    </div>
+                ) : (
+                    <div className="space-y-8">
+                        {Object.entries(groupedPermissions).map(([groupName, perms]) => (
+                            <div key={groupName} className="space-y-3">
+                                <div className="flex items-center gap-2 border-b border-slate-100 pb-2">
+                                    <Layers size={16} className="text-brand-primary" />
+                                    <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider">{groupName}</h3>
+                                    <span className="text-[10px] font-semibold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">
+                                        {isAdminRole ? perms.length : perms.filter(p => selectedPermissionIds.includes(p.id)).length} / {perms.length}
+                                    </span>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                                    {perms.map(perm => {
+                                        const isChecked = isAdminRole || selectedPermissionIds.includes(perm.id);
+                                        return (
+                                            <div
+                                                key={perm.id}
+                                                onClick={() => togglePermission(perm.id)}
+                                                className={`p-3.5 rounded-xl border transition-all flex items-start gap-3 select-none ${
+                                                    isAdminRole 
+                                                        ? 'bg-amber-50/40 border-amber-200/60 text-slate-800 cursor-not-allowed'
+                                                        : isChecked 
+                                                            ? 'bg-brand-primary/5 border-brand-primary/30 text-slate-900 shadow-xs cursor-pointer' 
+                                                            : 'bg-white border-slate-200/80 hover:border-slate-300 text-slate-600 cursor-pointer'
+                                                }`}
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isChecked}
+                                                    disabled={isAdminRole}
+                                                    onChange={() => {}} // Handled by div onClick
+                                                    className="mt-0.5 w-4 h-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary/20 cursor-pointer pointer-events-none disabled:opacity-75"
+                                                />
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="flex items-center justify-between gap-1">
+                                                        <p className="text-xs font-semibold text-slate-900 leading-snug">{perm.name}</p>
+                                                        {isAdminRole && <Lock size={12} className="text-amber-600 shrink-0" />}
+                                                    </div>
+                                                    <p className="text-[10px] font-mono font-medium text-brand-primary mt-0.5">{perm.code}</p>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }

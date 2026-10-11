@@ -10,6 +10,7 @@ import { useFavoritesStore } from "@/store/useFavoritesStore";
 import ProductCard from "@/components/product/ProductCard";
 import ScrollReveal from "@/components/ui/ScrollReveal";
 import Link from "next/link";
+import Image from "next/image";
 import { 
     ChevronRight, 
     ShieldCheck, 
@@ -27,11 +28,12 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const { slug } = useParams();
   const { getProductBySlug, getProductsByCategory, loading: productsLoading, products } = useProducts();
-  const { categories, loading: categoriesLoading } = useProductCategories();
+  const { categories, loading: categoriesLoading } = useProductCategories("PRODUCT");
   const { logView } = useViewLog();
   const { isAuthenticated } = useAuthStore();
   const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeDetailTab, setActiveDetailTab] = useState<'desc' | 'specs' | 'policy'>('desc');
   const [isAutoPaused, setIsAutoPaused] = useState(false);
   const [dragOffset, setDragOffset] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -243,18 +245,21 @@ export default function ProductDetailPage() {
                         onPointerCancel={finishImageDrag}
                     >
                         {productImages.map((image, index) => (
-                            <img
+                            <Image
                                 key={image}
                                 src={image}
                                 alt={`${product.name} - ảnh ${index + 1}`}
                                 draggable={false}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
+                                priority={index === 0}
                                 style={{
                                     transform:
                                         selectedImageIndex === index
                                             ? `translateX(${dragOffset}px) scale(${isDragging ? 0.985 : 1})`
                                             : "translateX(0) scale(1.05)",
                                 }}
-                                className={`absolute inset-0 h-full w-full object-cover transition-all ease-out group-hover:scale-105 ${
+                                className={`object-cover transition-all ease-out group-hover:scale-105 ${
                                     isDragging && selectedImageIndex === index ? "duration-0" : "duration-700"
                                 } ${
                                     selectedImageIndex === index
@@ -335,11 +340,15 @@ export default function ProductDetailPage() {
                                 }`}
                                 aria-label={`Chọn ảnh ${index + 1}`}
                             >
-                                <img
-                                    src={image}
-                                    alt={`${product.name} thumbnail ${index + 1}`}
-                                    className="h-full w-full object-cover"
-                                />
+                                <div className="relative w-full h-full">
+                                    <Image
+                                        src={image}
+                                        alt={`${product.name} thumbnail ${index + 1}`}
+                                        fill
+                                        sizes="(max-width: 640px) 25vw, 20vw"
+                                        className="object-cover"
+                                    />
+                                </div>
                             </button>
                         ))}
                     </div>

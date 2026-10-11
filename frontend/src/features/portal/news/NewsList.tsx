@@ -19,9 +19,13 @@ export default function NewsList() {
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const matchesFilter = filter === "all" || post.post_type === filter;
-      const matchesSearch = post.title.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) || 
-                            post.excerpt.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
+      const currentPostType = (post.postType || "").toLowerCase();
+      const targetFilter = filter.toLowerCase();
+      const matchesFilter = filter === "all" || currentPostType === targetFilter;
+      const q = debouncedSearchQuery.toLowerCase().trim();
+      const postTitle = (post.title || "").toLowerCase();
+      const postExcerpt = (post.excerpt || "").toLowerCase();
+      const matchesSearch = !q || postTitle.includes(q) || postExcerpt.includes(q);
       return matchesFilter && matchesSearch;
     });
   }, [posts, filter, debouncedSearchQuery]);
@@ -159,7 +163,7 @@ export default function NewsList() {
           <div className="space-y-12">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {currentPosts.map((post) => (
-                <NewsCard key={post.post_id} post={post} />
+                <NewsCard key={post.id} post={post} />
               ))}
             </div>
             

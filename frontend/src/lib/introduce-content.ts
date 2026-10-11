@@ -28,6 +28,7 @@ const mergeHero = (
   highlight: asText(value?.highlight, fallback.highlight),
   excerpt: asText(value?.excerpt, fallback.excerpt),
   thumbnail: asText(value?.thumbnail, fallback.thumbnail),
+  stats: Array.isArray(value?.stats) ? value.stats : fallback.stats,
 });
 
 const mergeBlock = (
@@ -84,6 +85,7 @@ export function normalizeIntroduceContent(
   return {
     hero: mergeHero(value.hero, fallback.hero),
     story: mergeBlock(value.story, fallback.story),
+    quote: asText(value.quote, fallback.quote || ""),
     vision: mergeBlock(value.vision, fallback.vision),
     mission: mergeBlock(value.mission, fallback.mission),
     reasonsHeading: asText(value.reasonsHeading, fallback.reasonsHeading),

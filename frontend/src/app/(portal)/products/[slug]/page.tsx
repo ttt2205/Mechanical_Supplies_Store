@@ -4,11 +4,10 @@ import { ChevronRight } from "lucide-react";
 import ProductListing from "@/features/portal/products/ProductListing";
 import {
   filterAndPaginateProducts,
-  getCategoryBySlug,
   getDescendantCategoryIds,
   getDirectChildren,
-  getProductCategories,
-  getProducts,
+  fetchCategoriesFromApi,
+  fetchProductsFromApi,
   parseProductFilters,
   type ProductSearchParams,
 } from "@/lib/product-catalog";
@@ -26,9 +25,11 @@ export default async function CategoryProductsPage({
     params,
     searchParams,
   ]);
-  const products = getProducts();
-  const categories = getProductCategories();
-  const category = getCategoryBySlug(slug);
+  const [products, categories] = await Promise.all([
+    fetchProductsFromApi(),
+    fetchCategoriesFromApi()
+  ]);
+  const category = categories.find((c) => c.slug === slug || c.code?.toLowerCase() === slug.toLowerCase());
 
   if (!category) {
     return (
@@ -44,7 +45,7 @@ export default async function CategoryProductsPage({
     );
   }
 
-  const subCategories = getDirectChildren(category.category_id);
+  const subCategories = getDirectChildren(category.category_id, categories);
   const filters = parseProductFilters(resolvedSearchParams);
   const categoryIds = getDescendantCategoryIds(categories, category.category_id);
   const listing = filterAndPaginateProducts(

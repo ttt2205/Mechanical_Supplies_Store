@@ -7,7 +7,8 @@ import {
     LayoutDashboard, 
     Users, 
     ShieldCheck, 
-    Package, 
+    Shield,
+    Package, Layers,
     FileText, 
     Settings, 
     Handshake, 
@@ -27,27 +28,23 @@ import {
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 
-const menuItems = [
+type MenuItem = { name: string; icon: any; href?: string; isHeader?: boolean; requiredPermission?: string };
+const menuItems: MenuItem[] = [
     { name: 'Tổng quan', icon: LayoutDashboard, href: '/admin/dashboard' },
-    { name: 'Sản phẩm', icon: Package, href: '/admin/product' },
-    { 
-        name: 'Bài viết', 
-        icon: FileText, 
-        isHeader: true 
-    },
-    { name: 'Giới thiệu', icon: Info, href: '/admin/post/about' },
-    { name: 'Dịch vụ', icon: Wrench, href: '/admin/post/services' },
-    { name: 'Tin tức', icon: Newspaper, href: '/admin/post/news' },
-    { 
-        name: 'Hệ thống', 
-        icon: Settings, 
-        isHeader: true 
-    },
-    { name: 'Người dùng', icon: Users, href: '/admin/user' },
-    { name: 'Phân quyền', icon: ShieldCheck, href: '/admin/role' },
-    { name: 'Đối tác', icon: Handshake, href: '/admin/supplier' },
-    { name: 'Lượt xem', icon: History, href: '/admin/view_log' },
-    { name: 'Lỗi hệ thống', icon: AlertCircle, href: '/admin/system-error-log' },
+    { name: 'Giới thiệu', icon: Info, href: '/admin/post/about', requiredPermission: 'post:create' },
+    { name: 'Cửa hàng', icon: Package, isHeader: true },
+    { name: 'Sản phẩm', icon: Package, href: '/admin/product', requiredPermission: 'product:create' },
+    { name: 'Danh mục', icon: Layers, href: '/admin/category', requiredPermission: 'category:create' },
+    { name: 'Bài viết', icon: FileText, isHeader: true },
+    { name: 'Dịch vụ', icon: Wrench, href: '/admin/post/services', requiredPermission: 'post:create' },
+    { name: 'Tin tức', icon: Newspaper, href: '/admin/post/news', requiredPermission: 'post:create' },
+    { name: 'Hệ thống', icon: Settings, isHeader: true },
+    { name: 'Người dùng', icon: Users, href: '/admin/user', requiredPermission: 'user:manage' },
+    { name: 'Vai trò', icon: Shield, href: '/admin/role', requiredPermission: 'role:manage' },
+    { name: 'Phân quyền', icon: ShieldCheck, href: '/admin/permission', requiredPermission: 'role:manage' },
+    { name: 'Đối tác', icon: Handshake, href: '/admin/supplier', requiredPermission: 'partner:manage' },
+    { name: 'Lượt xem', icon: History, href: '/admin/view_log', requiredPermission: 'log:view' },
+    { name: 'Lỗi hệ thống', icon: AlertCircle, href: '/admin/system-error-log', requiredPermission: 'log:view' },
 ];
 
 export default function Sidebar() {
@@ -55,7 +52,8 @@ export default function Sidebar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
     const pathname = usePathname();
-    const { user, logout } = useAuthStore();
+    const { user, permissions, logout } = useAuthStore();
+    const hasPermission = (code?: string) => !code || user?.role_id === 'admin' || (permissions && permissions.includes(code));
 
     const router = useRouter();
 
@@ -147,7 +145,7 @@ export default function Sidebar() {
 
             {/* Navigation */}
             <nav className="flex-grow py-6 overflow-y-auto scrollbar-hide px-3 z-10">
-                {menuItems.map((item, idx) => {
+                {menuItems.filter(item => hasPermission(item.requiredPermission)).map((item, idx) => {
                     if (item.isHeader) {
                         return !isCollapsed ? (
                             <div key={idx} className="px-4 mt-8 mb-2">
