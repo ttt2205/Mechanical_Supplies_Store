@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
     Shield, 
     ShieldCheck, 
     Save, 
     CheckSquare, 
     RotateCcw,
+    RotateCw,
     Loader2,
     Layers,
     Lock,
@@ -24,12 +25,13 @@ interface PermissionItem {
 }
 
 export default function PermissionManagementPage() {
-    const { roles, loading: rolesLoading } = useRoles();
+    const { roles, loading: rolesLoading, refresh: refreshRoles } = useRoles();
     const [selectedRoleId, setSelectedRoleId] = useState<number | null>(null);
     const [allPermissions, setAllPermissions] = useState<PermissionItem[]>([]);
     const [selectedPermissionIds, setSelectedPermissionIds] = useState<number[]>([]);
     const [loadingPermissions, setLoadingPermissions] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const { addToast } = useToastStore();
 
     // 1. Set default selected role when roles are loaded
@@ -40,20 +42,32 @@ export default function PermissionManagementPage() {
     }, [roles, selectedRoleId]);
 
     // 2. Fetch all system permissions once
-    useEffect(() => {
-        const fetchPermissions = async () => {
-            try {
-                const data = await fetchApi<PermissionItem[]>('/roles/permissions');
-                if (data && Array.isArray(data)) {
-                    setAllPermissions(data);
-                }
-            } catch (err) {
-                console.error('Fetch permissions error:', err);
-                addToast('Không thể tải danh sách quyền hệ thống', 'error');
+    const fetchPermissions = useCallback(async () => {
+        try {
+            const data = await fetchApi<PermissionItem[]>('/roles/permissions');
+            if (data && Array.isArray(data)) {
+                setAllPermissions(data);
             }
-        };
-        fetchPermissions();
+        } catch (err) {
+            console.error('Fetch permissions error:', err);
+            addToast('Không thể tải danh sách quyền hệ thống', 'error');
+        }
     }, [addToast]);
+
+    useEffect(() => {
+        fetchPermissions();
+    }, [fetchPermissions]);
+
+    const handleReload = async () => {
+        setIsRefreshing(true);
+        try {
+            await Promise.all([refreshRoles(), fetchPermissions()]);
+        } catch (err) {
+            console.error('Reload error:', err);
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
 
     // 3. Fetch active permission codes for selected role
     useEffect(() => {
@@ -153,14 +167,29 @@ export default function PermissionManagementPage() {
                         Gán các danh mục quyền hạn thực tế từ API cho từng vai trò người dùng trong hệ thống.
                     </p>
                 </div>
-                <button
-                    onClick={handleSavePermissions}
-                    disabled={isSaving || !selectedRoleId || isAdminRole}
-                    className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
-                    {isAdminRole ? 'Quyền Admin cố định' : 'Lưu phân quyền'}
-                </button>
+                <div className="flex flex-wrap items-center gap-3">
+                    <button
+                        type="button"
+                        onClick={handleReload}
+                        disabled={rolesLoading || loadingPermissions || isRefreshing}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 text-xs font-bold transition-all shadow-xs hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        title="Tải lại dữ liệu"
+                    >
+                        <RotateCw
+                            size={15}
+                            className={`text-slate-600 transition-transform ${rolesLoading || loadingPermissions || isRefreshing ? 'animate-spin text-brand-primary' : ''}`}
+                        />
+                        <span>{rolesLoading || loadingPermissions || isRefreshing ? 'Đang tải...' : 'Tải lại'}</span>
+                    </button>
+                    <button
+                        onClick={handleSavePermissions}
+                        disabled={isSaving || !selectedRoleId || isAdminRole}
+                        className="bg-brand-primary text-white px-6 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+                        {isAdminRole ? 'Quyền Admin cố định' : 'Lưu phân quyền'}
+                    </button>
+                </div>
             </div>
 
             {/* Protective Admin Notice */}
@@ -170,7 +199,7 @@ export default function PermissionManagementPage() {
                         <ShieldAlert size={20} />
                     </div>
                     <div>
-                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800">Quyền hạn Admin Bảo mật & Cố định (IsAdmin: True)</h4>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-amber-800">Quyền hạn Admin Bảo mật & Cố định</h4>
                         <p className="text-xs text-amber-700 font-medium mt-0.5">
                             Tài khoản Quản trị viên (Admin) tự động sở hữu 100% tất cả các quyền hạn trong hệ thống. Không được phép chỉnh sửa hoặc hạ quyền.
                         </p>
@@ -208,7 +237,7 @@ export default function PermissionManagementPage() {
                             <div>
                                 <p className="text-xs font-bold text-slate-900">{currentRole.name}</p>
                                 <p className="text-[10px] font-mono font-semibold text-brand-primary uppercase">
-                                    {currentRole.code} {isAdminRole ? '• (IsAdmin: True)' : ''}
+                                    {currentRole.code}
                                 </p>
                             </div>
                         </div>

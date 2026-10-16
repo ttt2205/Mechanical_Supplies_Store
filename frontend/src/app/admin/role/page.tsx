@@ -19,7 +19,7 @@ import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
 import { useToastStore } from '@/store/useToastStore';
 
 export default function RoleManagementPage() {
-    const { roles, loading, createRole, updateRole, deleteRole } = useRoles();
+    const { roles, loading, refresh, createRole, updateRole, deleteRole } = useRoles();
     const { addToast } = useToastStore();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingRole, setEditingRole] = useState<any>(null);
@@ -109,12 +109,13 @@ export default function RoleManagementPage() {
                 searchKey={(role) => (role.name || '') + ' ' + (role.code || '') + ' ' + (role.description || '')}
                 searchPlaceholder="Tìm kiếm vai trò theo tên hoặc mã..."
                 isLoading={loading}
+                onRefresh={refresh}
                 colSpan={6}
                 tableHeader={
                     <tr>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Mã vai trò (Code)</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Tên hiển thị</th>
-                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Loại vai trò (IsAdmin)</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Loại vai trò</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Mô tả</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Số tài khoản</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600 text-right">Thao tác</th>
@@ -142,11 +143,11 @@ export default function RoleManagementPage() {
                             <td className="px-8 py-5">
                                 {isAdmin ? (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-700 border border-amber-200/80 rounded-full text-[10px] font-black uppercase tracking-wider">
-                                        <ShieldAlert size={12} /> Quản trị viên (IsAdmin: True)
+                                        <ShieldAlert size={12} /> Quản trị viên
                                     </span>
                                 ) : (
                                     <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-[10px] font-bold uppercase tracking-wider">
-                                        Người dùng (IsAdmin: False)
+                                        Người dùng
                                     </span>
                                 )}
                             </td>

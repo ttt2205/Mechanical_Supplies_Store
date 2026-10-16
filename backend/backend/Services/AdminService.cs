@@ -17,24 +17,39 @@ namespace backend.Services
             _context = context;
         }
 
-        public async Task<List<Account>> GetAllAccountsAsync()
+        public async Task<List<AccountResponseDto>> GetAllAccountsAsync()
         {
-            var accounts = await _context.Accounts
-                .Include(a => a.Role)
+            return await _context.Accounts
+                .AsNoTracking()
+                .Select(a => new AccountResponseDto
+                {
+                    Id = a.Id,
+                    RoleId = a.RoleId,
+                    Username = a.Username,
+                    Email = a.Email,
+                    FullName = a.FullName,
+                    Phone = a.Phone,
+                    Status = a.Status,
+                    CreationTime = a.CreationTime,
+                    LastModificationTime = a.LastModificationTime,
+                    Role = a.Role != null ? new AccountRoleDto
+                    {
+                        Id = a.Role.Id,
+                        Code = a.Role.Code,
+                        Name = a.Role.Name,
+                        Description = a.Role.Description,
+                        IsAdmin = a.Role.IsAdmin
+                    } : null
+                })
                 .OrderByDescending(a => a.CreationTime)
                 .ToListAsync();
-
-            // Hide password hashes
-            foreach (var a in accounts) {
-                a.PasswordHash = "";
-            }
-
-            return accounts;
         }
 
-        public async Task<Account> UpdateAccountAsync(int id, UpdateAccountDto accountDto)
+        public async Task<AccountResponseDto> UpdateAccountAsync(int id, UpdateAccountDto accountDto)
         {
-            var account = await _context.Accounts.FindAsync(id);
+            var account = await _context.Accounts
+                .Include(a => a.Role)
+                .FirstOrDefaultAsync(a => a.Id == id);
             if (account == null)
                 throw new AppException("Not found");
 
@@ -50,9 +65,27 @@ namespace backend.Services
 
             account.LastModificationTime = DateTime.UtcNow;
             await _context.SaveChangesAsync();
-            account.PasswordHash = "";
 
-            return account;
+            return new AccountResponseDto
+            {
+                Id = account.Id,
+                RoleId = account.RoleId,
+                Username = account.Username,
+                Email = account.Email,
+                FullName = account.FullName,
+                Phone = account.Phone,
+                Status = account.Status,
+                CreationTime = account.CreationTime,
+                LastModificationTime = account.LastModificationTime,
+                Role = account.Role != null ? new AccountRoleDto
+                {
+                    Id = account.Role.Id,
+                    Code = account.Role.Code,
+                    Name = account.Role.Name,
+                    Description = account.Role.Description,
+                    IsAdmin = account.Role.IsAdmin
+                } : null
+            };
         }
 
         public async Task<bool> DeleteAccountAsync(int id)

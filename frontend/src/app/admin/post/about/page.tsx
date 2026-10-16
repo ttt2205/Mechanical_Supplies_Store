@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   CheckCircle2,
   Eye,
@@ -11,6 +11,7 @@ import {
   MapPin,
   MessageSquareText,
   Phone,
+  RotateCw,
   Save,
   ShieldCheck,
   Sparkles,
@@ -43,47 +44,47 @@ export default function AboutManagementPage() {
   const [content, setContent] = useState<IntroducePageContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    let isMounted = true;
+  const loadContent = useCallback(async () => {
+    try {
+      const response = await fetch("/api/admin/introduce-content", {
+        cache: "no-store",
+      });
 
-    async function loadContent() {
-      try {
-        const response = await fetch("/api/admin/introduce-content", {
-          cache: "no-store",
-        });
-
-        if (!response.ok) {
-          throw new Error("Không thể tải nội dung trang giới thiệu.");
-        }
-
-        const data = (await response.json()) as IntroducePageContent;
-        if (isMounted) {
-          setContent(data);
-        }
-      } catch (loadError) {
-        if (isMounted) {
-          setError(
-            loadError instanceof Error
-              ? loadError.message
-              : "Không thể tải nội dung trang giới thiệu.",
-          );
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+      if (!response.ok) {
+        throw new Error("Không thể tải nội dung trang giới thiệu.");
       }
+
+      const data = (await response.json()) as IntroducePageContent;
+      setContent(data);
+    } catch (loadError) {
+      setError(
+        loadError instanceof Error
+          ? loadError.message
+          : "Không thể tải nội dung trang giới thiệu.",
+      );
+    } finally {
+      setIsLoading(false);
     }
-
-    loadContent();
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
+
+  useEffect(() => {
+    loadContent();
+  }, [loadContent]);
+
+  const handleReload = async () => {
+    setIsRefreshing(true);
+    setMessage("");
+    setError("");
+    try {
+      await loadContent();
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const updateTextBlock = (
     key: "story" | "vision" | "mission",
@@ -196,12 +197,25 @@ export default function AboutManagementPage() {
         </div>
 
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="button"
+            onClick={handleReload}
+            disabled={isLoading || isRefreshing || isSaving}
+            className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 py-3 text-xs font-bold text-slate-700 shadow-sm transition-all hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+            title="Tải lại nội dung"
+          >
+            <RotateCw
+              size={15}
+              className={`text-slate-600 ${isLoading || isRefreshing ? "animate-spin text-brand-primary" : ""}`}
+            />
+            <span>{isLoading || isRefreshing ? "Đang tải..." : "Tải lại"}</span>
+          </button>
           <LinkButton />
           <button
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-brand-primary px-6 py-3 text-xs font-black uppercase tracking-widest text-white shadow-xl shadow-brand-primary/20 transition-all hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex min-h-12 items-center justify-center gap-3 rounded-2xl bg-brand-primary px-6 py-3 text-xs font-black uppercase tracking-widest text-white shadow-xl shadow-brand-primary/20 transition-all hover:bg-blue-800 disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
           >
             {isSaving ? (
               <Loader2 size={18} className="animate-spin" />

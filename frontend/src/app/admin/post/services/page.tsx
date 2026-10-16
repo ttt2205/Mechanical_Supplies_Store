@@ -49,7 +49,7 @@ const defaultFormData: ServiceFormState = {
 };
 
 export default function ServicesManagementPage() {
-    const { posts, loading, createPost, updatePost, deletePost } = usePosts('SERVICE');
+    const { posts, loading, fetchPosts, createPost, updatePost, deletePost } = usePosts('SERVICE');
     const { categories, refresh: refreshCategories } = useProductCategories("SERVICE");
     const { addToast } = useToastStore();
     const [isSaving, setIsSaving] = useState(false);
@@ -268,6 +268,7 @@ export default function ServicesManagementPage() {
                 searchKey={(item: any) => (item.title || '') + ' ' + (item.slug || '')}
                 searchPlaceholder="Tìm tên dịch vụ hoặc đường dẫn..."
                 isLoading={loading}
+                onRefresh={async () => { await Promise.all([fetchPosts(), refreshCategories()]); }}
                 colSpan={1}
                 tableHeader={
                     <tr>

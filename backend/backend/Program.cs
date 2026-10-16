@@ -7,6 +7,7 @@ using backend.Services;
 using backend.Interfaces;
 using Microsoft.OpenApi.Models;
 using backend.Middleware;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,14 +39,55 @@ builder.Services.AddDbContext<backend.Data.ApplicationDbContext>(options =>
     });
 });
 
-// Configure Redis
-builder.Services.AddStackExchangeRedisCache(options =>
+// Cấu hình Redis với cơ chế fallback tự động sang In-Memory Cache khi Redis không khả dụng
+var redisConnectionString = builder.Configuration.GetConnectionString("RedisConnection");
+bool isRedisConnected = false;
+
+if (!string.IsNullOrWhiteSpace(redisConnectionString))
 {
-    options.Configuration = builder.Configuration.GetConnectionString("RedisConnection");
-});
+    try
+    {
+        var redisOptions = ConfigurationOptions.Parse(redisConnectionString);
+        redisOptions.ConnectTimeout = 1500;
+        redisOptions.SyncTimeout = 1500;
+        redisOptions.AbortOnConnectFail = true;
+
+        var multiplexer = ConnectionMultiplexer.Connect(redisOptions);
+        if (multiplexer.IsConnected)
+        {
+            isRedisConnected = true;
+            builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+            builder.Services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = redisConnectionString;
+            });
+            Console.WriteLine("[CACHE INFO] Kết nối Redis thành công.");
+        }
+        else
+        {
+            multiplexer.Dispose();
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[CACHE WARNING] Không thể kết nối tới Redis ({ex.Message}). Tự động kích hoạt In-Memory Distributed Cache dự phòng.");
+    }
+}
+
+if (!isRedisConnected)
+{
+    builder.Services.AddDistributedMemoryCache();
+    Console.WriteLine("[CACHE INFO] Đã kích hoạt Distributed Memory Cache (RAM) dự phòng.");
+}
+
 builder.Services.AddScoped<backend.Interfaces.ICacheService, backend.Services.CacheService>();
 
 builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    })
     .ConfigureApiBehaviorOptions(options =>
     {
         options.InvalidModelStateResponseFactory = context =>

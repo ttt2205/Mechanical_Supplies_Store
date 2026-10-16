@@ -20,7 +20,7 @@ import {
 
 
 export default function ViewLogPage() {
-    const { systemLogs } = useLogs();
+    const { systemLogs, loading, loadLogs } = useLogs();
     const [filterEntityType, setFilterEntityType] = useState('ALL');
     
     const logs = (systemLogs || []).map((item: any) => {
@@ -52,6 +52,8 @@ export default function ViewLogPage() {
                         <Filter size={14} /> Xuất báo cáo (Excel)
                     </button>
                 }
+                isLoading={loading}
+                onRefresh={loadLogs}
                 data={logs}
                 filters={
                     <>

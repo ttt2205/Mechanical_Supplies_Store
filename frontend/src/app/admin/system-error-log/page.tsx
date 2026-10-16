@@ -20,7 +20,7 @@ import {
 
 
 export default function ErrorLogPage() {
-    const { errorLogs, loadLogs } = useLogs();
+    const { errorLogs, loading, loadLogs } = useLogs();
     const [filterLevel, setFilterLevel] = useState('ALL');
 
     const normalizedErrors = (errorLogs || []).map((item: any) => {
@@ -73,11 +73,8 @@ export default function ErrorLogPage() {
             <AdminPageLayout
                 title="Log Lỗi Hệ Thống"
                 description="Giám sát sức khỏe hệ thống và xử lý các sự cố kỹ thuật."
-                actionButton={
-                    <button onClick={() => loadLogs()} className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-brand-primary transition-all shadow-xl">
-                        <RefreshCcw size={14} /> Làm mới dữ liệu
-                    </button>
-                }
+                isLoading={loading}
+                onRefresh={loadLogs}
                 data={filteredErrors}
                 filters={
                     <>

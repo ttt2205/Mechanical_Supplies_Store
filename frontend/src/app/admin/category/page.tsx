@@ -18,8 +18,21 @@ import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
 import { useProductCategories } from '@/hooks/useProductCategories';
 import { useToastStore } from '@/store/useToastStore';
 
+const getCategoryLevel = (category: any, allCategories: any[]): number => {
+    let level = 1;
+    let current = category;
+    const visited = new Set<string | number>();
+    while (current && current.parent_id) {
+        if (visited.has(current.category_id)) break;
+        visited.add(current.category_id);
+        current = allCategories.find(p => String(p.category_id) === String(current.parent_id));
+        level++;
+    }
+    return level;
+};
+
 export default function CategoryManagementPage() {
-    const { categories, loading, createCategory, updateCategory, deleteCategory } = useProductCategories();
+    const { categories, loading, refresh, createCategory, updateCategory, deleteCategory } = useProductCategories();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<any>(null);
     const [filterStatus, setFilterStatus] = useState('ALL');
@@ -135,6 +148,7 @@ export default function CategoryManagementPage() {
                 searchKey={(item) => item.name + ' ' + (item.code || '')}
                 searchPlaceholder="Tìm kiếm danh mục theo tên hoặc mã..."
                 isLoading={loading}
+                onRefresh={refresh}
                 colSpan={7}
                 tableHeader={
                     <tr>
@@ -179,29 +193,26 @@ export default function CategoryManagementPage() {
                         </td>
                         <td className="px-6 py-4">
                             {c.parent_id ? (
-                                <div>
+                                <div className="space-y-1">
                                     <span className="font-semibold text-slate-700 text-xs block">
-                                        {categories.find(p => p.category_id === c.parent_id)?.name || `ID: ${c.parent_id}`}
+                                        {categories.find(p => String(p.category_id) === String(c.parent_id))?.name || `ID: ${c.parent_id}`}
                                     </span>
                                     {(() => {
-                                        const parent = categories.find(p => p.category_id === c.parent_id);
-                                        if (parent?.parent_id) {
-                                            return (
-                                                <span className="text-[10px] text-purple-600 font-bold bg-purple-50 px-1.5 py-0.5 rounded mt-1 inline-block">
-                                                    Cấp 3 (Thuộc {parent.code})
-                                                </span>
-                                            );
-                                        }
+                                        const level = getCategoryLevel(c, categories);
                                         return (
-                                            <span className="text-[10px] text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded mt-1 inline-block">
-                                                Cấp 2 (Con trực tiếp)
+                                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md inline-block uppercase tracking-wider ${
+                                                level === 2 
+                                                ? 'text-blue-700 bg-blue-50 border border-blue-200/80' 
+                                                : 'text-purple-700 bg-purple-50 border border-purple-200/80'
+                                            }`}>
+                                                Cấp {level}
                                             </span>
                                         );
                                     })()}
                                 </div>
                             ) : (
                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200/80 rounded-lg text-[10px] font-black tracking-wider uppercase">
-                                    Cấp 1 (Gốc hệ thống)
+                                    Cấp 1
                                 </span>
                             )}
                         </td>
@@ -295,14 +306,14 @@ export default function CategoryManagementPage() {
                                 ]}
                             />
                             <AdminSelect 
-                                label={(!editingCategory.parent_id && editingCategory.category_id) ? "Danh Mục Cha (Cố định hệ thống)" : "Danh Mục Cha (Bắt buộc)"} 
+                                label={(!editingCategory.parent_id && editingCategory.category_id) ? "Danh Mục Cha (Cố định Cấp 1)" : "Danh Mục Cha (Bắt buộc)"} 
                                 value={editingCategory.parentId}
                                 disabled={Boolean(!editingCategory.parent_id && editingCategory.category_id)}
                                 onChange={(e: any) => setEditingCategory({ ...editingCategory, parentId: e.target.value })}
                                 required={Boolean(!editingCategory.category_id || editingCategory.parent_id)}
                                 options={
                                     (!editingCategory.parent_id && editingCategory.category_id)
-                                    ? [{ value: '', label: 'Danh mục gốc của hệ thống (Mã cố định)' }]
+                                    ? [{ value: '', label: '[Cấp 1] Cố định hệ thống' }]
                                     : [
                                         { value: '', label: `-- Chọn danh mục cha [${editingCategory.type || 'PRODUCT'}] --` },
                                         ...categories
@@ -314,8 +325,7 @@ export default function CategoryManagementPage() {
                                             })
                                             .map(c => {
                                                 const isRoot = !c.parent_id;
-                                                const parentCategory = c.parent_id ? categories.find(p => p.category_id === c.parent_id) : null;
-                                                const labelPrefix = isRoot ? '[Cấp 1] ' : `  └ [Cấp 2 - ${parentCategory?.code || ''}] `;
+                                                const labelPrefix = isRoot ? '[Cấp 1] ' : `  └ [Cấp ${getCategoryLevel(c, categories)}] `;
                                                 return {
                                                     value: c.category_id.toString(),
                                                     label: `${labelPrefix}[${c.code}] ${c.name}`

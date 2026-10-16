@@ -39,7 +39,7 @@ const menuItems: MenuItem[] = [
     { name: 'Dịch vụ', icon: Wrench, href: '/admin/post/services', requiredPermission: 'post:create' },
     { name: 'Tin tức', icon: Newspaper, href: '/admin/post/news', requiredPermission: 'post:create' },
     { name: 'Hệ thống', icon: Settings, isHeader: true },
-    { name: 'Người dùng', icon: Users, href: '/admin/user', requiredPermission: 'user:manage' },
+    { name: 'Quản lý tài khoản', icon: Users, href: '/admin/user', requiredPermission: 'user:manage' },
     { name: 'Vai trò', icon: Shield, href: '/admin/role', requiredPermission: 'role:manage' },
     { name: 'Phân quyền', icon: ShieldCheck, href: '/admin/permission', requiredPermission: 'role:manage' },
     { name: 'Đối tác', icon: Handshake, href: '/admin/supplier', requiredPermission: 'partner:manage' },

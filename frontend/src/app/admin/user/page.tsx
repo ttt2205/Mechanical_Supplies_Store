@@ -24,8 +24,8 @@ import { AdminPageLayout } from '@/components/admin/AdminPageLayout';
 import { useToastStore } from '@/store/useToastStore';
 
 export default function UserManagementPage() {
-    const { users, createUser, updateUser, deleteUser } = useUsers();
-    const { roles } = useRoles();
+    const { users, loading, refresh, createUser, updateUser, deleteUser } = useUsers();
+    const { roles, refresh: refreshRoles } = useRoles();
     const { addToast } = useToastStore();
     const [roleFilter, setRoleFilter] = useState('');
     const [statusFilter, setStatusFilter] = useState('ALL');
@@ -80,9 +80,9 @@ export default function UserManagementPage() {
     };
 
     const handleDelete = async (id: number) => {
-        if (confirm('Bạn có chắc chắn muốn xóa người dùng này?')) {
+        if (confirm('Bạn có chắc chắn muốn xóa tài khoản này?')) {
             await deleteUser(id);
-            addToast('Đã xóa người dùng thành công', 'success');
+            addToast('Đã xóa tài khoản thành công', 'success');
         }
     };
 
@@ -126,7 +126,7 @@ export default function UserManagementPage() {
     return (
         <div className="space-y-8 pb-20">
             <AdminPageLayout
-                title="Quản lý người dùng"
+                title="Quản lý tài khoản"
                 description="Danh sách tất cả tài khoản truy cập vào hệ thống."
                 actionButton={
                     <button 
@@ -134,9 +134,11 @@ export default function UserManagementPage() {
                         className="bg-brand-primary text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-brand-primary/90 transition-all shadow-xs hover:shadow-sm flex items-center gap-2.5 w-fit"
                     >
                         <Plus size={16} />
-                        Thêm người dùng mới
+                        Thêm tài khoản mới
                     </button>
                 }
+                isLoading={loading}
+                onRefresh={async () => { await Promise.all([refresh(), refreshRoles()]); }}
                 data={roleFilteredUsers}
                 filters={
                     <>
@@ -153,26 +155,28 @@ export default function UserManagementPage() {
                         </select>
                     </>
                 }
-                searchKey={(user) => (user.fullName || user.fullname || '') + ' ' + (user.email || '') + ' ' + (user.username || '')}
+                searchKey={(user) => (user.fullName || (user as any).fullname || '') + ' ' + (user.email || '') + ' ' + (user.username || '')}
                 searchPlaceholder="Tìm theo tên, email, username..."
                 colSpan={6}
                 tableHeader={
                     <tr>
-                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Người dùng</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Tài khoản</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Liên hệ</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Vai trò</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Trạng thái</th>
-                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Truy cập cuối</th>
+                        <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600">Ngày tạo / Truy cập</th>
                         <th className="px-8 py-4 text-xs font-semibold uppercase tracking-wider text-slate-600 text-right">Thao tác</th>
                     </tr>
                 }
                 renderRow={(user, index) => {
-                    const fullName = user.fullName || user.fullname || user.username || 'Người dùng';
-                    const roleItem = user.role || roles.find(r => r.id === (user.roleId || user.role_id));
+                    const fullName = user.fullName || (user as any).fullname || user.username || 'Tài khoản';
+                    const roleItem = user.role || roles.find(r => r.id === (user.roleId || (user as any).role_id));
                     const roleName = roleItem?.name || 'Thành viên';
-                    const isSuper = roleItem?.code === 'SUPER_ADMIN' || user.role_id === 'SUPER_ADMIN';
+                    const isSuper = roleItem?.code === 'ADMIN' || Boolean(roleItem?.isAdmin);
                     const isActive = String(user.status || 'ACTIVE').toUpperCase() === 'ACTIVE';
-                    const lastLogin = user.lastLogin ? new Date(user.lastLogin).toLocaleDateString('vi-VN') : 'Chưa đăng nhập';
+                    const lastLogin = (user as any).lastLogin 
+                        ? new Date((user as any).lastLogin).toLocaleDateString('vi-VN') 
+                        : (user.creationTime ? new Date(user.creationTime).toLocaleDateString('vi-VN') : 'Mới tạo');
 
                     return (
                         <tr key={user.id || index} className="group hover:bg-slate-50/50 transition-colors cursor-pointer" onClick={() => openModal(user)}>

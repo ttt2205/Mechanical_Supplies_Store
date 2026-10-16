@@ -59,6 +59,7 @@ export function useDashboardStats(range: { from?: string; to?: string } = {}) {
     timeSeries: timeSeries.data,
     topProducts: topProducts.data,
     topPosts: topPosts.data,
+    refresh: () => Promise.all([overview.mutate(), timeSeries.mutate(), topProducts.mutate(), topPosts.mutate()]),
     isLoading:
       overview.isLoading || timeSeries.isLoading || topProducts.isLoading,
     isError: overview.error || timeSeries.error || topProducts.error,

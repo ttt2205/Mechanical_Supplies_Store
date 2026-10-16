@@ -41,40 +41,44 @@ export const usePartners = () => {
     return { partners, loading, refresh, createPartner, updatePartner, deletePartner };
 };
 
+import { userService } from "@/services/userService";
+import { UserAccountItem, CreateUserPayload, UpdateUserPayload } from "@/types/user";
+
 export const useUsers = () => {
-    const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<UserAccountItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const loadData = async () => {
+    const loadData = useCallback(async () => {
+        setLoading(true);
         try {
-            const data = await fetchApi<any[]>('/admin/accounts');
-            if (data) setUsers(data);
+            const data = await userService.getAll();
+            setUsers(data);
         } catch (err) {
-            console.error(err);
+            console.error('Failed to load accounts:', err);
         } finally {
             setLoading(false);
         }
-    };
+    }, []);
 
-    useEffect(() => { loadData(); }, []);
+    useEffect(() => { loadData(); }, [loadData]);
 
-    const refresh = async () => { setLoading(true); await loadData(); };
+    const refresh = async () => { await loadData(); };
 
-    const createUser = async (payload: any) => {
-        const res = await fetchApi<any>('/admin/accounts', { method: 'POST', body: JSON.stringify(payload) });
-        if (res) await refresh();
+    const createUser = async (payload: CreateUserPayload) => {
+        const res = await userService.create(payload);
+        await refresh();
         return res;
     };
 
-    const updateUser = async (id: number, payload: any) => {
-        const res = await fetchApi<any>(`/admin/accounts/${id}`, { method: 'PUT', body: JSON.stringify(payload) });
-        if (res) await refresh();
+    const updateUser = async (id: number, payload: UpdateUserPayload) => {
+        const res = await userService.update(id, payload);
+        await refresh();
         return res;
     };
 
     const deleteUser = async (id: number) => {
-        const res = await fetchApi<any>(`/admin/accounts/${id}`, { method: 'DELETE' });
-        if (res) await refresh();
+        const res = await userService.delete(id);
+        await refresh();
         return res;
     };
 

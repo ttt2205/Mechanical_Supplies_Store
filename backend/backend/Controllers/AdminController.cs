@@ -25,7 +25,7 @@ namespace backend.Controllers
         public async Task<IActionResult> GetAccounts() 
         {
             var result = await _adminService.GetAllAccountsAsync();
-            return Ok(ApiResponse<List<Account>>.SuccessResult(result, "Success"));
+            return Ok(ApiResponse<List<AccountResponseDto>>.SuccessResult(result, "Success"));
         }
 
         [HttpPost("accounts")]
@@ -40,7 +40,7 @@ namespace backend.Controllers
         public async Task<IActionResult> UpdateAccount(int id, [FromBody] UpdateAccountDto request) 
         {
             var result = await _adminService.UpdateAccountAsync(id, request);
-            return Ok(ApiResponse<Account>.SuccessResult(result, "Success"));
+            return Ok(ApiResponse<AccountResponseDto>.SuccessResult(result, "Success"));
         }
 
         [HttpDelete("accounts/{id}")]

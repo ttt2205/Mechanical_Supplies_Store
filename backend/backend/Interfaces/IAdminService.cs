@@ -8,8 +8,8 @@ namespace backend.Interfaces
     public interface IAdminService
     {
         Task CreateAccountAsync(CreateAccountDto accountDto);
-        Task<List<Account>> GetAllAccountsAsync();
-        Task<Account> UpdateAccountAsync(int id, UpdateAccountDto updateDto);
+        Task<List<AccountResponseDto>> GetAllAccountsAsync();
+        Task<AccountResponseDto> UpdateAccountAsync(int id, UpdateAccountDto updateDto);
         Task<bool> DeleteAccountAsync(int id);
     }
 }

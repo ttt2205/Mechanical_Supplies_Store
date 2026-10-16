@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Search, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, ChevronLeft, ChevronRight, RotateCw } from 'lucide-react';
 
 interface AdminPageLayoutProps<T> {
     title: string;
@@ -13,6 +13,7 @@ interface AdminPageLayoutProps<T> {
     renderRow: (item: T, index: number) => React.ReactNode;
     isLoading?: boolean;
     colSpan?: number; // Used for "No data" message spanning
+    onRefresh?: () => void | Promise<void>;
 }
 
 export function AdminPageLayout<T>({
@@ -26,8 +27,20 @@ export function AdminPageLayout<T>({
     tableHeader,
     renderRow,
     isLoading = false,
-    colSpan = 5
+    colSpan = 5,
+    onRefresh
 }: AdminPageLayoutProps<T>) {
+    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const handleRefresh = async () => {
+        if (!onRefresh || isLoading || isRefreshing) return;
+        try {
+            setIsRefreshing(true);
+            await onRefresh();
+        } finally {
+            setIsRefreshing(false);
+        }
+    };
     const [searchTerm, setSearchTerm] = useState('');
     const [pageSize, setPageSize] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -91,9 +104,24 @@ export function AdminPageLayout<T>({
                     <h1 className="text-2xl font-black text-slate-900 uppercase tracking-tight">{title}</h1>
                     <p className="text-sm text-slate-500 font-medium mt-1">{description}</p>
                 </div>
-                {actionButton && (
-                    <div>{actionButton}</div>
-                )}
+                <div className="flex flex-wrap items-center gap-3">
+                    {onRefresh && (
+                        <button
+                            type="button"
+                            onClick={handleRefresh}
+                            disabled={isLoading || isRefreshing}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 active:bg-slate-100 text-xs font-bold transition-all shadow-xs hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                            title="Tải lại dữ liệu"
+                        >
+                            <RotateCw
+                                size={15}
+                                className={`text-slate-600 transition-transform ${isLoading || isRefreshing ? 'animate-spin text-brand-primary' : ''}`}
+                            />
+                            <span>{isLoading || isRefreshing ? 'Đang tải...' : 'Tải lại'}</span>
+                        </button>
+                    )}
+                    {actionButton}
+                </div>
             </div>
 
             {/* Table section with integrated search */}
@@ -150,6 +178,17 @@ export function AdminPageLayout<T>({
                                             <Search className="text-slate-300 w-12 h-12 mb-2" />
                                             <span className="text-slate-500 font-bold text-lg">Không tìm thấy dữ liệu!</span>
                                             <span className="text-slate-400 text-sm">Vui lòng thử lại với từ khóa khác hoặc thêm mới.</span>
+                                            {onRefresh && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleRefresh}
+                                                    disabled={isLoading || isRefreshing}
+                                                    className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-bold text-brand-primary bg-brand-primary/10 hover:bg-brand-primary/20 rounded-xl transition-colors cursor-pointer"
+                                                >
+                                                    <RotateCw size={14} className={isLoading || isRefreshing ? 'animate-spin' : ''} />
+                                                    Tải lại dữ liệu
+                                                </button>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

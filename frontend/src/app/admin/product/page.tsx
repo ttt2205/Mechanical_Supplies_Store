@@ -77,7 +77,7 @@ function htmlToSections(html: string): FormSection[] {
 }
 
 export default function ProductManagementPage() {
-    const { products, loading, deleteProduct, createProduct, updateProduct } = useProducts();
+    const { products, loading, deleteProduct, createProduct, updateProduct, refresh } = useProducts();
     const { categories, refresh: refreshCategories } = useProductCategories("PRODUCT");
     const addToast = useToastStore(state => state.addToast);
     const { isUploading, uploadImage } = useImageUpload();
@@ -358,6 +358,7 @@ export default function ProductManagementPage() {
                 searchKey={(item: any) => item.name + ' ' + (item.productCode || '')}
                 searchPlaceholder="Tìm theo tên hoặc mã sản phẩm..."
                 isLoading={loading}
+                onRefresh={async () => { await Promise.all([refresh(), refreshCategories()]); }}
                 colSpan={6}
                 tableHeader={
                     <tr>

@@ -50,7 +50,7 @@ const defaultFormData: NewsFormState = {
 };
 
 export default function NewsManagementPage() {
-    const { posts, loading, createPost, updatePost, deletePost } = usePosts('NEWS');
+    const { posts, loading, fetchPosts, createPost, updatePost, deletePost } = usePosts('NEWS');
     const { addToast } = useToastStore();
     const [isSaving, setIsSaving] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -268,6 +268,7 @@ export default function NewsManagementPage() {
                 tableHeader={tableHeader}
                 renderRow={renderRow}
                 isLoading={loading}
+                onRefresh={fetchPosts}
                 colSpan={5}
             />
 

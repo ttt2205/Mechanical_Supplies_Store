@@ -28,7 +28,7 @@ import { useToastStore } from '@/store/useToastStore';
 import { fetchApi } from '@/lib/api';
 
 export default function PartnerManagementPage() {
-    const { partners, createPartner, updatePartner, deletePartner } = usePartners();
+    const { partners, loading, refresh, createPartner, updatePartner, deletePartner } = usePartners();
     const { categories, refresh: refreshCategories } = useProductCategories("PARTNER");
     const addToast = useToastStore(state => state.addToast);
 
@@ -175,6 +175,8 @@ export default function PartnerManagementPage() {
                         </button>
                     </div>
                 }
+                isLoading={loading}
+                onRefresh={async () => { await Promise.all([refresh(), refreshCategories()]); }}
                 data={filteredPartners}
                 filters={
                     <>
